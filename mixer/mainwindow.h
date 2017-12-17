@@ -12,6 +12,9 @@
 
 #include <QThread>
 
+#include "fft.h"
+#include <math.h>
+
 namespace Ui {
 
 class MainWindow;
@@ -24,7 +27,6 @@ class SoundProcessing : public QObject
 public:
     void init();
     ~SoundProcessing();
-
     bool abort;
 
 private:
@@ -39,6 +41,10 @@ private:
     bool isPlayed;
     bool isWhiteNoise;
 
+    double xmem1, xmem2, ymem1, ymem2;
+    double b0, b1, b2, a0, a1, a2;
+    double F0, BW, g;
+
 public slots:
     void loadAudio(QString filename);
     void readBuffer();
@@ -46,6 +52,10 @@ public slots:
     void play();
     void enableWhiteNoise();
     void disableWhiteNoise();
+
+    void lowEQ(int value);
+    void medEQ(int value);
+    void highEQ(int value);
 };
 
 class MainWindow : public QMainWindow
@@ -54,7 +64,7 @@ class MainWindow : public QMainWindow
     QThread th_soundProc;
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = 0); 
     ~MainWindow();
 
 protected:
