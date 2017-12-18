@@ -29,6 +29,10 @@ public:
     ~SoundProcessing();
     bool abort;
 
+    double processLow(double sample);
+    double processMedium(double sample);
+    double processHigh(double sample);
+
 private:
     QAudioDecoder *decoder;
     QAudioOutput *audioOutput;
@@ -41,9 +45,17 @@ private:
     bool isPlayed;
     bool isWhiteNoise;
 
-    double xmem1, xmem2, ymem1, ymem2;
-    double b0, b1, b2, a0, a1, a2;
-    double F0, BW, g;
+    double lxmem1, lxmem2, lymem1, lymem2;
+    double mxmem1, mxmem2, mymem1, mymem2;
+    double m2xmem1, m2xmem2, m2ymem1, m2ymem2;
+    double hxmem1, hxmem2, hymem1, hymem2;
+
+    double lb0, lb1, lb2, la0, la1, la2;
+    double mb0, mb1, mb2, ma0, ma1, ma2;
+    double m2b0, m2b1, m2b2, m2a0, m2a1, m2a2;
+    double hb0, hb1, hb2, ha0, ha1, ha2;
+
+    double lg, mg, hg;
 
 public slots:
     void loadAudio(QString filename);

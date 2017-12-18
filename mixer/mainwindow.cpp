@@ -69,9 +69,13 @@ void SoundProcessing::init() {
     audioOutput = new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice(), desiredFormat);
     audioDevice = audioOutput->start();
 
-    F0 = 12000;
-    BW = 1;
-    g = 0;
+    lg = 0;
+    mg = 0;
+    hg = 0;
+
+    lowEQ(50);
+    medEQ(50);
+    highEQ(50);
 }
 
 void SoundProcessing::loadAudio(QString filename) {
@@ -98,16 +102,14 @@ void SoundProcessing::play() {
         QByteArray sample;
 
         for(int j = 0; j < 16; j++) {
-            rate += 0.00001;
+            rate += 0.0000001;
             if(rate > 1) rate = 1;
             qint16 value = *(reinterpret_cast<qint16*>(channel1->data())+i+j);
 
-            double y = b0*value + b1*xmem1 + b2*xmem2 - a1*ymem1 - a2*ymem2;
+            double y = processLow(value);
+            y = processMedium(y);
+            y = processHigh(y);
 
-            xmem2 = xmem1;
-            xmem1 = value;
-            ymem2 = ymem1;
-            ymem1 = y;
             if(y*rate > 30000 || y*rate < -30000) {
                 rate = abs(30000/y);
             }
@@ -117,12 +119,10 @@ void SoundProcessing::play() {
 
             value = *(reinterpret_cast<qint16*>(channel2->data())+i+j);
 
-            y = b0*value + b1*xmem1 + b2*xmem2 - a1*ymem1 - a2*ymem2;
+            y = processLow(value);
+            y = processMedium(y);
+            y = processHigh(y);
 
-            xmem2 = xmem1;
-            xmem1 = value;
-            ymem2 = ymem1;
-            ymem1 = y;
             if(y*rate > 30000 || y*rate < -30000) {
                 rate = abs(30000/y);
             }
@@ -136,6 +136,9 @@ void SoundProcessing::play() {
         if(isWhiteNoise) {
             qint16 *data = reinterpret_cast<qint16*>(sample.data());
 
+            for(int j = 0; j < sample.size()/sizeof(qint16); j++) {
+                data[j] = rand();
+            }
         }
 
         qint64 written = 0;
@@ -148,77 +151,136 @@ void SoundProcessing::play() {
     isPlayed = false;
 }
 
+double SoundProcessing::processLow(double sample) {
+    double y = lb0*sample + lb1*lxmem1 + lb2*lxmem2 - la1*lymem1 - la2*lymem2;
+
+    lxmem2 = lxmem1;
+    lxmem1 = sample;
+    lymem2 = lymem1;
+    lymem1 = y;
+
+    return y;
+}
+
+double SoundProcessing::processMedium(double sample) {
+    double y = mb0*sample + mb1*mxmem1 + mb2*mxmem2 - ma1*mymem1 - ma2*mymem2;
+
+    mxmem2 = mxmem1;
+    mxmem1 = sample;
+    mymem2 = mymem1;
+    mymem1 = y;
+
+//    return y;
+    double y2 = m2b0*y + m2b1*m2xmem1 + m2b2*m2xmem2 - m2a1*m2ymem1 - m2a2*m2ymem2;
+
+    m2xmem2 = m2xmem1;
+    m2xmem1 = y;
+    m2ymem2 = m2ymem1;
+    m2ymem1 = y2;
+
+    return y2;
+}
+
+double SoundProcessing::processHigh(double sample) {
+    double y = hb0*sample + hb1*hxmem1 + hb2*hxmem2 - ha1*hymem1 - ha2*hymem2;
+
+    hxmem2 = hxmem1;
+    hxmem1 = sample;
+    hymem2 = hymem1;
+    hymem1 = y;
+
+    return y;
+}
+
 void SoundProcessing::lowEQ(int value) {
 
     double Fs = 48000;
-    F0 = value*24000/100.;
+    double F0 = 500;
+    double S = 1;
+    lg = (value-50)/50.*10;
 
-    double A = pow(10, g/40.);
+    double A = pow(10, lg/40.);
     double w0 = 2*3.14159265359*F0/Fs;
-    double c = cos(w0);
-    double s = sin(w0);
-    double alpha = s/2. * sqrt( (A + 1/A)*(1/BW - 1) + 2 );
+    double alpha = sin(w0)/2. * sqrt( (A + 1/A)*(1/S - 1) + 2 );
 
-    b0 =    A*( (A+1) - (A-1)*cos(w0) + 2*sqrt(A)*alpha );
-    b1 =  2*A*( (A-1) - (A+1)*cos(w0)                   );
-    b2 =    A*( (A+1) - (A-1)*cos(w0) - 2*sqrt(A)*alpha );
-    a0 =        (A+1) + (A-1)*cos(w0) + 2*sqrt(A)*alpha;
-    a1 =   -2*( (A-1) + (A+1)*cos(w0)                   );
-    a2 =        (A+1) + (A-1)*cos(w0) - 2*sqrt(A)*alpha;
+    lb0 =    A*( (A+1) - (A-1)*cos(w0) + 2*sqrt(A)*alpha );
+    lb1 =  2*A*( (A-1) - (A+1)*cos(w0)                   );
+    lb2 =    A*( (A+1) - (A-1)*cos(w0) - 2*sqrt(A)*alpha );
+    la0 =        (A+1) + (A-1)*cos(w0) + 2*sqrt(A)*alpha;
+    la1 =   -2*( (A-1) + (A+1)*cos(w0)                   );
+    la2 =        (A+1) + (A-1)*cos(w0) - 2*sqrt(A)*alpha;
 
-    b0 /= a0;
-    b1 /= a0;
-    b2 /= a0;
-    a1 /= a0;
-    a2 /= a0;
+    lb0 /= la0;
+    lb1 /= la0;
+    lb2 /= la0;
+    la1 /= la0;
+    la2 /= la0;
 }
 
 void SoundProcessing::medEQ(int value) {
     double Fs = 48000;
-    BW = 1;
+    double F0 = 15000;
+    double S = 1;
+    mg = (value-50)/50.*10;
 
-    double A = pow(10, g/40.);
+    double A = pow(10, mg/40.);
     double w0 = 2*3.14159265359*F0/Fs;
-    double c = cos(w0);
-    double s = sin(w0);
-    double alpha = s/2. * sqrt( (A + 1/A)*(1/BW - 1) + 2 );
+    double alpha = sin(w0)/2. * sqrt( (A + 1/A)*(1/S - 1) + 2 );
 
-    b0 =    A*( (A+1) - (A-1)*cos(w0) + 2*sqrt(A)*alpha );
-    b1 =  2*A*( (A-1) - (A+1)*cos(w0)                   );
-    b2 =    A*( (A+1) - (A-1)*cos(w0) - 2*sqrt(A)*alpha );
-    a0 =        (A+1) + (A-1)*cos(w0) + 2*sqrt(A)*alpha;
-    a1 =   -2*( (A-1) + (A+1)*cos(w0)                   );
-    a2 =        (A+1) + (A-1)*cos(w0) - 2*sqrt(A)*alpha;
+    mb0 =    A*( (A+1) - (A-1)*cos(w0) + 2*sqrt(A)*alpha );
+    mb1 =  2*A*( (A-1) - (A+1)*cos(w0)                   );
+    mb2 =    A*( (A+1) - (A-1)*cos(w0) - 2*sqrt(A)*alpha );
+    ma0 =        (A+1) + (A-1)*cos(w0) + 2*sqrt(A)*alpha;
+    ma1 =   -2*( (A-1) + (A+1)*cos(w0)                   );
+    ma2 =        (A+1) + (A-1)*cos(w0) - 2*sqrt(A)*alpha;
 
-    b0 /= a0;
-    b1 /= a0;
-    b2 /= a0;
-    a1 /= a0;
-    a2 /= a0;
+    mb0 /= ma0;
+    mb1 /= ma0;
+    mb2 /= ma0;
+    ma1 /= ma0;
+    ma2 /= ma0;
+
+    F0 = 500;
+    w0 = 2*3.14159265359*F0/Fs;
+    A = pow(10, -mg/40.);
+    alpha = sin(w0)/2. * sqrt( (A + 1/A)*(1/S - 1) + 2 );
+
+    m2b0 =    A*( (A+1) - (A-1)*cos(w0) + 2*sqrt(A)*alpha );
+    m2b1 =  2*A*( (A-1) - (A+1)*cos(w0)                   );
+    m2b2 =    A*( (A+1) - (A-1)*cos(w0) - 2*sqrt(A)*alpha );
+    m2a0 =        (A+1) + (A-1)*cos(w0) + 2*sqrt(A)*alpha;
+    m2a1 =   -2*( (A-1) + (A+1)*cos(w0)                   );
+    m2a2 =        (A+1) + (A-1)*cos(w0) - 2*sqrt(A)*alpha;
+
+    m2b0 /= m2a0;
+    m2b1 /= m2a0;
+    m2b2 /= m2a0;
+    m2a1 /= m2a0;
+    m2a2 /= m2a0;
 }
 
 void SoundProcessing::highEQ(int value) {
     double Fs = 48000;
-    g = (value-50)/50.*10;
+    double F0 = 15000;
+    double S = 1;
+    hg = (value-50)/50.*10;
 
-    double A = pow(10, g/40.);
+    double A = pow(10, hg/40.);
     double w0 = 2*3.14159265359*F0/Fs;
-    double c = cos(w0);
-    double s = sin(w0);
-    double alpha = s/2. * sqrt( (A + 1/A)*(1/BW - 1) + 2 );
+    double alpha = sin(w0)/2. * sqrt( (A + 1/A)*(1/S - 1) + 2 );
 
-    b0 =    A*( (A+1) - (A-1)*cos(w0) + 2*sqrt(A)*alpha );
-    b1 =  2*A*( (A-1) - (A+1)*cos(w0)                   );
-    b2 =    A*( (A+1) - (A-1)*cos(w0) - 2*sqrt(A)*alpha );
-    a0 =        (A+1) + (A-1)*cos(w0) + 2*sqrt(A)*alpha;
-    a1 =   -2*( (A-1) + (A+1)*cos(w0)                   );
-    a2 =        (A+1) + (A-1)*cos(w0) - 2*sqrt(A)*alpha;
+    hb0 =    A*( (A+1) + (A-1)*cos(w0) + 2*sqrt(A)*alpha );
+    hb1 = -2*A*( (A-1) + (A+1)*cos(w0)                   );
+    hb2 =    A*( (A+1) + (A-1)*cos(w0) - 2*sqrt(A)*alpha );
+    ha0 =        (A+1) - (A-1)*cos(w0) + 2*sqrt(A)*alpha;
+    ha1 =    2*( (A-1) - (A+1)*cos(w0)                   );
+    ha2 =        (A+1) - (A-1)*cos(w0) - 2*sqrt(A)*alpha;
 
-    b0 /= a0;
-    b1 /= a0;
-    b2 /= a0;
-    a1 /= a0;
-    a2 /= a0;
+    hb0 /= ha0;
+    hb1 /= ha0;
+    hb2 /= ha0;
+    ha1 /= ha0;
+    ha2 /= ha0;
 }
 
 void SoundProcessing::finishDecoding() {
