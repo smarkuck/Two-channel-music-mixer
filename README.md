@@ -1,3 +1,7 @@
+Filtry częstotliwości:
+[Audio EQ Cookbook](http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt)
+[Przykłady](http://blog.bjornroche.com/2012/08/basic-audio-eqs.html)
+
 Przycisk Play działa dopiero po chwili jak już utwór się załaduje.
 
 do odtwarzania mp3 potrzebny jest gstreamer1.0-plugins-ugly
