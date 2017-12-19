@@ -30,9 +30,12 @@ private:
 
 signals:
     void loadAudio(QString filename);
+    void loadAudio2(QString filename);
 
 public slots:
     void selectAudio();
+    void selectAudio2();
+    void crossFaderChange(int value);
 };
 
 #endif // MAINWINDOW_H

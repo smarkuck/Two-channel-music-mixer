@@ -27,11 +27,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        soundprocessing.cpp
+        soundprocessing.cpp \
+        mixpanel.cpp
 
 HEADERS += \
         mainwindow.h \
-        soundprocessing.h
+        soundprocessing.h \
+        mixpanel.h
 
 FORMS += \
         mainwindow.ui
