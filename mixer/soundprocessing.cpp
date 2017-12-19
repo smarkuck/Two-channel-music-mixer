@@ -4,7 +4,6 @@ SoundProcessing::SoundProcessing(QObject *parent) : QObject(parent)
 {
     abort = false;
     rate = 1;
-    written = 64*sizeof(qint16)*2;
     crossFader = 50;
 
     QAudioFormat format;
@@ -27,20 +26,9 @@ void SoundProcessing::play() {
     if(abort) timer->stop();
     if(!timer->isActive()) return;
 
-//    int space = written/sizeof(qint16)/2;
-
-//    for(int i = 64-space; i < 64; i++) {
-//        if(i-space<0) continue;
-//        buffer1[i*2-space*2] = buffer1[i*2];
-//        buffer1[i*2+1-space*2] = buffer1[i*2+1];
-//        buffer2[i*2-space*2] = buffer2[i*2];
-//        buffer2[i*2+1-space*2] = buffer2[i*2+1];
-//    }
+    double buffer1[128], buffer2[128];
 
     QByteArray output;
-
-    //panel1.process(buffer1+(64-space)*2, space);
-    //panel2.process(buffer2+(64-space)*2, space);
 
     panel1.process(buffer1, 64);
     panel2.process(buffer2, 64);
@@ -64,7 +52,6 @@ void SoundProcessing::play() {
         output.append(reinterpret_cast<char*>(&sample), sizeof(qint16));
     }
 
-    //written = audioDevice->write(output);
-    written = 0;
+    qint64 written = 0;
     while((written += audioDevice->write(output.right(output.size()-written))) < output.size());
 }

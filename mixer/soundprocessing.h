@@ -33,9 +33,6 @@ private:
     QTimer* timer;
 
     double rate;
-    qint64 written;
-
-    double buffer1[128], buffer2[128];
 
 public slots:
     void play();
