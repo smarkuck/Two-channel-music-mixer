@@ -27,13 +27,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        complex.cpp \
-        fft.cpp
+        soundprocessing.cpp
 
 HEADERS += \
         mainwindow.h \
-        complex.h \
-        fft.h
+        soundprocessing.h
 
 FORMS += \
         mainwindow.ui
