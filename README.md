@@ -23,3 +23,8 @@ gstreamer1.0-tools
 no i zanim udało mi się skompilować aplikację poprawnie musiałem doinstalować jakieś programiki których już nie pamiętam, stackoverflow pomoże a jak nie to piszcie
 
 jak będziecie dołączać nowe klasy z QT to patrzcie czy w dokumentacji nie pisze żeby dodać w pliku mixer.pro linijki w stylu `QT += multimedia` bo miałem z tym problem
+
+Dodałem osobnego brancha do wykresów, żeby się na niego przełączyć pobierzcie repo normalnie, wejdźcie do folderu z nim a potem wklepcie:
+```
+git checkout origin soundGraph
+```
