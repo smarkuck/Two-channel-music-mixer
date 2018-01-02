@@ -28,3 +28,7 @@ Dodałem osobnego brancha do wykresów, żeby się na niego przełączyć pobier
 ```
 git checkout origin soundGraph
 ```
+
+Dodałem następnego brancha do zapisywania akcji. Nie wiem czy o to chodziło ale jest w wersji demo :)
+Jak pobierzecie repo to po wczytaniu utworu spróbujcie załadować akcje test.acn i po odpaleniu powinny się suwaki same przesuwac.
+
