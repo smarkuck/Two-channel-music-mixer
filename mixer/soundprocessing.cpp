@@ -142,6 +142,7 @@ void SoundProcessing::download(QString filename){
     file->write(output1);
     file->close();
 
+    emit downloadReady();
     qDebug() << "ready";
 
 }

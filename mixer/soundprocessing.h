@@ -53,7 +53,7 @@ signals:
     void highEQChange(int value);
     void crossChange(int value);
     void startDownload(QString filename);
-
+    void downloadReady();
 
 public slots:
     void play();

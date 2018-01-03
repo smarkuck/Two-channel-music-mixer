@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(soundProc, SIGNAL(crossChange(int)), this, SLOT(crossChanger(int)));
 
     connect(&soundProc->panel1, SIGNAL(timeChange(QString)), ui->lTime, SLOT(setText(QString)));
+    connect(&soundProc->panel1, SIGNAL(fileReady()), this, SLOT(setText_audio1Ready()));
 
     connect(ui->pbAddMusic_2, SIGNAL(clicked(bool)), this, SLOT(selectAudio2()));
     connect(ui->action_Open2, SIGNAL(triggered(bool)), this, SLOT(selectAudio2()));
@@ -55,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->sHigh_2, SIGNAL(sliderMoved(int)), &soundProc->panel2, SLOT(highEQ(int)));
 
     connect(&soundProc->panel2, SIGNAL(timeChange(QString)), ui->lTime_2, SLOT(setText(QString)));
+    connect(&soundProc->panel2, SIGNAL(fileReady()), this, SLOT(setText_audio2Ready()));
 
     connect(ui->sCrossfader, SIGNAL(sliderMoved(int)), this, SLOT(crossFaderChange(int)));
     connect(ui->pbDownload, SIGNAL(clicked(bool)), this, SLOT(onDownload()));
@@ -71,6 +73,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(loadActionFromFile(QString)), &soundProc->action, SLOT(loadActionFromFile(QString)));
 
     connect(&soundProc->panel1, SIGNAL(writeToFile(quint64,quint64,quint64)), &soundProc->action, SLOT(write(quint64, quint64,quint64)));
+
+    connect(soundProc, SIGNAL(downloadReady()), this, SLOT(downloadTextChange()));
 }
 //------------------------------------------------------------
 void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
@@ -302,6 +306,7 @@ void MainWindow::selectAudio() {
     if(filename == "") return;
 
     ui->laudio->setText(filename.split('/').last());
+    ui->file1_ready->setText("Wait...");
     emit loadAudio(filename);
 }
 
@@ -316,6 +321,7 @@ void MainWindow::selectAudio2() {
     if(filename == "") return;
 
     ui->laudio_2->setText(filename.split('/').last());
+    ui->file2_ready->setText("Wait...");
     emit loadAudio2(filename);
 }
 //------------------------------------------------------------
@@ -377,6 +383,7 @@ void MainWindow::onDownload() {
     QString fileName = QFileDialog::getSaveFileName(this,
         tr("Download"), "/home", tr("audio(*.wav)"));
 
+    ui->download_ready->setText("Wait...");
     emit soundProc->startDownload(fileName);
 }
 
@@ -391,6 +398,15 @@ MainWindow::~MainWindow()
 
 //------------------------------------------------
 
+void MainWindow::downloadTextChange(){
+    ui->download_ready->setText("Done");
+}
 
 
+void MainWindow::setText_audio1Ready(){
+     ui->file1_ready->setText("");
+}
 
+void MainWindow::setText_audio2Ready(){
+     ui->file2_ready->setText("");
+}

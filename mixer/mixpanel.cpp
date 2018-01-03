@@ -224,6 +224,7 @@ void MixPanel::finishDecoding() {
     QString time  = "0:00/" + QString::number(minutes) + ":" + QString::number(seconds);
 
     emit timeChange(time);
+    emit fileReady();
 
 }
 

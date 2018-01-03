@@ -64,7 +64,9 @@ public slots:
     void highChange(int value);
     void crossChanger(int value);
     void onDownload();
-
+    void downloadTextChange();
+    void setText_audio1Ready();
+    void setText_audio2Ready();
 };
 
 #endif // MAINWINDOW_H
