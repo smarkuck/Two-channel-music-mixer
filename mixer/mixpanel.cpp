@@ -1,4 +1,5 @@
 #include "mixpanel.h"
+#include "mainwindow.h"
 
 MixPanel::MixPanel(QObject *parent) : QObject(parent)
 {
@@ -8,6 +9,7 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     isWhiteNoise = false;
     audioReady = false;
     isPlayed = false;
+    plot = false;
 
     channel1 = new QByteArray();
     channel2 = new QByteArray();
@@ -33,11 +35,16 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     lowEQ(50);
     medEQ(50);
     highEQ(50);
+
+
 }
 
 void MixPanel::playPause() {
     if(audioReady)
+    {
         isPlayed = !isPlayed;
+
+    }
 }
 
 void MixPanel::process(double *buffer, int nFrames) {
@@ -46,6 +53,7 @@ void MixPanel::process(double *buffer, int nFrames) {
         memset(buffer, 0, sizeof(double)*nFrames*2);
         return;
     }
+
 
     for(int i = 0; i < nFrames; i++) {
 
@@ -56,7 +64,6 @@ void MixPanel::process(double *buffer, int nFrames) {
         }
 
         qint16 value = *(reinterpret_cast<qint16*>(channel1->data())+actPos);
-
         double y = processLow(value);
         y = processMedium(y);
         buffer[i*2] = processHigh(y);
@@ -66,6 +73,7 @@ void MixPanel::process(double *buffer, int nFrames) {
         y = processLow(value);
         y = processMedium(y);
         buffer[i*2+1] = processHigh(y);
+
 
         actPos++;
     }
@@ -159,16 +167,19 @@ void MixPanel::shelfFilter(double F0, double g, QString type, memEQ &eq) {
 
 void MixPanel::lowEQ(int value) {
     shelfFilter(500, (value-50)/50.*10, "low", lowMemEq);
+    emit writeToFile(3, actPos,value);  //emisja sygnalu do zapisania akcji
 }
 
 void MixPanel::medEQ(int value) {
     double g = (value-50)/50.*10;
     shelfFilter(15000, g, "low", medMemEq);
     shelfFilter(500, -g, "low", medMemEq2);
+    emit writeToFile(4, actPos,value);
 }
 
 void MixPanel::highEQ(int value) {
     shelfFilter(15000, (value-50)/50.*10, "high", highMemEq);
+    emit writeToFile(5, actPos,value);
 }
 
 void MixPanel::loadAudio(QString filename) {
@@ -200,6 +211,7 @@ void MixPanel::readBuffer() {
 
 void MixPanel::finishDecoding() {
     qDebug() << "ready";
+    plot = false;
     audioReady = true;
 
     int minutes = duration/1000000./60.;
@@ -212,14 +224,17 @@ void MixPanel::finishDecoding() {
     QString time  = "0:00/" + QString::number(minutes) + ":" + QString::number(seconds);
 
     emit timeChange(time);
+
 }
 
 void MixPanel::enableWhiteNoise() {
     isWhiteNoise = true;
+     emit writeToFile(1, actPos,0);
 }
 
 void MixPanel::disableWhiteNoise() {
     isWhiteNoise = false;
+    emit writeToFile(2, actPos,0);
 }
 
 MixPanel::~MixPanel() {
@@ -228,4 +243,9 @@ MixPanel::~MixPanel() {
     delete channel1;
     delete channel2;
 }
+
+
+
+
+
 
