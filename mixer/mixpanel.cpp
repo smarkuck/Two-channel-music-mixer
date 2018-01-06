@@ -43,7 +43,6 @@ void MixPanel::playPause() {
     //if(audioReady)
     //{
         isPlayed = !isPlayed;
-
     //}
 }
 
@@ -74,7 +73,6 @@ void MixPanel::process(double *buffer, int nFrames) {
         y = processLow(value);
         y = processMedium(y);
         buffer[i*2+1] = processHigh(y);
-
 
         actPos++;
     }

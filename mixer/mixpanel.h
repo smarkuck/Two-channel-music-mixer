@@ -16,7 +16,6 @@
 class MixPanel : public QObject
 {
     Q_OBJECT
-    //Q_ENUMS(Actions)
 
 private:
     struct memEQ {

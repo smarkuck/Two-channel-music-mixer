@@ -10,7 +10,6 @@
 #include <QAudioFormat>
 #include <QAudioBuffer>
 #include <QAudioOutput>
-
 #include <mixpanel.h>
 #include <action.h>
 
@@ -31,8 +30,8 @@ public:
 
     Action action;
 
-    enum Actions { white_noise_true = 1, white_noise_false, low, med, high, cross, low2, med2, high2};
-
+    enum Actions { WN_true = 1, WN_false, low, med, high, cross, WN2_true, WN2_false, low2, med2, high2, cross2};
+    void doActions(quint64 actPos1, quint64 actPos2);
 
     double buffer1[1024], buffer2[1024];
 
@@ -55,6 +54,7 @@ signals:
     void medEQChange2(int value);
     void highEQChange2(int value);
     void crossChange(int value);
+    void crossChange2(int value);
     void startDownload(QString filename);
     void downloadReady();
 

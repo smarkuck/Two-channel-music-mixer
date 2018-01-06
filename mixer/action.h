@@ -16,6 +16,7 @@ public:
     QVector<quint64> buffer;
     QVector<quint64> buffer2;
     QVector<quint64> loadBuffer;
+    int aCounter;
 signals:
 
 public slots:

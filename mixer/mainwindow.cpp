@@ -36,9 +36,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbNo, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(disableWhiteNoise()));
     connect(ui->pbSound, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playPause()));
 
-    connect(ui->sLow, SIGNAL(sliderMoved(int)), &soundProc->panel1, SLOT(lowEQ(int)));
-    connect(ui->sMedium, SIGNAL(sliderMoved(int)), &soundProc->panel1, SLOT(medEQ(int)));
-    connect(ui->sHigh, SIGNAL(sliderMoved(int)), &soundProc->panel1, SLOT(highEQ(int)));
+    connect(ui->sLow, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(lowEQ(int)));
+    connect(ui->sMedium, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(medEQ(int)));
+    connect(ui->sHigh, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(highEQ(int)));
 
     //AKCJE
     //sygnaly do zmiany suwakow
@@ -60,14 +60,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbNo_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(disableWhiteNoise()));
     connect(ui->pbSound_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playPause()));
 
-    connect(ui->sLow_2, SIGNAL(sliderMoved(int)), &soundProc->panel2, SLOT(lowEQ(int)));
-    connect(ui->sMedium_2, SIGNAL(sliderMoved(int)), &soundProc->panel2, SLOT(medEQ(int)));
-    connect(ui->sHigh_2, SIGNAL(sliderMoved(int)), &soundProc->panel2, SLOT(highEQ(int)));
+    connect(ui->sLow_2, SIGNAL(valueChanged(int)), &soundProc->panel2, SLOT(lowEQ(int)));
+    connect(ui->sMedium_2, SIGNAL(valueChanged(int)), &soundProc->panel2, SLOT(medEQ(int)));
+    connect(ui->sHigh_2, SIGNAL(valueChanged(int)), &soundProc->panel2, SLOT(highEQ(int)));
 
     connect(&soundProc->panel2, SIGNAL(timeChange(QString)), ui->lTime_2, SLOT(setText(QString)));
     connect(&soundProc->panel2, SIGNAL(fileReady()), this, SLOT(setText_audio2Ready()));
 
-    connect(ui->sCrossfader, SIGNAL(sliderMoved(int)), this, SLOT(crossFaderChange(int)));
+    connect(ui->sCrossfader, SIGNAL(valueChanged(int)), this, SLOT(crossFaderChange(int)));
     connect(ui->pbDownload, SIGNAL(clicked(bool)), this, SLOT(onDownload()));
 
     connect(ui->customPlot, SIGNAL(plottableClick(QCPAbstractPlottable*,int,QMouseEvent*)), this, SLOT(graphClicked(QCPAbstractPlottable*,int)));
@@ -138,7 +138,7 @@ void MainWindow::bracketDataSlot()
                          +*(reinterpret_cast<qint16*>(soundProc->panel1.channel2->data())+actPos));
       actPos += 3000;
 
-      if(actPos % 192 == 0)
+      if(actPos % 96 == 0)
       {
         ui->customPlot->graph()->setData(x, y);
         ui->customPlot->replot();
@@ -233,7 +233,7 @@ void MainWindow::bracketDataSlot2()
       y.push_back(*(reinterpret_cast<qint16*>(soundProc->panel2.channel1->data())+actPos)
               +*(reinterpret_cast<qint16*>(soundProc->panel2.channel2->data())+actPos));
       actPos += 3000;
-      if(actPos % 192 == 0){
+      if(actPos % 96 == 0){
         ui->customPlot_2->graph()->setData(x, y);
         ui->customPlot_2->replot();
       }
@@ -309,7 +309,10 @@ void MainWindow::selectAudio2() {
 //------------------------------------------------------------
 void MainWindow::crossFaderChange(int value) {
     soundProc->crossFader = value;
-    emit soundProc->panel1.writeToFile(6, soundProc->panel1.actPos,value);
+    if(soundProc->panel1.audioReady)
+        emit soundProc->panel1.writeToFile(6, soundProc->panel1.actPos,value);
+    else if(soundProc->panel2.audioReady)
+        emit soundProc->panel2.writeToFile(6, soundProc->panel2.actPos,value);
 }
 
 void MainWindow::saveAction()
