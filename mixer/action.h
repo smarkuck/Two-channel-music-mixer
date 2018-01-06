@@ -14,12 +14,14 @@ class Action : public QObject
 public:
     explicit Action(QObject *parent = nullptr);
     QVector<quint64> buffer;
+    QVector<quint64> buffer2;
     QVector<quint64> loadBuffer;
 signals:
 
 public slots:
     void saveActionToFile(QString fileName);
-    void write(quint64 type, quint64 positon, quint64 value);
+    void writePanel1(quint64 type, quint64 position, quint64 value);
+    void writePanel2(quint64 type, quint64 position, quint64 value);
     void loadActionFromFile(QString fileName);
 };
 

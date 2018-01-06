@@ -13,15 +13,27 @@ void Action::saveActionToFile(QString fileName)
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&file);
 
+    out << buffer.size() << "\n";
     for(int i=0; i < buffer.size() ; i++){
     out << buffer[i] << "\n";
+    //qDebug() << buffer[i] << "\n";
+    }
+    for(int i=0; i < buffer2.size() ; i++){
+    out << buffer2[i] << "\n";
     //qDebug() << buffer[i] << "\n";
     }
     file.close();
     qDebug() << "actions saved";
 }
 
-void Action::write(quint64 type,quint64 position, quint64 value)
+void Action::writePanel2(quint64 type, quint64 position, quint64 value)
+{
+    buffer2.push_back(type+4);
+    buffer2.push_back(position);
+    buffer2.push_back(value);
+}
+
+void Action::writePanel1(quint64 type,quint64 position, quint64 value)
 {
     //Sposob zapisu akcji:
     //loadBuffer[i] - typ akcji

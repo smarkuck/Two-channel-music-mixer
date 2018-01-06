@@ -31,10 +31,10 @@ public:
 
     Action action;
 
-    enum Actions { white_noise_true = 1, white_noise_false, low, med, high, cross};
+    enum Actions { white_noise_true = 1, white_noise_false, low, med, high, cross, low2, med2, high2};
 
 
-    double buffer1[256], buffer2[256];
+    double buffer1[1024], buffer2[1024];
 
 private:
     QAudioOutput *audioOutput;
@@ -51,6 +51,9 @@ signals:
     void lowEQChange(int value);
     void medEQChange(int value);
     void highEQChange(int value);
+    void lowEQChange2(int value);
+    void medEQChange2(int value);
+    void highEQChange2(int value);
     void crossChange(int value);
     void startDownload(QString filename);
     void downloadReady();

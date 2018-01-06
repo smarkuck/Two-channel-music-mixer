@@ -29,7 +29,6 @@ public:
     QVector<double> x1,y2;
     QCPBars *bars2;
     QVector<double> x2,y1;
-
     ~MainWindow();
 
 protected:
@@ -39,6 +38,7 @@ private:
     Ui::MainWindow *ui;
     SoundProcessing* soundProc;
     QThread th_soundProc;
+    QThread th_soundGraph;
 
 signals:
     void loadAudio(QString filename);
@@ -62,6 +62,9 @@ public slots:
     void lowChange(int value);
     void medChange(int value);
     void highChange(int value);
+    void lowChange2(int value);
+    void medChange2(int value);
+    void highChange2(int value);
     void crossChanger(int value);
     void onDownload();
     void downloadTextChange();

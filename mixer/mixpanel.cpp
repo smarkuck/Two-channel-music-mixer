@@ -40,16 +40,17 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
 }
 
 void MixPanel::playPause() {
-    if(audioReady)
-    {
+    //if(audioReady)
+    //{
         isPlayed = !isPlayed;
 
-    }
+    //}
 }
 
 void MixPanel::process(double *buffer, int nFrames) {
 
-    if(!audioReady || !isPlayed) {
+    //if(!audioReady || !isPlayed) {
+    if( !isPlayed) {
         memset(buffer, 0, sizeof(double)*nFrames*2);
         return;
     }
@@ -184,7 +185,7 @@ void MixPanel::highEQ(int value) {
 
 void MixPanel::loadAudio(QString filename) {
     isPlayed = false;
-    audioReady = false;
+    audioReady = true;
 
     duration = 0;
     actPos = 0;
@@ -207,13 +208,6 @@ void MixPanel::readBuffer() {
         channel1->append(reinterpret_cast<const char*>(data+i*2), sizeof(qint16));
         channel2->append(reinterpret_cast<const char*>(data+1+i*2), sizeof(qint16));
     }
-}
-
-void MixPanel::finishDecoding() {
-    qDebug() << "ready";
-    plot = false;
-    audioReady = true;
-
     int minutes = duration/1000000./60.;
     int seconds = (duration - minutes*1000000*60)/1000000.;
 
@@ -224,6 +218,16 @@ void MixPanel::finishDecoding() {
     QString time  = "0:00/" + QString::number(minutes) + ":" + QString::number(seconds);
 
     emit timeChange(time);
+    if(minutes == 1)
+
+    audioReady = true;
+
+}
+
+void MixPanel::finishDecoding() {
+    qDebug() << "ready";
+    plot = false;
+
     emit fileReady();
 
 }

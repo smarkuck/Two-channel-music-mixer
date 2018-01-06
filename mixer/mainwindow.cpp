@@ -12,6 +12,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
+    ui->customPlot->moveToThread(&th_soundGraph);
+    connect(&th_soundGraph, &QThread::finished,ui->customPlot , &QObject::deleteLater);
+    th_soundGraph.start();
+
+
     setupSoundGraph(ui->customPlot);
     setupSoundGraph2(ui->customPlot_2);
 
@@ -39,6 +45,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(soundProc, SIGNAL(lowEQChange(int)), this, SLOT(lowChange(int)));
     connect(soundProc, SIGNAL(medEQChange(int)), this, SLOT(medChange(int)));
     connect(soundProc, SIGNAL(highEQChange(int)), this, SLOT(highChange(int)));
+    connect(soundProc, SIGNAL(lowEQChange2(int)), this, SLOT(lowChange2(int)));
+    connect(soundProc, SIGNAL(medEQChange2(int)), this, SLOT(medChange2(int)));
+    connect(soundProc, SIGNAL(highEQChange2(int)), this, SLOT(highChange2(int)));
     connect(soundProc, SIGNAL(crossChange(int)), this, SLOT(crossChanger(int)));
 
     connect(&soundProc->panel1, SIGNAL(timeChange(QString)), ui->lTime, SLOT(setText(QString)));
@@ -72,7 +81,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbActionLoad, SIGNAL(clicked(bool)), this, SLOT(loadAction()));
     connect(this, SIGNAL(loadActionFromFile(QString)), &soundProc->action, SLOT(loadActionFromFile(QString)));
 
-    connect(&soundProc->panel1, SIGNAL(writeToFile(quint64,quint64,quint64)), &soundProc->action, SLOT(write(quint64, quint64,quint64)));
+    connect(&soundProc->panel1, SIGNAL(writeToFile(quint64,quint64,quint64)), &soundProc->action, SLOT(writePanel1(quint64,quint64,quint64)));
+    connect(&soundProc->panel2, SIGNAL(writeToFile(quint64,quint64,quint64)), &soundProc->action, SLOT(writePanel2(quint64,quint64,quint64)));
 
     connect(soundProc, SIGNAL(downloadReady()), this, SLOT(downloadTextChange()));
 }
@@ -80,8 +90,9 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
 {
 
-  customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+  //customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
   QCPGraph *graph = customPlot->addGraph();
+  customPlot->setBackground(QColor(QWidget::palette().color(QWidget::backgroundRole())));
 
   //stworzenie i ustawienie wskaznika do pokazywania aktualnego czasu utworu
   bars1 = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
@@ -89,17 +100,8 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
   bars1->setPen(QPen(QColor(Qt::green)));
   bars1->setBrush(QBrush(QBrush(QColor(Qt::green))));
 
-  //stworzenie tickera do ustawienia osiX na minuty z sekundami
-  QSharedPointer<QCPAxisTickerTime> timeTicker(new QCPAxisTickerTime);
-  timeTicker->setTimeFormat("%m:%s");
-  customPlot->xAxis->setTicker(timeTicker);
-  customPlot->axisRect()->setupFullAxesBox();
-  customPlot->yAxis->setRange(-75000, 75000);   //ustawienie zakresu osiY
+  customPlot->yAxis->setRange(-100000, 100000);
     customPlot->yAxis->setVisible(false);
-    customPlot->yAxis->setOffset(0); //nie da sie mniejszego :(
-    customPlot->yAxis->setPadding(0);
-    customPlot->yAxis->setLabelPadding(0);
-    customPlot->yAxis->setTickLabelPadding(0);
     customPlot->yAxis2->setVisible(false);
     customPlot->xAxis2->setVisible(false);
     customPlot->xAxis->setVisible(false);
@@ -108,8 +110,8 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
     //jeden el dla czesci dodatniej wskzanika, drugi dla ujemnej
     x1.push_back(0);
     x1.push_back(0);
-    y2.push_back(75000);
-    y2.push_back(-75000);
+    y2.push_back(100000);
+    y2.push_back(-100000);
 
   connect(&dataTimer, SIGNAL(timeout()), this, SLOT(bracketDataSlot()));
 
@@ -121,52 +123,45 @@ void MainWindow::bracketDataSlot()
     //jezeli utwor zaladoany to rysuje wykres
   if(soundProc->panel1.audioReady && soundProc->panel1.plot == false){
 
+      ui->customPlot->xAxis->setRange(0,(soundProc->panel1.channel1->size() )/ (48000 * 2) + 1);
       int n = soundProc->panel1.channel1->size();
-      QVector<double> x(n), y(n);
-
-    //QCPBars *bars1 = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
-    //bars1->setWidth(100);
-    //bars1->setWidth(3);  //to moze byc do zaznaczania :)
-    //bars1->setWidth(0.025);
-   // bars1->setPen(QPen(QColor(Qt::green)));
-   // bars1->setBrush(QBrush(QBrush(QColor(Qt::green))));
+      QVector<double> x, y;
 
       quint64 actPos = 0;
 
-  for (int i=1; i<n/sizeof(qint16); i += 100)
+  for (int i=1; actPos<n/sizeof(qint16); i++)
     {
-      x[i] = i/48000.;  //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
-      //pobieram i dodaje probki z kanalu 1 i 2, nie wiem czy to jest dobre ale nie bedziemy
-      //chyba rysowac dwoch kanalow osobno xD
-      y[i] = *(reinterpret_cast<qint16*>(soundProc->panel1.channel1->data())+actPos)
-              +*(reinterpret_cast<qint16*>(soundProc->panel1.channel2->data())+actPos);
-      actPos += 100;
+      //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
+      x.push_back(actPos/48000.);
+        //pobieram i dodaje probki z kanalu 1 i 2
+      y.push_back(*(reinterpret_cast<qint16*>(soundProc->panel1.channel1->data())+actPos)
+                         +*(reinterpret_cast<qint16*>(soundProc->panel1.channel2->data())+actPos));
+      actPos += 3000;
 
+      if(actPos % 192 == 0)
+      {
+        ui->customPlot->graph()->setData(x, y);
+        ui->customPlot->replot();
+      }
   }
 
-  //ustawiam dane do rysowania i wskaznik pozycji utworu na 0
-  ui->customPlot->graph()->setData(x, y);
-  x1[0] = 0;
-  y2[0] = 75000;
-  x1[1] = 0;
-  y2[1] = -75000;
-  bars1->setData(x1, y2);
-  ui->customPlot->xAxis->setVisible(true);
-  ui->customPlot->replot();
-  soundProc->panel1.plot = true;
+    //ustawiam dane do rysowania i wskaznik pozycji utworu na 0
+    x1[0] = 0;
+    x1[1] = 0;
+    bars1->setData(x1, y2);
+    ui->customPlot->replot();
+    soundProc->panel1.plot = true;
+
   }
 
 
   if(soundProc->panel1.isPlayed){
 
     //to odpowiada za przesuwanie sie wykresu podczas odtwarzania
-      //pobieram aktualna pozycje utworu i dziele przez czestotliwosc zeby dostac sekundy
-    ui->customPlot->xAxis->setRange(soundProc->panel1.actPos/48000+2, 4, Qt::AlignRight);
 
+    ui->customPlot->xAxis->setRange(0,(soundProc->panel1.channel1->size() )/ (48000 * 2) + 1);
     x1[0] = soundProc->panel1.actPos/48000;
     x1[1]=  soundProc->panel1.actPos/48000;
-    y2[0] = 75000;
-    y2[1] = -75000;
     bars1->setData(x1, y2);
 
     ui->customPlot->replot();
@@ -178,13 +173,11 @@ void MainWindow::bracketDataSlot()
 void MainWindow::graphClicked(QCPAbstractPlottable *plottable, int dataIndex)
 {
   double czas = plottable->interface1D()->dataMainKey(dataIndex);  //TO JEST OS X - sekundy
-  double amplituda = plottable->interface1D()->dataMainValue(dataIndex);  //TO JEST OS Y - amplituda dzwieku
+  //double amplituda = plottable->interface1D()->dataMainValue(dataIndex);  //TO JEST OS Y - amplituda dzwieku
 
   soundProc->panel1.actPos = czas*48000;
   x1[0] = czas;
   x1[1] = czas;
-  y2[0] = 75000;
-  y2[1] = -75000;
   bars1->setData(x1, y2);
   ui->customPlot->replot();
 
@@ -194,26 +187,18 @@ void MainWindow::graphClicked(QCPAbstractPlottable *plottable, int dataIndex)
 void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
 {
 
-  customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+  //customPlot->setInteractions( QCP::iRangeZoom);
   QCPGraph *graph = customPlot->addGraph();
 
+    customPlot->setBackground(QColor(QWidget::palette().color(QWidget::backgroundRole())));
   //stworzenie i ustawienie wskaznika do pokazywania aktualnego czasu utworu
   bars2 = new QCPBars(ui->customPlot_2->xAxis, ui->customPlot_2->yAxis);
   bars2->setWidth(0.025);
   bars2->setPen(QPen(QColor(Qt::green)));
   bars2->setBrush(QBrush(QBrush(QColor(Qt::green))));
 
-  //stworzenie tickera do ustawienia osiX na minuty z sekundami
-  QSharedPointer<QCPAxisTickerTime> timeTicker(new QCPAxisTickerTime);
-  timeTicker->setTimeFormat("%m:%s");
-  customPlot->xAxis->setTicker(timeTicker);
-  customPlot->axisRect()->setupFullAxesBox();
-  customPlot->yAxis->setRange(-75000, 75000);   //ustawienie zakresu osiY
+  customPlot->yAxis->setRange(-100000, 100000);   //ustawienie zakresu osiY
     customPlot->yAxis->setVisible(false);
-    customPlot->yAxis->setOffset(0); //nie da sie mniejszego :(
-    customPlot->yAxis->setPadding(0);
-    customPlot->yAxis->setLabelPadding(0);
-    customPlot->yAxis->setTickLabelPadding(0);
     customPlot->yAxis2->setVisible(false);
     customPlot->xAxis2->setVisible(false);
     customPlot->xAxis->setVisible(false);
@@ -222,8 +207,8 @@ void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
     //jeden el dla czesci dodatniej wskzanika, drugi dla ujemnej
     x2.push_back(0);
     x2.push_back(0);
-    y1.push_back(75000);
-    y1.push_back(-75000);
+    y1.push_back(100000);
+    y1.push_back(-100000);
 
   connect(&dataTimer2, SIGNAL(timeout()), this, SLOT(bracketDataSlot2()));
 
@@ -235,29 +220,30 @@ void MainWindow::bracketDataSlot2()
     //jezeli utwor zaladoany to rysuje wykres
   if(soundProc->panel2.audioReady && soundProc->panel2.plot == false){
 
+      ui->customPlot_2->xAxis->setRange(0,(soundProc->panel2.channel1->size() )/ (48000 * 2) + 1);
       int n = soundProc->panel2.channel1->size();
-      QVector<double> x(n), y(n);
+      QVector<double> x, y;
       quint64 actPos = 0;
 
-  for (int i=1; i<n/sizeof(qint16); i+=100)
+  for (int i=1; i<n/sizeof(qint16); i+=3000)
     {
-      x[i] = i/48000.;  //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
+      x.push_back(i/48000.);  //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
       //pobieram i dodaje probki z kanalu 1 i 2, nie wiem czy to jest dobre ale nie bedziemy
       //chyba rysowac dwoch kanalow osobno xD
-      y[i] = *(reinterpret_cast<qint16*>(soundProc->panel2.channel1->data())+actPos)
-              +*(reinterpret_cast<qint16*>(soundProc->panel2.channel2->data())+actPos);
-      actPos += 100;
+      y.push_back(*(reinterpret_cast<qint16*>(soundProc->panel2.channel1->data())+actPos)
+              +*(reinterpret_cast<qint16*>(soundProc->panel2.channel2->data())+actPos));
+      actPos += 3000;
+      if(actPos % 192 == 0){
+        ui->customPlot_2->graph()->setData(x, y);
+        ui->customPlot_2->replot();
+      }
 
   }
 
   //ustawiam dane do rysowania i wskaznik pozycji utworu na 0
-  ui->customPlot_2->graph()->setData(x, y);
   x2[0] = 0;
-  y1[0] = 75000;
   x2[1] = 0;
-  y1[1] = -75000;
   bars2->setData(x2, y1);
-  ui->customPlot_2->xAxis->setVisible(true);
   ui->customPlot_2->replot();
   soundProc->panel2.plot = true;
   }
@@ -267,12 +253,10 @@ void MainWindow::bracketDataSlot2()
 
     //to odpowiada za przesuwanie sie wykresu podczas odtwarzania
       //pobieram aktualna pozycje utworu i dziele przez czestotliwosc zeby dostac sekundy
-    ui->customPlot_2->xAxis->setRange(soundProc->panel2.actPos/48000+2, 4, Qt::AlignRight);
-
+    //ui->customPlot_2->xAxis->setRange(soundProc->panel2.actPos/48000+2, 4, Qt::AlignRight);
+    ui->customPlot->xAxis->setRange(0,(soundProc->panel1.channel1->size() )/ (48000 * 2) + 1);
     x2[0] = soundProc->panel2.actPos/48000;
     x2[1]=  soundProc->panel2.actPos/48000;
-    y1[0] = 75000;
-    y1[1] = -75000;
     bars2->setData(x2, y1);
 
     ui->customPlot_2->replot();
@@ -284,13 +268,11 @@ void MainWindow::bracketDataSlot2()
 void MainWindow::graphClicked2(QCPAbstractPlottable *plottable, int dataIndex)
 {
   double czas = plottable->interface1D()->dataMainKey(dataIndex);  //TO JEST OS X - sekundy
-  double amplituda = plottable->interface1D()->dataMainValue(dataIndex);  //TO JEST OS Y - amplituda dzwieku
+  //double amplituda = plottable->interface1D()->dataMainValue(dataIndex);  //TO JEST OS Y - amplituda dzwieku
 
   soundProc->panel2.actPos = czas*48000;
   x2[0] = czas;
   x2[1] = czas;
-  y1[0] = 75000;
-  y1[1] = -75000;
   bars2->setData(x2, y1);
   ui->customPlot_2->replot();
 
@@ -367,6 +349,24 @@ void MainWindow::highChange(int value)
 {
     ui->sHigh->setSliderPosition(value);
     ui->sHigh->setValue(value);
+}
+
+void MainWindow::lowChange2(int value)
+{
+    ui->sLow_2->setSliderPosition(value);
+    ui->sLow_2->setValue(value);
+}
+
+void MainWindow::medChange2(int value)
+{
+    ui->sMedium_2->setSliderPosition(value);
+    ui->sMedium_2->setValue(value);
+}
+
+void MainWindow::highChange2(int value)
+{
+    ui->sHigh_2->setSliderPosition(value);
+    ui->sHigh_2->setValue(value);
 }
 
 void MainWindow::crossChanger(int value)
