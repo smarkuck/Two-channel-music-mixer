@@ -33,6 +33,7 @@ public:
     bool isWhiteNoise;
     bool isSingleLoop;
     bool isLoopStartSet;
+    bool isLoopEndSet;
 
     bool isLoopingSet;
     qint64 loopingStart;

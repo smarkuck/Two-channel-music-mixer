@@ -53,11 +53,12 @@ void MixPanel::playPause() {
 void MixPanel::playLoopingSet() {
     //if(audioReady)
     //{
-        if(isLoopStartSet && !isLoopingSet){
+        if(isLoopStartSet && isLoopEndSet && !isLoopingSet){
             isLoopStartSet = false;
-            loopingStart = loopingEnd = 0;
+            //loopingStart = loopingEnd = 0;
         }
         isLoopingSet = !isLoopingSet;
+
         qDebug() << isLoopingSet;
 
     //}
@@ -75,6 +76,7 @@ void MixPanel::playLoopingEnd() {
     //{
         loopingEnd = actPos;
         actPos = loopingStart;
+        isLoopEndSet = true;
     //}
 }
 void MixPanel::playLoopingReturn() {

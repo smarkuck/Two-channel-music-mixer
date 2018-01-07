@@ -38,6 +38,8 @@ public:
     QVector<double> xStart_2,yStart_2;
     QCPBars *barLoopEnd_2;
     QVector<double> xEnd_2,yEnd_2;
+    QCPBars *filled;
+    QVector<double> xfill,yfill;
     ~MainWindow();
 
 protected:

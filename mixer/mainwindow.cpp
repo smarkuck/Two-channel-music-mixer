@@ -117,13 +117,21 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
     barLoopStart_1 = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
     barLoopStart_1->setWidth(0.025);
     barLoopStart_1->setPen(QPen(QColor(Qt::red)));
-    barLoopStart_1->setBrush(QBrush(QBrush(QColor(Qt::red))));
+    QColor color1 = QColor(Qt::red);
+    color1.setAlpha(50);
+    barLoopStart_1->setBrush(QBrush(QBrush(color1)));
+
 
     barLoopEnd_1 = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
-    barLoopEnd_1->setWidth(0.025);
+    barLoopEnd_1->setWidth(0.25);
     barLoopEnd_1->setPen(QPen(QColor(Qt::red)));
-    barLoopEnd_1->setBrush(QBrush(QBrush(QColor(Qt::red))));
+    barLoopStart_1->setBrush(QBrush(QBrush(color1)));
+    //barLoopEnd_1->setBrush(QBrush(QBrush(QColor(Qt::red).setAlpha(50))));
 
+    filled = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
+    filled->setWidth(0.25);
+    filled->setPen(QPen(Qt::NoPen));
+    filled->setBrush(QBrush(QBrush(color1)));
 
   customPlot->yAxis->setRange(-100000, 100000);
     customPlot->yAxis->setVisible(false);
@@ -145,6 +153,10 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
     yEnd_1.push_back(-100000);
     xEnd_1.push_back(0);
     xEnd_1.push_back(0);
+    yfill.push_back(100000);
+    yfill.push_back(-100000);
+    xfill.push_back(0);
+    xfill.push_back(0);
   connect(&dataTimer, SIGNAL(timeout()), this, SLOT(bracketDataSlot()));
 
   dataTimer.start(0); // ustawinie timera do odswiezania danych
@@ -181,17 +193,32 @@ void MainWindow::bracketDataSlot()
     x1[0] = 0;
     x1[1] = 0;
     bars1->setData(x1, y2);
-    xStart_1[0]=0;
-    xStart_1[1]=0;
-    barLoopStart_1->setData(xStart_1, yStart_1);
-    xEnd_1[0]=0;
-    xEnd_1[1]=0;
-    barLoopEnd_1->setData(xEnd_1, yEnd_1);
     ui->customPlot->replot();
     soundProc->panel1.plot = true;
 
   }
 
+  if(soundProc->panel1.isLoopStartSet){
+      xStart_1[0]=soundProc->panel1.loopingStart/48000;
+      xStart_1[1]=soundProc->panel1.loopingStart/48000;
+      barLoopStart_1->setData(xStart_1, yStart_1);
+  }
+
+  if(soundProc->panel1.isLoopEndSet){
+      xEnd_1[0]=soundProc->panel1.loopingEnd/48000;
+      xEnd_1[1]=soundProc->panel1.loopingEnd/48000;
+      barLoopEnd_1->setData(xEnd_1, yEnd_1);
+  }
+
+
+  if(soundProc->panel1.isLoopStartSet && soundProc->panel1.isLoopEndSet ){
+      xfill[0] = (soundProc->panel1.loopingEnd/48000 - ((soundProc->panel1.loopingEnd/48000 - soundProc->panel1.loopingStart/48000) / 2));
+      xfill[1] = (soundProc->panel1.loopingEnd/48000 - ((soundProc->panel1.loopingEnd/48000 - soundProc->panel1.loopingStart/48000) / 2));
+
+      filled->setWidth((soundProc->panel1.loopingEnd/48000 - soundProc->panel1.loopingStart/48000));
+      filled->setData(xfill,yfill);
+      ui->customPlot->replot();
+  }
 
   if(soundProc->panel1.isPlayed){
 
@@ -201,20 +228,17 @@ void MainWindow::bracketDataSlot()
     x1[0] = soundProc->panel1.actPos/48000;
     x1[1]=  soundProc->panel1.actPos/48000;
     bars1->setData(x1, y2);
-    xStart_1[0]=soundProc->panel1.loopingStart/48000;
-    xStart_1[1]=soundProc->panel1.loopingStart/48000;
-    barLoopStart_1->setData(xStart_1, yStart_1);
-    xEnd_1[0]=soundProc->panel1.loopingEnd/48000;
-    xEnd_1[1]=soundProc->panel1.loopingEnd/48000;
-    barLoopEnd_1->setData(xEnd_1, yEnd_1);
     ui->customPlot->replot();
   }
+
+
 
 }
 
 
 void MainWindow::graphClicked(QCPAbstractPlottable *plottable, int dataIndex)
 {
+
   double czas = plottable->interface1D()->dataMainKey(dataIndex);  //TO JEST OS X - sekundy
   //double amplituda = plottable->interface1D()->dataMainValue(dataIndex);  //TO JEST OS Y - amplituda dzwieku
 
