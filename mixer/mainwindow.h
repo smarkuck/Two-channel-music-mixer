@@ -25,10 +25,19 @@ public:
 
     void setupSoundGraph(QCustomPlot *customPlot);
     void setupSoundGraph2(QCustomPlot *customPlot);
+
     QCPBars *bars1;
     QVector<double> x1,y2;
     QCPBars *bars2;
     QVector<double> x2,y1;
+    QCPBars *barLoopStart_1;
+    QVector<double> xStart_1,yStart_1;
+    QCPBars *barLoopEnd_1;
+    QVector<double> xEnd_1,yEnd_1;
+    QCPBars *barLoopStart_2;
+    QVector<double> xStart_2,yStart_2;
+    QCPBars *barLoopEnd_2;
+    QVector<double> xEnd_2,yEnd_2;
     ~MainWindow();
 
 protected:

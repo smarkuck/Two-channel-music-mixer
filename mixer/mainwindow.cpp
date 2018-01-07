@@ -113,6 +113,18 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
   bars1->setPen(QPen(QColor(Qt::green)));
   bars1->setBrush(QBrush(QBrush(QColor(Qt::green))));
 
+
+    barLoopStart_1 = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
+    barLoopStart_1->setWidth(0.025);
+    barLoopStart_1->setPen(QPen(QColor(Qt::red)));
+    barLoopStart_1->setBrush(QBrush(QBrush(QColor(Qt::red))));
+
+    barLoopEnd_1 = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
+    barLoopEnd_1->setWidth(0.025);
+    barLoopEnd_1->setPen(QPen(QColor(Qt::red)));
+    barLoopEnd_1->setBrush(QBrush(QBrush(QColor(Qt::red))));
+
+
   customPlot->yAxis->setRange(-100000, 100000);
     customPlot->yAxis->setVisible(false);
     customPlot->yAxis2->setVisible(false);
@@ -125,7 +137,14 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
     x1.push_back(0);
     y2.push_back(100000);
     y2.push_back(-100000);
-
+    yStart_1.push_back(100000);
+    yStart_1.push_back(-100000);
+    xStart_1.push_back(0);
+    xStart_1.push_back(0);
+    yEnd_1.push_back(100000);
+    yEnd_1.push_back(-100000);
+    xEnd_1.push_back(0);
+    xEnd_1.push_back(0);
   connect(&dataTimer, SIGNAL(timeout()), this, SLOT(bracketDataSlot()));
 
   dataTimer.start(0); // ustawinie timera do odswiezania danych
@@ -162,6 +181,12 @@ void MainWindow::bracketDataSlot()
     x1[0] = 0;
     x1[1] = 0;
     bars1->setData(x1, y2);
+    xStart_1[0]=0;
+    xStart_1[1]=0;
+    barLoopStart_1->setData(xStart_1, yStart_1);
+    xEnd_1[0]=0;
+    xEnd_1[1]=0;
+    barLoopEnd_1->setData(xEnd_1, yEnd_1);
     ui->customPlot->replot();
     soundProc->panel1.plot = true;
 
@@ -176,7 +201,12 @@ void MainWindow::bracketDataSlot()
     x1[0] = soundProc->panel1.actPos/48000;
     x1[1]=  soundProc->panel1.actPos/48000;
     bars1->setData(x1, y2);
-
+    xStart_1[0]=soundProc->panel1.loopingStart/48000;
+    xStart_1[1]=soundProc->panel1.loopingStart/48000;
+    barLoopStart_1->setData(xStart_1, yStart_1);
+    xEnd_1[0]=soundProc->panel1.loopingEnd/48000;
+    xEnd_1[1]=soundProc->panel1.loopingEnd/48000;
+    barLoopEnd_1->setData(xEnd_1, yEnd_1);
     ui->customPlot->replot();
   }
 
@@ -210,6 +240,18 @@ void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
   bars2->setPen(QPen(QColor(Qt::green)));
   bars2->setBrush(QBrush(QBrush(QColor(Qt::green))));
 
+
+  barLoopStart_2 = new QCPBars(ui->customPlot_2->xAxis, ui->customPlot_2->yAxis);
+  barLoopStart_2->setWidth(0.025);
+  barLoopStart_2->setPen(QPen(QColor(Qt::red)));
+  barLoopStart_2->setBrush(QBrush(QBrush(QColor(Qt::red))));
+
+  barLoopEnd_2 = new QCPBars(ui->customPlot_2->xAxis, ui->customPlot_2->yAxis);
+  barLoopEnd_2->setWidth(0.025);
+  barLoopEnd_2->setPen(QPen(QColor(Qt::red)));
+  barLoopEnd_2->setBrush(QBrush(QBrush(QColor(Qt::red))));
+
+
   customPlot->yAxis->setRange(-100000, 100000);   //ustawienie zakresu osiY
     customPlot->yAxis->setVisible(false);
     customPlot->yAxis2->setVisible(false);
@@ -222,7 +264,14 @@ void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
     x2.push_back(0);
     y1.push_back(100000);
     y1.push_back(-100000);
-
+    yStart_2.push_back(100000);
+    yStart_2.push_back(-100000);
+    xStart_2.push_back(0);
+    xStart_2.push_back(0);
+    yEnd_2.push_back(100000);
+    yEnd_2.push_back(-100000);
+    xEnd_2.push_back(0);
+    xEnd_2.push_back(0);
   connect(&dataTimer2, SIGNAL(timeout()), this, SLOT(bracketDataSlot2()));
 
   dataTimer2.start(0); // ustawinie timera do odswiezania danych
@@ -257,6 +306,12 @@ void MainWindow::bracketDataSlot2()
   x2[0] = 0;
   x2[1] = 0;
   bars2->setData(x2, y1);
+  xStart_2[0]=0;
+  xStart_2[1]=0;
+  barLoopStart_2->setData(xStart_2, yStart_2);
+  xEnd_2[0]=0;
+  xEnd_2[1]=0;
+  barLoopEnd_2->setData(xEnd_2, yEnd_2);
   ui->customPlot_2->replot();
   soundProc->panel2.plot = true;
   }
@@ -271,7 +326,12 @@ void MainWindow::bracketDataSlot2()
     x2[0] = soundProc->panel2.actPos/48000;
     x2[1]=  soundProc->panel2.actPos/48000;
     bars2->setData(x2, y1);
-
+    xStart_2[0]=soundProc->panel2.loopingStart/48000;
+    xStart_2[1]=soundProc->panel2.loopingStart/48000;
+    barLoopStart_2->setData(xStart_2, yStart_2);
+    xEnd_2[0]=soundProc->panel2.loopingEnd/48000;
+    xEnd_2[1]=soundProc->panel2.loopingEnd/48000;
+    barLoopEnd_2->setData(xEnd_2, yEnd_2);
     ui->customPlot_2->replot();
   }
 
