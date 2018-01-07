@@ -64,7 +64,7 @@ void SoundProcessing::play() {
 
 }
 void SoundProcessing::download(QString filename){
-
+    qDebug() << " Downloading started " ;
     QFile* file= new QFile(QStringLiteral("%1.wav").arg(filename));
     int i = 1;
     while(file->exists()){

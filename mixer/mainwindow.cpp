@@ -387,7 +387,9 @@ void MainWindow::onDownload() {
         tr("Download"), "/home", tr("audio(*.wav)"));
 
     ui->download_ready->setText("Wait...");
+    qDebug() << "befor emit";
     emit soundProc->startDownload(fileName);
+    qDebug() << "after emit";
 }
 
 //------------------------------------------------------------
