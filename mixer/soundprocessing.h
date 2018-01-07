@@ -19,8 +19,7 @@ class SoundProcessing : public QObject
     Q_ENUMS(Actions)
 
 public:
-    explicit SoundProcessing(QObject *parent = nullptr);
-    void writeWavHeader( QFile * file );
+    explicit SoundProcessing(QObject *parent = nullptr); 
     bool abort;
 
     int crossFader;
@@ -35,14 +34,13 @@ public:
 
     double buffer1[1024], buffer2[1024];
 
+    QByteArray output1;
+    QAudioFormat format;
 private:
     QAudioOutput *audioOutput;
     QIODevice *audioDevice;
 
     QTimer* timer;
-
-    QByteArray output1;
-    QAudioFormat format;
 
     double rate;
 
@@ -55,12 +53,11 @@ signals:
     void highEQChange2(int value);
     void crossChange(int value);
     void crossChange2(int value);
-    void startDownload(QString filename);
-    void downloadReady();
+
 
 public slots:
     void play();
-    void download(QString filename);
+
 };
 
 #endif // SOUNDPROCESSING_H

@@ -56,6 +56,7 @@ signals:
     void loadAudio2(QString filename);
     void saveActionToFile(QString fileName);
     void loadActionFromFile(QString fileName);
+    void startDownload(QString filename);
 
 public slots:
     //----PLOTING------------
