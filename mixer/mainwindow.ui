@@ -583,6 +583,32 @@
      <string>Stop</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pbSingleLoop_1">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>210</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Petla</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbSingleLoop_2">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>210</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Petla</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

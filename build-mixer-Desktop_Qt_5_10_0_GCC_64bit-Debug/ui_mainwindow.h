@@ -71,6 +71,8 @@ public:
     QLabel *download_ready;
     QPushButton *pbStop_1;
     QPushButton *pbStop_2;
+    QPushButton *pbSingleLoop_1;
+    QPushButton *pbSingleLoop_2;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QStatusBar *statusBar;
@@ -245,6 +247,12 @@ public:
         pbStop_2 = new QPushButton(centralWidget);
         pbStop_2->setObjectName(QStringLiteral("pbStop_2"));
         pbStop_2->setGeometry(QRect(420, 70, 41, 31));
+        pbSingleLoop_1 = new QPushButton(centralWidget);
+        pbSingleLoop_1->setObjectName(QStringLiteral("pbSingleLoop_1"));
+        pbSingleLoop_1->setGeometry(QRect(30, 210, 89, 25));
+        pbSingleLoop_2 = new QPushButton(centralWidget);
+        pbSingleLoop_2->setObjectName(QStringLiteral("pbSingleLoop_2"));
+        pbSingleLoop_2->setGeometry(QRect(370, 210, 89, 25));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -302,6 +310,8 @@ public:
         download_ready->setText(QString());
         pbStop_1->setText(QApplication::translate("MainWindow", "Stop", nullptr));
         pbStop_2->setText(QApplication::translate("MainWindow", "Stop", nullptr));
+        pbSingleLoop_1->setText(QApplication::translate("MainWindow", "Petla", nullptr));
+        pbSingleLoop_2->setText(QApplication::translate("MainWindow", "Petla", nullptr));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", nullptr));
     } // retranslateUi
 

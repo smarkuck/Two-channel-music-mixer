@@ -5,7 +5,7 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
 {
     actPos = 0;
     duration = 0;
-
+    isSingleLoop = false;
     isWhiteNoise = false;
     audioReady = false;
     isPlayed = false;
@@ -45,6 +45,14 @@ void MixPanel::playPause() {
         isPlayed = !isPlayed;
     //}
 }
+
+void MixPanel::playLoop() {
+    //if(audioReady)
+    //{
+        isSingleLoop = !isSingleLoop;
+    //}
+}
+
 void MixPanel::playStop() {
 
     isPlayed = false;
@@ -92,7 +100,8 @@ void MixPanel::process(double *buffer, int nFrames) {
 
     if(actPos >= channel1->size()/sizeof(qint16)) {
         actPos = 0;
-        isPlayed = false;
+        if(isSingleLoop) isPlayed = true;
+        else isPlayed = false;
     }
 
     if(isWhiteNoise) {
