@@ -45,6 +45,19 @@ void MixPanel::playPause() {
         isPlayed = !isPlayed;
     //}
 }
+void MixPanel::playStop() {
+
+    isPlayed = false;
+    audioReady = true;
+    actPos = 0;
+    int minutes = duration/1000000./60.;
+    int seconds = (duration - minutes*1000000*60)/1000000.;
+    QString time  = "0:00/" + QString::number(minutes) + ":" + QString::number(seconds);
+    emit timeChange(time);
+
+
+
+}
 
 void MixPanel::process(double *buffer, int nFrames) {
 

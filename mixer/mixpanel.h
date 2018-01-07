@@ -62,6 +62,7 @@ signals:
 
 public slots:
     void playPause();
+    void playStop();
 
     void loadAudio(QString filename);
     void readBuffer();
