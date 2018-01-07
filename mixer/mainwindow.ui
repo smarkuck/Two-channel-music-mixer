@@ -44,7 +44,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>180</y>
+      <y>160</y>
       <width>89</width>
       <height>25</height>
      </rect>
@@ -210,7 +210,7 @@
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>180</y>
+      <y>160</y>
       <width>89</width>
       <height>25</height>
      </rect>
@@ -587,7 +587,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>210</y>
+      <y>180</y>
       <width>89</width>
       <height>25</height>
      </rect>
@@ -600,7 +600,7 @@
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>210</y>
+      <y>180</y>
       <width>89</width>
       <height>25</height>
      </rect>
@@ -638,8 +638,8 @@
    <widget class="QPushButton" name="pbLoopEnable_1">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>250</y>
+      <x>30</x>
+      <y>220</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -652,7 +652,7 @@
     <property name="geometry">
      <rect>
       <x>420</x>
-      <y>250</y>
+      <y>210</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -685,6 +685,32 @@
     </property>
     <property name="text">
      <string>LoopEnd</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbLoopReturn_1">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>250</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>LoopReturn</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbLoopReturn_2">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>250</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>LoopReturn</string>
     </property>
    </widget>
   </widget>

@@ -79,6 +79,8 @@ public:
     QPushButton *pbLoopEnable_2;
     QPushButton *pbLoopStart_2;
     QPushButton *pbLoopEnd_2;
+    QPushButton *pbLoopReturn_1;
+    QPushButton *pbLoopReturn_2;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QStatusBar *statusBar;
@@ -113,7 +115,7 @@ public:
         pbYes->setGeometry(QRect(30, 140, 89, 25));
         pbNo = new QPushButton(centralWidget);
         pbNo->setObjectName(QStringLiteral("pbNo"));
-        pbNo->setGeometry(QRect(30, 180, 89, 25));
+        pbNo->setGeometry(QRect(30, 160, 89, 25));
         pbAddMusic = new QPushButton(centralWidget);
         pbAddMusic->setObjectName(QStringLiteral("pbAddMusic"));
         pbAddMusic->setGeometry(QRect(30, 10, 21, 25));
@@ -158,7 +160,7 @@ public:
         label_4->setGeometry(QRect(250, 210, 31, 17));
         pbNo_2 = new QPushButton(centralWidget);
         pbNo_2->setObjectName(QStringLiteral("pbNo_2"));
-        pbNo_2->setGeometry(QRect(370, 180, 89, 25));
+        pbNo_2->setGeometry(QRect(370, 160, 89, 25));
         laudio_2 = new QLabel(centralWidget);
         laudio_2->setObjectName(QStringLiteral("laudio_2"));
         laudio_2->setGeometry(QRect(400, 10, 241, 17));
@@ -255,10 +257,10 @@ public:
         pbStop_2->setGeometry(QRect(420, 70, 41, 31));
         pbSingleLoop_1 = new QPushButton(centralWidget);
         pbSingleLoop_1->setObjectName(QStringLiteral("pbSingleLoop_1"));
-        pbSingleLoop_1->setGeometry(QRect(30, 210, 89, 25));
+        pbSingleLoop_1->setGeometry(QRect(30, 180, 89, 25));
         pbSingleLoop_2 = new QPushButton(centralWidget);
         pbSingleLoop_2->setObjectName(QStringLiteral("pbSingleLoop_2"));
-        pbSingleLoop_2->setGeometry(QRect(370, 210, 89, 25));
+        pbSingleLoop_2->setGeometry(QRect(370, 180, 89, 25));
         pbLoopStart_1 = new QPushButton(centralWidget);
         pbLoopStart_1->setObjectName(QStringLiteral("pbLoopStart_1"));
         pbLoopStart_1->setGeometry(QRect(120, 250, 61, 31));
@@ -267,16 +269,22 @@ public:
         pbLoopEnd_1->setGeometry(QRect(190, 250, 61, 31));
         pbLoopEnable_1 = new QPushButton(centralWidget);
         pbLoopEnable_1->setObjectName(QStringLiteral("pbLoopEnable_1"));
-        pbLoopEnable_1->setGeometry(QRect(20, 250, 91, 31));
+        pbLoopEnable_1->setGeometry(QRect(30, 220, 91, 31));
         pbLoopEnable_2 = new QPushButton(centralWidget);
         pbLoopEnable_2->setObjectName(QStringLiteral("pbLoopEnable_2"));
-        pbLoopEnable_2->setGeometry(QRect(420, 250, 91, 31));
+        pbLoopEnable_2->setGeometry(QRect(420, 210, 91, 31));
         pbLoopStart_2 = new QPushButton(centralWidget);
         pbLoopStart_2->setObjectName(QStringLiteral("pbLoopStart_2"));
         pbLoopStart_2->setGeometry(QRect(520, 250, 61, 31));
         pbLoopEnd_2 = new QPushButton(centralWidget);
         pbLoopEnd_2->setObjectName(QStringLiteral("pbLoopEnd_2"));
         pbLoopEnd_2->setGeometry(QRect(590, 250, 61, 31));
+        pbLoopReturn_1 = new QPushButton(centralWidget);
+        pbLoopReturn_1->setObjectName(QStringLiteral("pbLoopReturn_1"));
+        pbLoopReturn_1->setGeometry(QRect(30, 250, 89, 25));
+        pbLoopReturn_2 = new QPushButton(centralWidget);
+        pbLoopReturn_2->setObjectName(QStringLiteral("pbLoopReturn_2"));
+        pbLoopReturn_2->setGeometry(QRect(430, 250, 89, 25));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -342,6 +350,8 @@ public:
         pbLoopEnable_2->setText(QApplication::translate("MainWindow", "LoopEnable", nullptr));
         pbLoopStart_2->setText(QApplication::translate("MainWindow", "LoopStart", nullptr));
         pbLoopEnd_2->setText(QApplication::translate("MainWindow", "LoopEnd", nullptr));
+        pbLoopReturn_1->setText(QApplication::translate("MainWindow", "LoopReturn", nullptr));
+        pbLoopReturn_2->setText(QApplication::translate("MainWindow", "LoopReturn", nullptr));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", nullptr));
     } // retranslateUi
 

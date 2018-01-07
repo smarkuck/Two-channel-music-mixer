@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MixPanel_t {
-    QByteArrayData data[24];
-    char stringdata0[242];
+    QByteArrayData data[25];
+    char stringdata0[260];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -46,23 +46,24 @@ QT_MOC_LITERAL(11, 87, 8), // "playLoop"
 QT_MOC_LITERAL(12, 96, 14), // "playLoopingSet"
 QT_MOC_LITERAL(13, 111, 16), // "playLoopingStart"
 QT_MOC_LITERAL(14, 128, 14), // "playLoopingEnd"
-QT_MOC_LITERAL(15, 143, 9), // "loadAudio"
-QT_MOC_LITERAL(16, 153, 8), // "filename"
-QT_MOC_LITERAL(17, 162, 10), // "readBuffer"
-QT_MOC_LITERAL(18, 173, 14), // "finishDecoding"
-QT_MOC_LITERAL(19, 188, 16), // "enableWhiteNoise"
-QT_MOC_LITERAL(20, 205, 17), // "disableWhiteNoise"
-QT_MOC_LITERAL(21, 223, 5), // "lowEQ"
-QT_MOC_LITERAL(22, 229, 5), // "medEQ"
-QT_MOC_LITERAL(23, 235, 6) // "highEQ"
+QT_MOC_LITERAL(15, 143, 17), // "playLoopingReturn"
+QT_MOC_LITERAL(16, 161, 9), // "loadAudio"
+QT_MOC_LITERAL(17, 171, 8), // "filename"
+QT_MOC_LITERAL(18, 180, 10), // "readBuffer"
+QT_MOC_LITERAL(19, 191, 14), // "finishDecoding"
+QT_MOC_LITERAL(20, 206, 16), // "enableWhiteNoise"
+QT_MOC_LITERAL(21, 223, 17), // "disableWhiteNoise"
+QT_MOC_LITERAL(22, 241, 5), // "lowEQ"
+QT_MOC_LITERAL(23, 247, 5), // "medEQ"
+QT_MOC_LITERAL(24, 253, 6) // "highEQ"
 
     },
     "MixPanel\0timeChange\0\0time\0writeToFile\0"
     "type\0position\0value\0fileReady\0playPause\0"
     "playStop\0playLoop\0playLoopingSet\0"
     "playLoopingStart\0playLoopingEnd\0"
-    "loadAudio\0filename\0readBuffer\0"
-    "finishDecoding\0enableWhiteNoise\0"
+    "playLoopingReturn\0loadAudio\0filename\0"
+    "readBuffer\0finishDecoding\0enableWhiteNoise\0"
     "disableWhiteNoise\0lowEQ\0medEQ\0highEQ"
 };
 #undef QT_MOC_LITERAL
@@ -73,7 +74,7 @@ static const uint qt_meta_data_MixPanel[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      17,   14, // methods
+      18,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -81,25 +82,26 @@ static const uint qt_meta_data_MixPanel[] = {
        3,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   99,    2, 0x06 /* Public */,
-       4,    3,  102,    2, 0x06 /* Public */,
-       8,    0,  109,    2, 0x06 /* Public */,
+       1,    1,  104,    2, 0x06 /* Public */,
+       4,    3,  107,    2, 0x06 /* Public */,
+       8,    0,  114,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       9,    0,  110,    2, 0x0a /* Public */,
-      10,    0,  111,    2, 0x0a /* Public */,
-      11,    0,  112,    2, 0x0a /* Public */,
-      12,    0,  113,    2, 0x0a /* Public */,
-      13,    0,  114,    2, 0x0a /* Public */,
-      14,    0,  115,    2, 0x0a /* Public */,
-      15,    1,  116,    2, 0x0a /* Public */,
-      17,    0,  119,    2, 0x0a /* Public */,
-      18,    0,  120,    2, 0x0a /* Public */,
-      19,    0,  121,    2, 0x0a /* Public */,
-      20,    0,  122,    2, 0x0a /* Public */,
-      21,    1,  123,    2, 0x0a /* Public */,
-      22,    1,  126,    2, 0x0a /* Public */,
-      23,    1,  129,    2, 0x0a /* Public */,
+       9,    0,  115,    2, 0x0a /* Public */,
+      10,    0,  116,    2, 0x0a /* Public */,
+      11,    0,  117,    2, 0x0a /* Public */,
+      12,    0,  118,    2, 0x0a /* Public */,
+      13,    0,  119,    2, 0x0a /* Public */,
+      14,    0,  120,    2, 0x0a /* Public */,
+      15,    0,  121,    2, 0x0a /* Public */,
+      16,    1,  122,    2, 0x0a /* Public */,
+      18,    0,  125,    2, 0x0a /* Public */,
+      19,    0,  126,    2, 0x0a /* Public */,
+      20,    0,  127,    2, 0x0a /* Public */,
+      21,    0,  128,    2, 0x0a /* Public */,
+      22,    1,  129,    2, 0x0a /* Public */,
+      23,    1,  132,    2, 0x0a /* Public */,
+      24,    1,  135,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QString,    3,
@@ -113,7 +115,8 @@ static const uint qt_meta_data_MixPanel[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,   16,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::QString,   17,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -140,14 +143,15 @@ void MixPanel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
         case 6: _t->playLoopingSet(); break;
         case 7: _t->playLoopingStart(); break;
         case 8: _t->playLoopingEnd(); break;
-        case 9: _t->loadAudio((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 10: _t->readBuffer(); break;
-        case 11: _t->finishDecoding(); break;
-        case 12: _t->enableWhiteNoise(); break;
-        case 13: _t->disableWhiteNoise(); break;
-        case 14: _t->lowEQ((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 15: _t->medEQ((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 16: _t->highEQ((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 9: _t->playLoopingReturn(); break;
+        case 10: _t->loadAudio((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 11: _t->readBuffer(); break;
+        case 12: _t->finishDecoding(); break;
+        case 13: _t->enableWhiteNoise(); break;
+        case 14: _t->disableWhiteNoise(); break;
+        case 15: _t->lowEQ((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 16: _t->medEQ((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 17: _t->highEQ((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -201,13 +205,13 @@ int MixPanel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 17)
+        if (_id < 18)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 17;
+        _id -= 18;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 17)
+        if (_id < 18)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 17;
+        _id -= 18;
     }
     return _id;
 }

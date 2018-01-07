@@ -32,6 +32,7 @@ public:
     bool audioReady;
     bool isWhiteNoise;
     bool isSingleLoop;
+    bool isLoopStartSet;
 
     bool isLoopingSet;
     qint64 loopingStart;
@@ -72,6 +73,7 @@ public slots:
     void playLoopingSet();
     void playLoopingStart();
     void playLoopingEnd();
+    void playLoopingReturn();
 
     void loadAudio(QString filename);
     void readBuffer();

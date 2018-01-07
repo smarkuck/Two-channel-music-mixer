@@ -8,6 +8,7 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     loopingStart = 0;
     isSingleLoop = false;
     isLoopingSet = false;
+    isLoopStartSet = false;
     isWhiteNoise = false;
     audioReady = false;
     isPlayed = false;
@@ -52,8 +53,11 @@ void MixPanel::playPause() {
 void MixPanel::playLoopingSet() {
     //if(audioReady)
     //{
+        if(isLoopStartSet && !isLoopingSet){
+            isLoopStartSet = false;
+            loopingStart = loopingEnd = 0;
+        }
         isLoopingSet = !isLoopingSet;
-        loopingStart = loopingEnd = 0;
         qDebug() << isLoopingSet;
 
     //}
@@ -62,6 +66,7 @@ void MixPanel::playLoopingStart() {
     //if(audioReady)
     //{
         loopingStart = actPos;
+        isLoopStartSet = true;
 
     //}
 }
@@ -70,6 +75,16 @@ void MixPanel::playLoopingEnd() {
     //{
         loopingEnd = actPos;
         actPos = loopingStart;
+    //}
+}
+void MixPanel::playLoopingReturn() {
+    //if(audioReady)
+    //{
+        if(isLoopStartSet)
+        {
+            isLoopingSet = true;
+            actPos = loopingStart;
+        }
     //}
 }
 void MixPanel::playLoop() {
@@ -123,9 +138,15 @@ void MixPanel::process(double *buffer, int nFrames) {
 
         actPos++;
     }
-
-    if((actPos == loopingEnd )&& isLoopingSet){
-        actPos = loopingStart;
+    if((loopingEnd > loopingStart) && isLoopingSet){
+        if((actPos > loopingEnd)){
+            actPos = loopingStart;
+        }
+    }
+    else if ((loopingEnd < loopingStart) && isLoopingSet){
+        if((actPos > loopingEnd) && (actPos < loopingStart)){
+            actPos = loopingStart;
+        }
     }
 
     if(actPos >= channel1->size()/sizeof(qint16)) {
