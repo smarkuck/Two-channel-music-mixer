@@ -37,6 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbSound, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playPause()));
     connect(ui->pbStop_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playStop()));
     connect(ui->pbSingleLoop_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoop()));
+    connect(ui->pbLoopEnable_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoopingSet()));
+    connect(ui->pbLoopStart_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoopingStart()));
+    connect(ui->pbLoopEnd_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoopingEnd()));
 
     connect(ui->sLow, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(lowEQ(int)));
     connect(ui->sMedium, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(medEQ(int)));
@@ -63,6 +66,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbSound_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playPause()));
     connect(ui->pbStop_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playStop()));
     connect(ui->pbSingleLoop_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoop()));
+    connect(ui->pbLoopEnable_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoopingSet()));
+    connect(ui->pbLoopStart_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoopingStart()));
+    connect(ui->pbLoopEnd_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoopingEnd()));
 
 
     connect(ui->sLow_2, SIGNAL(valueChanged(int)), &soundProc->panel2, SLOT(lowEQ(int)));

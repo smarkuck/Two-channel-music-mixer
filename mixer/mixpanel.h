@@ -33,6 +33,10 @@ public:
     bool isWhiteNoise;
     bool isSingleLoop;
 
+    bool isLoopingSet;
+    qint64 loopingStart;
+    qint64 loopingEnd;
+
     qint64 duration;
     qint64 actPos;
     QByteArray *channel1;
@@ -65,6 +69,9 @@ public slots:
     void playPause();
     void playStop();
     void playLoop();
+    void playLoopingSet();
+    void playLoopingStart();
+    void playLoopingEnd();
 
     void loadAudio(QString filename);
     void readBuffer();

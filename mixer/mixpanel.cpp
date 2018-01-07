@@ -5,7 +5,9 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
 {
     actPos = 0;
     duration = 0;
+    loopingStart = 0;
     isSingleLoop = false;
+    isLoopingSet = false;
     isWhiteNoise = false;
     audioReady = false;
     isPlayed = false;
@@ -43,9 +45,33 @@ void MixPanel::playPause() {
     //if(audioReady)
     //{
         isPlayed = !isPlayed;
+
     //}
 }
 
+void MixPanel::playLoopingSet() {
+    //if(audioReady)
+    //{
+        isLoopingSet = !isLoopingSet;
+        loopingStart = loopingEnd = 0;
+        qDebug() << isLoopingSet;
+
+    //}
+}
+void MixPanel::playLoopingStart() {
+    //if(audioReady)
+    //{
+        loopingStart = actPos;
+
+    //}
+}
+void MixPanel::playLoopingEnd() {
+    //if(audioReady)
+    //{
+        loopingEnd = actPos;
+        actPos = loopingStart;
+    //}
+}
 void MixPanel::playLoop() {
     //if(audioReady)
     //{
@@ -98,9 +124,13 @@ void MixPanel::process(double *buffer, int nFrames) {
         actPos++;
     }
 
+    if((actPos == loopingEnd )&& isLoopingSet){
+        actPos = loopingStart;
+    }
+
     if(actPos >= channel1->size()/sizeof(qint16)) {
         actPos = 0;
-        if(isSingleLoop) isPlayed = true;
+        if(isSingleLoop || isLoopingSet) isPlayed = true;
         else isPlayed = false;
     }
 

@@ -73,6 +73,12 @@ public:
     QPushButton *pbStop_2;
     QPushButton *pbSingleLoop_1;
     QPushButton *pbSingleLoop_2;
+    QPushButton *pbLoopStart_1;
+    QPushButton *pbLoopEnd_1;
+    QPushButton *pbLoopEnable_1;
+    QPushButton *pbLoopEnable_2;
+    QPushButton *pbLoopStart_2;
+    QPushButton *pbLoopEnd_2;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QStatusBar *statusBar;
@@ -253,6 +259,24 @@ public:
         pbSingleLoop_2 = new QPushButton(centralWidget);
         pbSingleLoop_2->setObjectName(QStringLiteral("pbSingleLoop_2"));
         pbSingleLoop_2->setGeometry(QRect(370, 210, 89, 25));
+        pbLoopStart_1 = new QPushButton(centralWidget);
+        pbLoopStart_1->setObjectName(QStringLiteral("pbLoopStart_1"));
+        pbLoopStart_1->setGeometry(QRect(120, 250, 61, 31));
+        pbLoopEnd_1 = new QPushButton(centralWidget);
+        pbLoopEnd_1->setObjectName(QStringLiteral("pbLoopEnd_1"));
+        pbLoopEnd_1->setGeometry(QRect(190, 250, 61, 31));
+        pbLoopEnable_1 = new QPushButton(centralWidget);
+        pbLoopEnable_1->setObjectName(QStringLiteral("pbLoopEnable_1"));
+        pbLoopEnable_1->setGeometry(QRect(20, 250, 91, 31));
+        pbLoopEnable_2 = new QPushButton(centralWidget);
+        pbLoopEnable_2->setObjectName(QStringLiteral("pbLoopEnable_2"));
+        pbLoopEnable_2->setGeometry(QRect(420, 250, 91, 31));
+        pbLoopStart_2 = new QPushButton(centralWidget);
+        pbLoopStart_2->setObjectName(QStringLiteral("pbLoopStart_2"));
+        pbLoopStart_2->setGeometry(QRect(520, 250, 61, 31));
+        pbLoopEnd_2 = new QPushButton(centralWidget);
+        pbLoopEnd_2->setObjectName(QStringLiteral("pbLoopEnd_2"));
+        pbLoopEnd_2->setGeometry(QRect(590, 250, 61, 31));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -312,6 +336,12 @@ public:
         pbStop_2->setText(QApplication::translate("MainWindow", "Stop", nullptr));
         pbSingleLoop_1->setText(QApplication::translate("MainWindow", "Petla", nullptr));
         pbSingleLoop_2->setText(QApplication::translate("MainWindow", "Petla", nullptr));
+        pbLoopStart_1->setText(QApplication::translate("MainWindow", "LoopStart", nullptr));
+        pbLoopEnd_1->setText(QApplication::translate("MainWindow", "LoopEnd", nullptr));
+        pbLoopEnable_1->setText(QApplication::translate("MainWindow", "LoopEnable", nullptr));
+        pbLoopEnable_2->setText(QApplication::translate("MainWindow", "LoopEnable", nullptr));
+        pbLoopStart_2->setText(QApplication::translate("MainWindow", "LoopStart", nullptr));
+        pbLoopEnd_2->setText(QApplication::translate("MainWindow", "LoopEnd", nullptr));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", nullptr));
     } // retranslateUi
 
