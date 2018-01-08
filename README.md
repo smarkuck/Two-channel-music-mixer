@@ -32,3 +32,10 @@ git checkout origin soundGraph
 Dodałem następnego brancha do zapisywania akcji. Nie wiem czy o to chodziło ale jest w wersji demo :)
 Jak pobierzecie repo to po wczytaniu utworu spróbujcie załadować akcje test.acn i po odpaleniu powinny się suwaki same przesuwac.
 
+
+
+----------
+
+Dodałam pobieranie w formacie mp3 ale ono się opiera na bibliotece zewnętrznej libmp3lame.so, ona jest w folderze mixer,
+jak będzie wam wyskakiwał błąd że jakieś undefined references do funkcji z lame w nazwie to trzeba kliknąć prawym przyciskiem na nazwę projektu->Add Libraries->Add external libraries 
+i wybrać tą bibliotekę i powinno być ok
