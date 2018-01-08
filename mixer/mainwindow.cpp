@@ -250,6 +250,7 @@ void MainWindow::graphClicked(QCPAbstractPlottable *plottable, int dataIndex)
   //double amplituda = plottable->interface1D()->dataMainValue(dataIndex);  //TO JEST OS Y - amplituda dzwieku
 
   soundProc->panel1.actPos = czas*48000;
+  soundProc->panel1.realPosition = czas*48000;
   x1[0] = czas;
   x1[1] = czas;
   bars1->setData(x1, y2);
@@ -375,6 +376,7 @@ void MainWindow::graphClicked2(QCPAbstractPlottable *plottable, int dataIndex)
   //double amplituda = plottable->interface1D()->dataMainValue(dataIndex);  //TO JEST OS Y - amplituda dzwieku
 
   soundProc->panel2.actPos = czas*48000;
+  soundProc->panel2.realPosition = czas*48000;
   x2[0] = czas;
   x2[1] = czas;
   bars2->setData(x2, y1);

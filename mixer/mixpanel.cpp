@@ -78,6 +78,7 @@ void MixPanel::playLoopingEnd() {
     //{
         loopingEnd = actPos;
         actPos = loopingStart;
+        realPosition = loopingStart;
         isLoopEndSet = true;
     //}
 }
@@ -88,6 +89,7 @@ void MixPanel::playLoopingReturn() {
         {
             isLoopingSet = true;
             actPos = loopingStart;
+            realPosition = loopingStart;
         }
     //}
 }
@@ -103,6 +105,7 @@ void MixPanel::playStop() {
     isPlayed = false;
     audioReady = true;
     actPos = 0;
+    realPosition = 0;
     int minutes = duration/1000000./60.;
     int seconds = (duration - minutes*1000000*60)/1000000.;
     QString time  = "0:00/" + QString::number(minutes) + ":" + QString::number(seconds);
@@ -147,16 +150,19 @@ void MixPanel::process(double *buffer, int nFrames) {
     if((loopingEnd > loopingStart) && isLoopingSet){
         if((actPos > loopingEnd)){
             actPos = loopingStart;
+            realPosition = loopingStart;
         }
     }
     else if ((loopingEnd < loopingStart) && isLoopingSet){
         if((actPos > loopingEnd) && (actPos < loopingStart)){
             actPos = loopingStart;
+            realPosition = loopingStart;
         }
     }
 
     if(actPos >= channel1->size()/sizeof(qint16)) {
         actPos = 0;
+        realPosition = 0;
         if(isSingleLoop || isLoopingSet) isPlayed = true;
         else isPlayed = false;
     }
@@ -260,6 +266,7 @@ void MixPanel::loadAudio(QString filename) {
 
     duration = 0;
     actPos = 0;
+    realPosition = 0;
 
     channel1->clear();
     channel2->clear();
