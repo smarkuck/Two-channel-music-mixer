@@ -5,7 +5,10 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
 {
     actPos = 0;
     duration = 0;
-
+    loopingStart = 0;
+    isSingleLoop = false;
+    isLoopingSet = false;
+    isLoopStartSet = false;
     isWhiteNoise = false;
     audioReady = false;
     isPlayed = false;
@@ -43,7 +46,68 @@ void MixPanel::playPause() {
     //if(audioReady)
     //{
         isPlayed = !isPlayed;
+
     //}
+}
+
+void MixPanel::playLoopingSet() {
+    //if(audioReady)
+    //{
+        if(isLoopStartSet && isLoopEndSet && !isLoopingSet){
+            isLoopStartSet = false;
+            //loopingStart = loopingEnd = 0;
+        }
+        isLoopingSet = !isLoopingSet;
+
+        qDebug() << isLoopingSet;
+
+    //}
+}
+void MixPanel::playLoopingStart() {
+    //if(audioReady)
+    //{
+        loopingStart = actPos;
+        isLoopStartSet = true;
+
+    //}
+}
+void MixPanel::playLoopingEnd() {
+    //if(audioReady)
+    //{
+        loopingEnd = actPos;
+        actPos = loopingStart;
+        isLoopEndSet = true;
+    //}
+}
+void MixPanel::playLoopingReturn() {
+    //if(audioReady)
+    //{
+        if(isLoopStartSet)
+        {
+            isLoopingSet = true;
+            actPos = loopingStart;
+        }
+    //}
+}
+void MixPanel::playLoop() {
+    //if(audioReady)
+    //{
+        isSingleLoop = !isSingleLoop;
+    //}
+}
+
+void MixPanel::playStop() {
+
+    isPlayed = false;
+    audioReady = true;
+    actPos = 0;
+    int minutes = duration/1000000./60.;
+    int seconds = (duration - minutes*1000000*60)/1000000.;
+    QString time  = "0:00/" + QString::number(minutes) + ":" + QString::number(seconds);
+    emit timeChange(time);
+
+
+
 }
 
 void MixPanel::process(double *buffer, int nFrames) {
@@ -76,10 +140,21 @@ void MixPanel::process(double *buffer, int nFrames) {
 
         actPos++;
     }
+    if((loopingEnd > loopingStart) && isLoopingSet){
+        if((actPos > loopingEnd)){
+            actPos = loopingStart;
+        }
+    }
+    else if ((loopingEnd < loopingStart) && isLoopingSet){
+        if((actPos > loopingEnd) && (actPos < loopingStart)){
+            actPos = loopingStart;
+        }
+    }
 
     if(actPos >= channel1->size()/sizeof(qint16)) {
         actPos = 0;
-        isPlayed = false;
+        if(isSingleLoop || isLoopingSet) isPlayed = true;
+        else isPlayed = false;
     }
 
     if(isWhiteNoise) {

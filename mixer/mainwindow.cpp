@@ -35,6 +35,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbYes, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(enableWhiteNoise()));
     connect(ui->pbNo, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(disableWhiteNoise()));
     connect(ui->pbSound, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playPause()));
+    connect(ui->pbStop_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playStop()));
+    connect(ui->pbSingleLoop_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoop()));
+    connect(ui->pbLoopEnable_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoopingSet()));
+    connect(ui->pbLoopStart_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoopingStart()));
+    connect(ui->pbLoopEnd_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoopingEnd()));
+    connect(ui->pbLoopReturn_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoopingReturn()));
 
     connect(ui->sLow, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(lowEQ(int)));
     connect(ui->sMedium, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(medEQ(int)));
@@ -59,6 +65,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbYes_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(enableWhiteNoise()));
     connect(ui->pbNo_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(disableWhiteNoise()));
     connect(ui->pbSound_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playPause()));
+    connect(ui->pbStop_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playStop()));
+    connect(ui->pbSingleLoop_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoop()));
+    connect(ui->pbLoopEnable_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoopingSet()));
+    connect(ui->pbLoopStart_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoopingStart()));
+    connect(ui->pbLoopEnd_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoopingEnd()));
+    connect(ui->pbLoopReturn_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoopingReturn()));
+
 
     connect(ui->sLow_2, SIGNAL(valueChanged(int)), &soundProc->panel2, SLOT(lowEQ(int)));
     connect(ui->sMedium_2, SIGNAL(valueChanged(int)), &soundProc->panel2, SLOT(medEQ(int)));
@@ -103,6 +116,26 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
   bars1->setPen(QPen(QColor(Qt::green)));
   bars1->setBrush(QBrush(QBrush(QColor(Qt::green))));
 
+
+    barLoopStart_1 = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
+    barLoopStart_1->setWidth(0.025);
+    barLoopStart_1->setPen(QPen(QColor(Qt::red)));
+    QColor color1 = QColor(Qt::red);
+    color1.setAlpha(50);
+    barLoopStart_1->setBrush(QBrush(QBrush(color1)));
+
+
+    barLoopEnd_1 = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
+    barLoopEnd_1->setWidth(0.25);
+    barLoopEnd_1->setPen(QPen(QColor(Qt::red)));
+    barLoopStart_1->setBrush(QBrush(QBrush(color1)));
+    //barLoopEnd_1->setBrush(QBrush(QBrush(QColor(Qt::red).setAlpha(50))));
+
+    filled = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
+    filled->setWidth(0.25);
+    filled->setPen(QPen(Qt::NoPen));
+    filled->setBrush(QBrush(QBrush(color1)));
+
   customPlot->yAxis->setRange(-100000, 100000);
     customPlot->yAxis->setVisible(false);
     customPlot->yAxis2->setVisible(false);
@@ -115,7 +148,18 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
     x1.push_back(0);
     y2.push_back(100000);
     y2.push_back(-100000);
-
+    yStart_1.push_back(100000);
+    yStart_1.push_back(-100000);
+    xStart_1.push_back(0);
+    xStart_1.push_back(0);
+    yEnd_1.push_back(100000);
+    yEnd_1.push_back(-100000);
+    xEnd_1.push_back(0);
+    xEnd_1.push_back(0);
+    yfill.push_back(100000);
+    yfill.push_back(-100000);
+    xfill.push_back(0);
+    xfill.push_back(0);
   connect(&dataTimer, SIGNAL(timeout()), this, SLOT(bracketDataSlot()));
 
   dataTimer.start(0); // ustawinie timera do odswiezania danych
@@ -157,6 +201,27 @@ void MainWindow::bracketDataSlot()
 
   }
 
+  if(soundProc->panel1.isLoopStartSet){
+      xStart_1[0]=soundProc->panel1.loopingStart/48000;
+      xStart_1[1]=soundProc->panel1.loopingStart/48000;
+      barLoopStart_1->setData(xStart_1, yStart_1);
+  }
+
+  if(soundProc->panel1.isLoopEndSet){
+      xEnd_1[0]=soundProc->panel1.loopingEnd/48000;
+      xEnd_1[1]=soundProc->panel1.loopingEnd/48000;
+      barLoopEnd_1->setData(xEnd_1, yEnd_1);
+  }
+
+
+  if(soundProc->panel1.isLoopStartSet && soundProc->panel1.isLoopEndSet ){
+      xfill[0] = (soundProc->panel1.loopingEnd/48000 - ((soundProc->panel1.loopingEnd/48000 - soundProc->panel1.loopingStart/48000) / 2));
+      xfill[1] = (soundProc->panel1.loopingEnd/48000 - ((soundProc->panel1.loopingEnd/48000 - soundProc->panel1.loopingStart/48000) / 2));
+
+      filled->setWidth((soundProc->panel1.loopingEnd/48000 - soundProc->panel1.loopingStart/48000));
+      filled->setData(xfill,yfill);
+      ui->customPlot->replot();
+  }
 
   if(soundProc->panel1.isPlayed){
 
@@ -166,15 +231,17 @@ void MainWindow::bracketDataSlot()
     x1[0] = soundProc->panel1.actPos/48000;
     x1[1]=  soundProc->panel1.actPos/48000;
     bars1->setData(x1, y2);
-
     ui->customPlot->replot();
   }
+
+
 
 }
 
 
 void MainWindow::graphClicked(QCPAbstractPlottable *plottable, int dataIndex)
 {
+
   double czas = plottable->interface1D()->dataMainKey(dataIndex);  //TO JEST OS X - sekundy
   //double amplituda = plottable->interface1D()->dataMainValue(dataIndex);  //TO JEST OS Y - amplituda dzwieku
 
@@ -200,6 +267,18 @@ void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
   bars2->setPen(QPen(QColor(Qt::green)));
   bars2->setBrush(QBrush(QBrush(QColor(Qt::green))));
 
+
+  barLoopStart_2 = new QCPBars(ui->customPlot_2->xAxis, ui->customPlot_2->yAxis);
+  barLoopStart_2->setWidth(0.025);
+  barLoopStart_2->setPen(QPen(QColor(Qt::red)));
+  barLoopStart_2->setBrush(QBrush(QBrush(QColor(Qt::red))));
+
+  barLoopEnd_2 = new QCPBars(ui->customPlot_2->xAxis, ui->customPlot_2->yAxis);
+  barLoopEnd_2->setWidth(0.025);
+  barLoopEnd_2->setPen(QPen(QColor(Qt::red)));
+  barLoopEnd_2->setBrush(QBrush(QBrush(QColor(Qt::red))));
+
+
   customPlot->yAxis->setRange(-100000, 100000);   //ustawienie zakresu osiY
     customPlot->yAxis->setVisible(false);
     customPlot->yAxis2->setVisible(false);
@@ -212,7 +291,14 @@ void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
     x2.push_back(0);
     y1.push_back(100000);
     y1.push_back(-100000);
-
+    yStart_2.push_back(100000);
+    yStart_2.push_back(-100000);
+    xStart_2.push_back(0);
+    xStart_2.push_back(0);
+    yEnd_2.push_back(100000);
+    yEnd_2.push_back(-100000);
+    xEnd_2.push_back(0);
+    xEnd_2.push_back(0);
   connect(&dataTimer2, SIGNAL(timeout()), this, SLOT(bracketDataSlot2()));
 
   dataTimer2.start(0); // ustawinie timera do odswiezania danych
@@ -247,6 +333,12 @@ void MainWindow::bracketDataSlot2()
   x2[0] = 0;
   x2[1] = 0;
   bars2->setData(x2, y1);
+  xStart_2[0]=0;
+  xStart_2[1]=0;
+  barLoopStart_2->setData(xStart_2, yStart_2);
+  xEnd_2[0]=0;
+  xEnd_2[1]=0;
+  barLoopEnd_2->setData(xEnd_2, yEnd_2);
   ui->customPlot_2->replot();
   soundProc->panel2.plot = true;
   }
@@ -261,7 +353,12 @@ void MainWindow::bracketDataSlot2()
     x2[0] = soundProc->panel2.actPos/48000;
     x2[1]=  soundProc->panel2.actPos/48000;
     bars2->setData(x2, y1);
-
+    xStart_2[0]=soundProc->panel2.loopingStart/48000;
+    xStart_2[1]=soundProc->panel2.loopingStart/48000;
+    barLoopStart_2->setData(xStart_2, yStart_2);
+    xEnd_2[0]=soundProc->panel2.loopingEnd/48000;
+    xEnd_2[1]=soundProc->panel2.loopingEnd/48000;
+    barLoopEnd_2->setData(xEnd_2, yEnd_2);
     ui->customPlot_2->replot();
   }
 

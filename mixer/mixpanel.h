@@ -31,6 +31,13 @@ public:
     bool isPlayed;
     bool audioReady;
     bool isWhiteNoise;
+    bool isSingleLoop;
+    bool isLoopStartSet;
+    bool isLoopEndSet;
+
+    bool isLoopingSet;
+    qint64 loopingStart;
+    qint64 loopingEnd;
 
     qint64 duration;
     qint64 actPos;
@@ -62,6 +69,12 @@ signals:
 
 public slots:
     void playPause();
+    void playStop();
+    void playLoop();
+    void playLoopingSet();
+    void playLoopingStart();
+    void playLoopingEnd();
+    void playLoopingReturn();
 
     void loadAudio(QString filename);
     void readBuffer();
