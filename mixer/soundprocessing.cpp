@@ -18,8 +18,8 @@ SoundProcessing::SoundProcessing(QObject *parent) : QObject(parent)
 
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(play()));
-    timer->start(1);
-    connect(this,SIGNAL(startDownload(QString)),this,SLOT(download(QString)));
+    timer->start(0.5);
+
 }
 //------------------------------------------------------------
 void SoundProcessing::play() {
@@ -57,61 +57,11 @@ void SoundProcessing::play() {
 
     //wpisuj do output1 dopiero gdy zacznie być odtwarzany jakis plik:
     int y = output.toHex().count('0');
-    if(y != 1024 )
+    if(y != 4096 )
         output1.insert(output1.size(),output);
 
     qint64 written = 0;
     while((written += audioDevice->write(output.right(output.size()-written))) < output.size());
-
-}
-void SoundProcessing::download(QString filename){
-    qDebug() << " Downloading started " ;
-    QFile* file= new QFile(QStringLiteral("%1.wav").arg(filename));
-    int i = 1;
-    while(file->exists()){
-        QString name = QStringLiteral("%1%2.wav").arg(filename).arg(i);
-        file = new QFile(name);
-        i++;
-    }
-    file->open(QIODevice::Append);
-    //wpisanie headera formatu WAVE do pliku
-    writeWavHeader(file);
-    //wpisanie danych z dzwiekiem
-    file->write(output1);
-    file->close();
-
-    emit downloadReady();
-    qDebug() << "ready";
-
-}
-
-
-void SoundProcessing::writeWavHeader( QFile * file )
-{
-
-
-    QDataStream out(file);
-    out.setByteOrder(QDataStream::LittleEndian);
-
-    // RIFF chunk
-    out.writeRawData("RIFF", 4);
-    out << quint32(0); // Placeholder for the RIFF chunk size (filled by close())
-    out.writeRawData("WAVE", 4);
-
-    // Format description chunk
-    out.writeRawData("fmt ", 4);
-    out << quint32(16); // "fmt " chunk size (always 16 for PCM)
-    out << quint16(1); // data format (1 => PCM)
-    out << quint16(format.channelCount());
-    out << quint32(format.sampleRate());
-    out << quint32(format.sampleRate() * format.channelCount()
-                   * format.sampleSize() / 8 ); // bytes per second
-    out << quint16(format.channelCount() * format.sampleSize() / 8); // Block align
-    out << quint16(format.sampleSize()); // Significant Bits Per Sample
-
-    // Data chunk
-    out.writeRawData("data", 4);
-    out << quint32(0); // Placeholder for the data chunk size (filled by close())
 
 }
 

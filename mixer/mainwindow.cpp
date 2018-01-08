@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "downloading.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QDesktopWidget>
@@ -24,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     soundProc = new SoundProcessing;
     soundProc->moveToThread(&th_soundProc);
 
+    Downloading* download = new Downloading(soundProc);
+
     connect(&th_soundProc, &QThread::finished, soundProc, &QObject::deleteLater);
     th_soundProc.start();
 
@@ -45,6 +48,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->sLow, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(lowEQ(int)));
     connect(ui->sMedium, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(medEQ(int)));
     connect(ui->sHigh, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(highEQ(int)));
+    connect(ui->sSpeed1,SIGNAL(valueChanged(int)),&soundProc->panel1,SLOT(speedChange(int)));
+    connect(ui->sSpeed2,SIGNAL(valueChanged(int)),&soundProc->panel2,SLOT(speedChange(int)));
+    connect(ui->sVolume1,SIGNAL(valueChanged(int)),&soundProc->panel1,SLOT(volumeChange(int)));
+    connect(ui->sVolume2,SIGNAL(valueChanged(int)),&soundProc->panel2,SLOT(volumeChange(int)));
 
     //AKCJE
     //sygnaly do zmiany suwakow
@@ -82,6 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->sCrossfader, SIGNAL(valueChanged(int)), this, SLOT(crossFaderChange(int)));
     connect(ui->pbDownload, SIGNAL(clicked(bool)), this, SLOT(onDownload()));
+    connect(this, SIGNAL(startDownload(QString)), download, SLOT(download(QString)));
 
     connect(ui->customPlot, SIGNAL(plottableClick(QCPAbstractPlottable*,int,QMouseEvent*)), this, SLOT(graphClicked(QCPAbstractPlottable*,int)));
     connect(ui->customPlot_2, SIGNAL(plottableClick(QCPAbstractPlottable*,int,QMouseEvent*)), this, SLOT(graphClicked2(QCPAbstractPlottable*,int)));
@@ -100,7 +108,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&soundProc->panel1, SIGNAL(writeToFile(quint64,quint64,quint64)), &soundProc->action, SLOT(writePanel1(quint64,quint64,quint64)));
     connect(&soundProc->panel2, SIGNAL(writeToFile(quint64,quint64,quint64)), &soundProc->action, SLOT(writePanel2(quint64,quint64,quint64)));
 
-    connect(soundProc, SIGNAL(downloadReady()), this, SLOT(downloadTextChange()));
+    connect(download, SIGNAL(downloadReady()), this, SLOT(downloadTextChange()));
 }
 //------------------------------------------------------------
 void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
@@ -483,15 +491,21 @@ void MainWindow::onDownload() {
 
 
     //wybor lokalizacji zapisywanego pliku audio
-    QString fileName = QFileDialog::getSaveFileName(this,
-        tr("Download"), "/home", tr("audio(*.wav)"));
+    QString selectedFilter;
+    QString filename = QFileDialog::getSaveFileName(this,
+        tr("Download"), "/home", tr("audio(*.wav);;audio(*.mp3)"),&selectedFilter);
 
-    ui->download_ready->setText("Wait...");
-    qDebug() << "befor emit";
-    emit soundProc->startDownload(fileName);
-    qDebug() << "after emit";
+    if(filename.count() != 0){
+        ui->download_ready->setText("Wait...");
+        if (selectedFilter.endsWith(".wav)"))
+            filename += ".wav";
+        else
+            filename += ".mp3";
+
+        emit startDownload(filename);
+    }
+
 }
-
 //------------------------------------------------------------
 
 MainWindow::~MainWindow()
