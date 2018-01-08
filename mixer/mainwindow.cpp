@@ -81,6 +81,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbActionLoad, SIGNAL(clicked(bool)), this, SLOT(loadAction()));
     connect(this, SIGNAL(loadActionFromFile(QString)), &soundProc->action, SLOT(loadActionFromFile(QString)));
 
+    connect(ui->pbRecord, SIGNAL(clicked(bool)), &soundProc->action, SLOT(record()));
+    connect(ui->pbRun, SIGNAL(clicked(bool)), &soundProc->action, SLOT(run()));
+
     connect(&soundProc->panel1, SIGNAL(writeToFile(quint64,quint64,quint64)), &soundProc->action, SLOT(writePanel1(quint64,quint64,quint64)));
     connect(&soundProc->panel2, SIGNAL(writeToFile(quint64,quint64,quint64)), &soundProc->action, SLOT(writePanel2(quint64,quint64,quint64)));
 

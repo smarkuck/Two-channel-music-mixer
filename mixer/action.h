@@ -12,11 +12,14 @@ class Action : public QObject
 {
     Q_OBJECT
 public:
-    explicit Action(QObject *parent = nullptr);
+    Action();
     QVector<quint64> buffer;
     QVector<quint64> buffer2;
     QVector<quint64> loadBuffer;
-    int aCounter;
+    int p1, p2, beg1, beg2;
+    bool actionLoaded;
+    bool isRunning;
+    bool isRecording;
 signals:
 
 public slots:
@@ -24,6 +27,8 @@ public slots:
     void writePanel1(quint64 type, quint64 position, quint64 value);
     void writePanel2(quint64 type, quint64 position, quint64 value);
     void loadActionFromFile(QString fileName);
+    void record();
+    void run();
 };
 
 #endif // ACTION_H

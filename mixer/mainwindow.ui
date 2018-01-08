@@ -85,7 +85,7 @@
      <number>50</number>
     </property>
     <property name="tracking">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -110,7 +110,7 @@
      <number>50</number>
     </property>
     <property name="tracking">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -135,7 +135,7 @@
      <number>50</number>
     </property>
     <property name="tracking">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -261,7 +261,7 @@
      <number>50</number>
     </property>
     <property name="tracking">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -283,7 +283,7 @@
      <number>50</number>
     </property>
     <property name="tracking">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -344,7 +344,7 @@
      <number>50</number>
     </property>
     <property name="tracking">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -434,7 +434,7 @@
      <number>50</number>
     </property>
     <property name="tracking">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -555,6 +555,32 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbRecord">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>440</y>
+      <width>101</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Record Action</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbRun">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>440</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Run Action</string>
     </property>
    </widget>
   </widget>

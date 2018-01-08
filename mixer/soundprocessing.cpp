@@ -13,6 +13,7 @@ SoundProcessing::SoundProcessing(QObject *parent) : QObject(parent)
     format.setSampleSize(16);
 
     audioOutput = new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice(), format);
+    audioOutput->setBufferSize(1024);
     audioDevice = audioOutput->start();
 
     timer = new QTimer();
@@ -116,106 +117,102 @@ void SoundProcessing::writeWavHeader( QFile * file )
 
 void SoundProcessing::doActions(quint64 actPos1, quint64 actPos2)
 {
-    if(!action.loadBuffer.empty()){  //sprawdzam czy jest pusty bufor z wczytanymi akcjami
+    if(action.actionLoaded && action.isRunning){  //sprawdzam czy bufer jest gotowy
+        if(action.loadBuffer[0] > 0) { //czy są akcje dla panelu 1
+            if(action.p1 >= action.beg2) //czy wskaźnik nie przeskoczył swojego zakresu
+                action.p1 = action.beg2-3; //jeśli tak to ustaw na ostatni element
 
-        if(actPos1 < action.loadBuffer[2])    //jezeli przesune utwor na poczatek to ustawiam ponowne wykonywanie sie akcji
-            action.aCounter = 1;
+            //ustawiam wskaźniki w odpowiednie miejsce
+            while(action.p1 > action.beg1 && actPos1 < action.loadBuffer[action.p1+1]) {
+                action.p1-=3;
+            }
 
-        if(action.aCounter < action.loadBuffer.size())
-        {
-            int type = action.loadBuffer[action.aCounter];
+            while(action.p1 < action.beg2-3 && actPos1 >= action.loadBuffer[action.p1+4]) {
+                action.p1+=3;
+            }
 
-            //switch od tego co ma sie zmieniac
-            switch (type) {
-            case WN_true:
-                if(actPos1 == action.loadBuffer[action.aCounter+1]  ){
+            //wykonuję akcję z konkretnego zakresu
+            while(action.p1 < action.beg2 && actPos1 >= action.loadBuffer[action.p1+1] && actPos1-512 < action.loadBuffer[action.p1+1])
+            {
+                int type = action.loadBuffer[action.p1];
+
+                //switch od tego co ma sie zmieniac
+                switch (type) {
+                case WN_true:
                     panel1.isWhiteNoise = true;
-                    action.aCounter += 3; //przesuwam o 3 zeby dostac sie do kolejnego typu akcji
-                }
-                break;
-            case WN_false:
-                if(actPos1 == action.loadBuffer[action.aCounter+1]  ){
+                    action.p1 += 3; //przesuwam o 3 zeby dostac sie do kolejnego typu akcji
+                    break;
+                case WN_false:
                     panel1.isWhiteNoise = false;
-                    action.aCounter += 3;
+                    action.p1 += 3;
+                    break;
+                case low:
+                    emit lowEQChange(action.loadBuffer[action.p1+2]);
+                    action.p1 += 3;
+                    break;
+                case med:
+                    emit medEQChange(action.loadBuffer[action.p1+2]);
+                    action.p1 += 3;
+                    break;
+                case high:
+                    emit highEQChange(action.loadBuffer[action.p1+2]);
+                    action.p1 += 3;
+                    break;
+                case cross:
+                    crossFader = action.loadBuffer[action.p1+2];
+                    emit crossChange(action.loadBuffer[action.p1+2]);
+                    action.p1 += 3;
+                    break;
+                default:
+                    break;
                 }
-                break;
-            case low:
-                if(actPos1 == action.loadBuffer[action.aCounter+1]  ){
-                    emit lowEQChange(action.loadBuffer[action.aCounter+2]);
-                    action.aCounter += 3;
-                }
-                break;
-            case med:
-                if(actPos1 == action.loadBuffer[action.aCounter+1]  ){
-                    emit medEQChange(action.loadBuffer[action.aCounter+2]);
-                    action.aCounter += 3;
-                }
-                break;
-            case high:
-                if(actPos1 == action.loadBuffer[action.aCounter+1]  ){
-                    emit highEQChange(action.loadBuffer[action.aCounter+2]);
-                    action.aCounter += 3;
-                }
-                break;
-            case cross:
-                if(actPos1 == action.loadBuffer[action.aCounter+1]  ){
-                    crossFader = action.loadBuffer[action.aCounter+2];
-                    emit crossChange(action.loadBuffer[action.aCounter+2]);
-                    action.aCounter += 3;
-                }
-                break;
-            default:
-                break;
             }
         }
 
-        //SWITCH PANEL 2
-        if(action.loadBuffer.size() > action.loadBuffer[0] )
-        {
-            static int j=action.loadBuffer[0] + 1;
-            //if(actPos2 < action.loadBuffer[action.loadBuffer[0] + 2])    //jezeli przesune utwor na poczatek to ustawiam ponowne wykonywanie sie akcji
-             //j = action.loadBuffer[0] + 1;
+        if(action.beg2 < action.loadBuffer.size()) { //czy są akcje dla panelu 2
+            if(action.p2 >= action.loadBuffer.size()) //czy wskaźnik nie przeskoczył swojego zakresu
+                action.p2 = action.loadBuffer.size()-3; //jeśli tak to ustaw na ostatni element
 
-            if(j < action.loadBuffer.size())
+            //ustawiam wskaźniki w odpowiednie miejsce
+            while(action.p2 > action.beg2 && actPos2 < action.loadBuffer[action.p2+1]) {
+                action.p2-=3;
+            }
+
+            while(action.p2 < action.loadBuffer.size()-3 && actPos2 >= action.loadBuffer[action.p2+4]) {
+                action.p2+=3;
+            }
+
+            //wykonuję akcję z konkretnego zakresu
+            while(action.p2 < action.loadBuffer.size() && actPos2 >= action.loadBuffer[action.p2+1] && actPos2-512 < action.loadBuffer[action.p2+1])
             {
-                int type2 = action.loadBuffer[j];
-                switch (type2) {
-                case WN2_true:
-                    if(actPos2 == action.loadBuffer[j+1]  ){
-                        panel2.isWhiteNoise = true;
-                        j += 3;
-                    }
+                int type = action.loadBuffer[action.p2];
+
+                //switch od tego co ma sie zmieniac
+                switch (type) {
+                case WN_true:
+                    panel2.isWhiteNoise = true;
+                    action.p2 += 3; //przesuwam o 3 zeby dostac sie do kolejnego typu akcji
                     break;
-                case WN2_false:
-                    if(actPos2 == action.loadBuffer[j+1]  ){
-                        panel2.isWhiteNoise = false;
-                        j += 3;
-                    }
+                case WN_false:
+                    panel2.isWhiteNoise = false;
+                    action.p2 += 3;
                     break;
-                case low2:
-                    if(actPos2 == action.loadBuffer[j+1]  ){
-                        emit lowEQChange2(action.loadBuffer[j+2]);
-                        j += 3;
-                    }
+                case low:
+                    emit lowEQChange2(action.loadBuffer[action.p2+2]);
+                    action.p2 += 3;
                     break;
-                case med2:
-                    if(actPos2 == action.loadBuffer[j+1]  ){
-                        emit medEQChange2(action.loadBuffer[j+2]);
-                        j += 3;
-                    }
+                case med:
+                    emit medEQChange2(action.loadBuffer[action.p2+2]);
+                    action.p2 += 3;
                     break;
-                case high2:
-                    if(actPos2 == action.loadBuffer[j+1]  ){
-                        emit highEQChange2(action.loadBuffer[j+2]);
-                        j += 3;
-                    }
+                case high:
+                    emit highEQChange2(action.loadBuffer[action.p2+2]);
+                    action.p2 += 3;
                     break;
-                case cross2:
-                    if(actPos2 == action.loadBuffer[j+1]  ){
-                        crossFader = action.loadBuffer[j+2];
-                        emit crossChange(action.loadBuffer[j+2]);
-                        j += 3;
-                    }
+                case cross:
+                    crossFader = action.loadBuffer[action.p2+2];
+                    emit crossChange(action.loadBuffer[action.p2+2]);
+                    action.p2 += 3;
                     break;
                 default:
                     break;
