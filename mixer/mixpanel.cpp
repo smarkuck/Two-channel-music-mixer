@@ -15,6 +15,7 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     isPlayed = false;
     plot = false;
     speed = 1.0;
+    volume = 0.5;
 
     channel1 = new QByteArray();
     channel2 = new QByteArray();
@@ -129,12 +130,12 @@ void MixPanel::process(double *buffer, int nFrames) {
             continue;
         }
 
-        qint16 value = *(reinterpret_cast<qint16*>(channel1->data())+actPos);
+        qint16 value = *(reinterpret_cast<qint16*>(channel1->data())+actPos)*volume;
         double y = processLow(value);
         y = processMedium(y);
         buffer[i*2] = processHigh(y);
 
-        value = *(reinterpret_cast<qint16*>(channel2->data())+actPos);
+        value = *(reinterpret_cast<qint16*>(channel2->data())+actPos)*volume;
 
         y = processLow(value);
         y = processMedium(y);
@@ -320,9 +321,12 @@ void MixPanel::disableWhiteNoise() {
 }
 
 void MixPanel::speedChange(int value){
-    double g = value/50.0;
-    speed = g;
+    speed = value/50.0;
 }
+void MixPanel::volumeChange(int value){
+    volume = value/100.0;
+}
+
 MixPanel::~MixPanel() {
     delete decoder;
 

@@ -43,6 +43,7 @@ public:
     qint64 actPos;
     qreal realPosition;
     double speed;
+    qreal volume;
     QByteArray *channel1;
     QByteArray *channel2;
 
@@ -90,7 +91,7 @@ public slots:
     void highEQ(int value);
 
     void speedChange(int value);
-
+    void volumeChange(int value);
 };
 
 #endif // MIXPANEL_H
