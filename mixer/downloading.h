@@ -10,7 +10,7 @@ public:
      explicit Downloading(SoundProcessing* soundprocessing, QObject *parent = nullptr);
      SoundProcessing* soundProc;
      void writeWavHeader( QFile * file );
-     void writeMp3Header(QString wavFilename);
+     void closeWavHeader( QFile * file );
 signals:
      void downloadReady();
 public slots:

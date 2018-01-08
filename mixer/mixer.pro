@@ -45,9 +45,5 @@ HEADERS += \
 FORMS += \
         mainwindow.ui
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/./release/ -lmp3lame
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/./debug/ -lmp3lame
-else:unix: LIBS += -L$$PWD/./ -lmp3lame
-
 INCLUDEPATH += $$PWD/.
 DEPENDPATH += $$PWD/.

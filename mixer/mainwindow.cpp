@@ -493,14 +493,11 @@ void MainWindow::onDownload() {
     //wybor lokalizacji zapisywanego pliku audio
     QString selectedFilter;
     QString filename = QFileDialog::getSaveFileName(this,
-        tr("Download"), "/home", tr("audio(*.wav);;audio(*.mp3)"),&selectedFilter);
+        tr("Download"), "/home", tr("audio(*.wav)"),&selectedFilter);
 
     if(filename.count() != 0){
         ui->download_ready->setText("Wait...");
-        if (selectedFilter.endsWith(".wav)"))
-            filename += ".wav";
-        else
-            filename += ".mp3";
+        filename += ".wav";
 
         emit startDownload(filename);
     }
