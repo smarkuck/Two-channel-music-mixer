@@ -35,8 +35,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbAddMusic, SIGNAL(clicked(bool)), this, SLOT(selectAudio()));
     connect(ui->action_Open, SIGNAL(triggered(bool)), this, SLOT(selectAudio()));
     connect(this, SIGNAL(loadAudio(QString)), &soundProc->panel1, SLOT(loadAudio(QString)));
-    connect(ui->pbYes, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(enableWhiteNoise()));
-    connect(ui->pbNo, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(disableWhiteNoise()));
     connect(ui->pbSound, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playPause()));
     connect(ui->pbStop_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playStop()));
     connect(ui->pbSingleLoop_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoop()));
@@ -69,8 +67,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbAddMusic_2, SIGNAL(clicked(bool)), this, SLOT(selectAudio2()));
     connect(ui->action_Open2, SIGNAL(triggered(bool)), this, SLOT(selectAudio2()));
     connect(this, SIGNAL(loadAudio2(QString)), &soundProc->panel2, SLOT(loadAudio(QString)));
-    connect(ui->pbYes_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(enableWhiteNoise()));
-    connect(ui->pbNo_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(disableWhiteNoise()));
     connect(ui->pbSound_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playPause()));
     connect(ui->pbStop_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playStop()));
     connect(ui->pbSingleLoop_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoop()));
@@ -418,9 +414,9 @@ void MainWindow::selectAudio2() {
 void MainWindow::crossFaderChange(int value) {
     soundProc->crossFader = value;
     if(soundProc->panel1.audioReady)
-        emit soundProc->panel1.writeToFile(6, soundProc->panel1.actPos,value);
+        emit soundProc->panel1.writeToFile(soundProc->Actions::cross, soundProc->panel1.actPos,value);
     else if(soundProc->panel2.audioReady)
-        emit soundProc->panel2.writeToFile(6, soundProc->panel2.actPos,value);
+        emit soundProc->panel2.writeToFile(soundProc->Actions::cross, soundProc->panel2.actPos,value);
 }
 
 void MainWindow::saveAction()

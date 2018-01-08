@@ -27,32 +27,6 @@
      <string>Play</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pbYes">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>80</y>
-      <width>51</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Enable</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pbNo">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>100</y>
-      <width>51</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Disable</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pbAddMusic">
     <property name="geometry">
      <rect>
@@ -141,19 +115,6 @@
      <enum>Qt::Vertical</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>90</y>
-      <width>61</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>white noise :)</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="laudio">
     <property name="geometry">
      <rect>
@@ -204,19 +165,6 @@
     </property>
     <property name="text">
      <string>High</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pbNo_2">
-    <property name="geometry">
-     <rect>
-      <x>630</x>
-      <y>110</y>
-      <width>51</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Disable</string>
     </property>
    </widget>
    <widget class="QLabel" name="laudio_2">
@@ -287,32 +235,6 @@
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>550</x>
-      <y>100</y>
-      <width>101</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>white noise :)</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pbYes_2">
-    <property name="geometry">
-     <rect>
-      <x>630</x>
-      <y>90</y>
-      <width>51</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Enable</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pbAddMusic_2">
@@ -862,7 +784,7 @@
      <x>0</x>
      <y>0</y>
      <width>690</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

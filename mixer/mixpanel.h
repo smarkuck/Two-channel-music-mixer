@@ -30,7 +30,6 @@ public:
     bool plot;
     bool isPlayed;
     bool audioReady;
-    bool isWhiteNoise;
     bool isSingleLoop;
     bool isLoopStartSet;
     bool isLoopEndSet;
@@ -82,9 +81,6 @@ public slots:
     void loadAudio(QString filename);
     void readBuffer();
     void finishDecoding();
-
-    void enableWhiteNoise();
-    void disableWhiteNoise();
 
     void lowEQ(int value);
     void medEQ(int value);

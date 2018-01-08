@@ -29,7 +29,7 @@ public:
 
     Action action;
 
-    enum Actions { WN_true = 1, WN_false, low, med, high, cross, WN2_true, WN2_false, low2, med2, high2, cross2};
+    enum Actions { low=1, med, high, cross };
     void doActions(quint64 actPos1, quint64 actPos2);
 
     double buffer1[1024], buffer2[1024];

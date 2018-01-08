@@ -88,14 +88,6 @@ void SoundProcessing::doActions(quint64 actPos1, quint64 actPos2)
 
                 //switch od tego co ma sie zmieniac
                 switch (type) {
-                case WN_true:
-                    panel1.isWhiteNoise = true;
-                    action.p1 += 3; //przesuwam o 3 zeby dostac sie do kolejnego typu akcji
-                    break;
-                case WN_false:
-                    panel1.isWhiteNoise = false;
-                    action.p1 += 3;
-                    break;
                 case low:
                     emit lowEQChange(action.loadBuffer[action.p1+2]);
                     action.p1 += 3;
@@ -139,14 +131,6 @@ void SoundProcessing::doActions(quint64 actPos1, quint64 actPos2)
 
                 //switch od tego co ma sie zmieniac
                 switch (type) {
-                case WN_true:
-                    panel2.isWhiteNoise = true;
-                    action.p2 += 3; //przesuwam o 3 zeby dostac sie do kolejnego typu akcji
-                    break;
-                case WN_false:
-                    panel2.isWhiteNoise = false;
-                    action.p2 += 3;
-                    break;
                 case low:
                     emit lowEQChange2(action.loadBuffer[action.p2+2]);
                     action.p2 += 3;
