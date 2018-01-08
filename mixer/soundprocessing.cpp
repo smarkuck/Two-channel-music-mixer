@@ -17,7 +17,7 @@ SoundProcessing::SoundProcessing(QObject *parent) : QObject(parent)
 
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(play()));
-    timer->start(1);
+    timer->start(0.5);
 
 }
 //------------------------------------------------------------
@@ -56,7 +56,7 @@ void SoundProcessing::play() {
 
     //wpisuj do output1 dopiero gdy zacznie być odtwarzany jakis plik:
     int y = output.toHex().count('0');
-    if(y != 1024 )
+    if(y != 4096 )
         output1.insert(output1.size(),output);
 
     qint64 written = 0;

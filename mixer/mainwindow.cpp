@@ -48,6 +48,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->sLow, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(lowEQ(int)));
     connect(ui->sMedium, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(medEQ(int)));
     connect(ui->sHigh, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(highEQ(int)));
+    connect(ui->sSpeed1,SIGNAL(valueChanged(int)),&soundProc->panel1,SLOT(speedChange(int)));
+    connect(ui->sSpeed2,SIGNAL(valueChanged(int)),&soundProc->panel2,SLOT(speedChange(int)));
 
     //AKCJE
     //sygnaly do zmiany suwakow

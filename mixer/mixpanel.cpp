@@ -4,6 +4,7 @@
 MixPanel::MixPanel(QObject *parent) : QObject(parent)
 {
     actPos = 0;
+    realPosition = 0;
     duration = 0;
     loopingStart = 0;
     isSingleLoop = false;
@@ -13,6 +14,7 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     audioReady = false;
     isPlayed = false;
     plot = false;
+    speed = 1.0;
 
     channel1 = new QByteArray();
     channel2 = new QByteArray();
@@ -138,7 +140,9 @@ void MixPanel::process(double *buffer, int nFrames) {
         y = processMedium(y);
         buffer[i*2+1] = processHigh(y);
 
-        actPos++;
+        realPosition += speed;
+        actPos = (int)realPosition;
+
     }
     if((loopingEnd > loopingStart) && isLoopingSet){
         if((actPos > loopingEnd)){
@@ -315,6 +319,10 @@ void MixPanel::disableWhiteNoise() {
     emit writeToFile(2, actPos,0);
 }
 
+void MixPanel::speedChange(int value){
+    double g = value/50.0;
+    speed = g;
+}
 MixPanel::~MixPanel() {
     delete decoder;
 

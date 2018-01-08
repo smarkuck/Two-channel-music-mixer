@@ -40,6 +40,8 @@ public:
     QVector<double> xEnd_2,yEnd_2;
     QCPBars *filled;
     QVector<double> xfill,yfill;
+    double speed;
+    double volume;
     ~MainWindow();
 
 protected:
@@ -57,6 +59,7 @@ signals:
     void saveActionToFile(QString fileName);
     void loadActionFromFile(QString fileName);
     void startDownload(QString filename);
+
 
 public slots:
     //----PLOTING------------
@@ -78,6 +81,7 @@ public slots:
     void medChange2(int value);
     void highChange2(int value);
     void crossChanger(int value);
+
     void onDownload();
     void downloadTextChange();
     void setText_audio1Ready();

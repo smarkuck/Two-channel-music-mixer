@@ -41,6 +41,8 @@ public:
 
     qint64 duration;
     qint64 actPos;
+    qreal realPosition;
+    double speed;
     QByteArray *channel1;
     QByteArray *channel2;
 
@@ -87,6 +89,7 @@ public slots:
     void medEQ(int value);
     void highEQ(int value);
 
+    void speedChange(int value);
 
 };
 
