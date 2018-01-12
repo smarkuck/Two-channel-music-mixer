@@ -32,16 +32,27 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     connect(decoder, SIGNAL(bufferReady()), this, SLOT(readBuffer()));
     connect(decoder, SIGNAL(finished()), this, SLOT(finishDecoding()));
 
-    memset(&lowMemEq, 0, sizeof(memEQ));
-    memset(&medMemEq, 0, sizeof(memEQ));
-    memset(&medMemEq2, 0, sizeof(memEQ));
-    memset(&highMemEq, 0, sizeof(memEQ));
+    for(int i = 0; i < 2; i++) {
+        memset(&lowMemEq[i], 0, sizeof(memEQ));
+        memset(&medMemEq[i], 0, sizeof(memEQ));
+        memset(&medMemEq2[i], 0, sizeof(memEQ));
+        memset(&highMemEq[i], 0, sizeof(memEQ));
+    }
 
     lowEQ(50);
     medEQ(50);
     highEQ(50);
 
+    shelfFilter(500, -10, "low", lowMemEq[0]);
+    shelfFilter(500, 10, "low", lowMemEq[1]);
 
+    shelfFilter(15000, -10, "low", medMemEq[0]);
+    shelfFilter(500, 10, "low", medMemEq2[0]);
+    shelfFilter(15000, 10, "low", medMemEq[1]);
+    shelfFilter(500, -10, "low", medMemEq2[1]);
+
+    shelfFilter(15000, -10, "high", highMemEq[0]);
+    shelfFilter(15000, 10, "high", highMemEq[1]);
 }
 
 void MixPanel::playPause() {
@@ -133,15 +144,42 @@ void MixPanel::process(double *buffer, int nFrames) {
         }
 
         qint16 value = *(reinterpret_cast<qint16*>(channel1->data())+actPos)*volume;
-        double y = processLow(value);
-        y = processMedium(y);
-        buffer[i*2] = processHigh(y);
+        qint16 value2 = *(reinterpret_cast<qint16*>(channel2->data())+actPos)*volume;
 
-        value = *(reinterpret_cast<qint16*>(channel2->data())+actPos)*volume;
+        double y;
+        double y2;
 
-        y = processLow(value);
-        y = processMedium(y);
-        buffer[i*2+1] = processHigh(y);
+        if(lowValue>=0) {
+            y = processLowUp(value)*lowValue*10+value*(1-lowValue);
+            y2 = processLowUp(value2)*lowValue*10+value2*(1-lowValue);
+        }
+        else {
+            y = processLowDown(value)*(-lowValue)*10+value*(1+lowValue);
+            y2 = processLowDown(value2)*(-lowValue)*10+value2*(1+lowValue);
+        }
+
+        if(medValue>=0) {
+            y += processMediumUp(value)*medValue*10+value*(1-medValue);
+            y2 += processMediumUp(value2)*medValue*10+value2*(1-medValue);
+        }
+        else {
+            y += processMediumDown(value)*(-medValue)*10+value*(1+medValue);
+            y2 += processMediumDown(value2)*(-medValue)*10+value2*(1+medValue);
+        }
+
+        if(highValue>=0) {
+            y += processHighUp(value)*highValue*10+value*(1-highValue);
+            y2 += processHighUp(value2)*highValue*10+value2*(1-highValue);
+        }
+        else {
+            y += processHighDown(value)*(-highValue)*10+value*(1+highValue);
+            y2 += processHighDown(value2)*(-highValue)*10+value2*(1+highValue);
+        }
+
+        float dividor = abs(lowValue)*10+1+abs(medValue)*10+1+abs(highValue)*10+1;
+
+        buffer[i*2] = y/dividor;
+        buffer[i*2+1] = y2/dividor;
 
         realPosition += speed;
         actPos = (int)realPosition;
@@ -201,16 +239,28 @@ double MixPanel::processEQ(double sample, memEQ &eq) {
     return y;
 }
 
-double MixPanel::processLow(double sample) {
-    return processEQ(sample, lowMemEq);
+double MixPanel::processLowUp(double sample) {
+    return processEQ(sample, lowMemEq[1]);
 }
 
-double MixPanel::processMedium(double sample) {
-    return processEQ(processEQ(sample, medMemEq), medMemEq2);
+double MixPanel::processLowDown(double sample) {
+    return processEQ(sample, lowMemEq[0]);
 }
 
-double MixPanel::processHigh(double sample) {
-    return processEQ(sample, highMemEq);
+double MixPanel::processMediumUp(double sample) {
+    return processEQ(processEQ(sample, medMemEq[1]), medMemEq2[1]);
+}
+
+double MixPanel::processMediumDown(double sample) {
+    return processEQ(processEQ(sample, medMemEq[0]), medMemEq2[0]);
+}
+
+double MixPanel::processHighUp(double sample) {
+    return processEQ(sample, highMemEq[1]);
+}
+
+double MixPanel::processHighDown(double sample) {
+    return processEQ(sample, highMemEq[0]);
 }
 
 void MixPanel::shelfFilter(double F0, double g, QString type, memEQ &eq) {
@@ -244,19 +294,22 @@ void MixPanel::shelfFilter(double F0, double g, QString type, memEQ &eq) {
 }
 
 void MixPanel::lowEQ(int value) {
-    shelfFilter(500, (value-50)/50.*10, "low", lowMemEq);
+    //shelfFilter(500, (value-50)/50.*10, "low", lowMemEq);
+    lowValue = (value-50)/50.;
     emit writeToFile(1, actPos,value);  //emisja sygnalu do zapisania akcji
 }
 
 void MixPanel::medEQ(int value) {
-    double g = (value-50)/50.*10;
-    shelfFilter(15000, g, "low", medMemEq);
-    shelfFilter(500, -g, "low", medMemEq2);
+    //double g = (value-50)/50.*10;
+    //shelfFilter(15000, g, "low", medMemEq);
+    //shelfFilter(500, -g, "low", medMemEq2);
+    medValue = (value-50)/50.;
     emit writeToFile(2, actPos,value);
 }
 
 void MixPanel::highEQ(int value) {
-    shelfFilter(15000, (value-50)/50.*10, "high", highMemEq);
+    //shelfFilter(15000, (value-50)/50.*10, "high", highMemEq);
+    highValue = (value-50)/50.;
     emit writeToFile(3, actPos,value);
 }
 

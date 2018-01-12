@@ -46,15 +46,23 @@ public:
     QByteArray *channel1;
     QByteArray *channel2;
 
-    memEQ lowMemEq;
-    memEQ medMemEq;
-    memEQ medMemEq2;
-    memEQ highMemEq;
+    memEQ lowMemEq[2];
+    memEQ medMemEq[2];
+    memEQ medMemEq2[2];
+    memEQ highMemEq[2];
+
+    double lowValue;
+    double medValue;
+    double highValue;
 
     double processEQ(double sample, memEQ &eq);
-    double processLow(double sample);
-    double processMedium(double sample);
-    double processHigh(double sample);
+    double processLowUp(double sample);
+    double processLowDown(double sample);
+    double processMediumUp(double sample);
+    double processMediumDown(double sample);
+    double processHighUp(double sample);
+    double processHighDown(double sample);
+
 
     void process(double *buffer, int nFrames);
 
