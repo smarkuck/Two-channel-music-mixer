@@ -56,59 +56,74 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
 }
 
 void MixPanel::playPause() {
-    //if(audioReady)
-    //{
-        isPlayed = !isPlayed;
 
-    //}
+        isPlayed = !isPlayed;
 }
 
 void MixPanel::playLoopingSet() {
-    //if(audioReady)
-    //{
-        if(isLoopStartSet && isLoopEndSet && !isLoopingSet){
-            isLoopStartSet = false;
-            //loopingStart = loopingEnd = 0;
+
+        if(isLoopingActive)
+            isLoopingActive = !isLoopingActive;
+        else if(isLoopingSet)
+        {
+            if(actPos > loopingStart && actPos < loopingEnd)
+                 isLoopingActive = !isLoopingActive;
+            else
+            {
+                isLoopingActive = true;
+                actPos = loopingStart;
+                realPosition = loopingStart;
+            }
         }
-        isLoopingSet = !isLoopingSet;
-
-        qDebug() << isLoopingSet;
-
-    //}
 }
 void MixPanel::playLoopingStart() {
-    //if(audioReady)
-    //{
+
         loopingStart = actPos;
         isLoopStartSet = true;
-
-    //}
-}
-void MixPanel::playLoopingEnd() {
-    //if(audioReady)
-    //{
-        loopingEnd = actPos;
-        actPos = loopingStart;
-        realPosition = loopingStart;
-        isLoopEndSet = true;
-    //}
-}
-void MixPanel::playLoopingReturn() {
-    //if(audioReady)
-    //{
-        if(isLoopStartSet)
+        if(isLoopEndSet)
         {
             isLoopingSet = true;
-            actPos = loopingStart;
-            realPosition = loopingStart;
+            isLoopingActive = false;
         }
-    //}
+        if(isLoopEndSet && actPos > loopingEnd)
+        {
+            isLoopingSet = false;
+            isLoopingActive = false;
+        }
+}
+void MixPanel::playLoopingEnd() {
+
+        if(isLoopStartSet && actPos > loopingStart)
+        {
+            isLoopEndSet = true;
+            loopingEnd = actPos;
+            isLoopingSet = true;
+            isLoopingActive = true;
+            if(isPlayed)
+            {
+                actPos = loopingStart;
+                realPosition = loopingStart;
+            }
+        }
+
+
+}
+void MixPanel::flagReturn() {
+
+    if(!isFlagSet)
+    {
+        isFlagSet = !isFlagSet;
+        returnFlag = actPos;
+    }
+        else
+    {
+        actPos = returnFlag;
+        realPosition = returnFlag;
+    }
 }
 void MixPanel::playLoop() {
-    //if(audioReady)
-    //{
+
         isSingleLoop = !isSingleLoop;
-    //}
 }
 
 void MixPanel::playStop() {
@@ -185,18 +200,26 @@ void MixPanel::process(double *buffer, int nFrames) {
         actPos = (int)realPosition;
 
     }
-    if((loopingEnd > loopingStart) && isLoopingSet){
-        if((actPos > loopingEnd)){
-            actPos = loopingStart;
-            realPosition = loopingStart;
+//    if((loopingEnd > loopingStart) && isLoopingSet){
+//        if((actPos > loopingEnd)){
+//            actPos = loopingStart;
+//            realPosition = loopingStart;
+//        }
+//    }
+//    else if ((loopingEnd < loopingStart) && isLoopingSet){
+//        if((actPos > loopingEnd) && (actPos < loopingStart)){
+//            actPos = loopingStart;
+//            realPosition = loopingStart;
+//        }
+//    }
+
+        if(isLoopingActive){
+            if((actPos > loopingEnd)){
+                actPos = loopingStart;
+                realPosition = loopingStart;
+            }
         }
-    }
-    else if ((loopingEnd < loopingStart) && isLoopingSet){
-        if((actPos > loopingEnd) && (actPos < loopingStart)){
-            actPos = loopingStart;
-            realPosition = loopingStart;
-        }
-    }
+
 
     if(actPos >= channel1->size()/sizeof(qint16)) {
         actPos = 0;

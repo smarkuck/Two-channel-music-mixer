@@ -33,10 +33,12 @@ public:
     bool isSingleLoop;
     bool isLoopStartSet;
     bool isLoopEndSet;
-
+    bool isLoopingActive;
     bool isLoopingSet;
+    bool isFlagSet;
     qint64 loopingStart;
     qint64 loopingEnd;
+    qint64 returnFlag;
 
     qint64 duration;
     qint64 actPos;
@@ -85,7 +87,7 @@ public slots:
     void playLoopingSet();
     void playLoopingStart();
     void playLoopingEnd();
-    void playLoopingReturn();
+    void flagReturn();
 
     void loadAudio(QString filename);
     void readBuffer();

@@ -786,7 +786,7 @@
      <string>LoopEnd</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pbLoopReturn_1">
+   <widget class="QPushButton" name="pbFlagReturn_1">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -801,7 +801,7 @@
      </font>
     </property>
     <property name="text">
-     <string>LoopReturn</string>
+     <string>returnFlag</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pbLoopReturn_2">
@@ -1039,7 +1039,7 @@
    <zorder>pbLoopEnable_2</zorder>
    <zorder>pbLoopStart_2</zorder>
    <zorder>pbLoopEnd_2</zorder>
-   <zorder>pbLoopReturn_1</zorder>
+   <zorder>pbFlagReturn_1</zorder>
    <zorder>pbLoopReturn_2</zorder>
    <zorder>sSpeed1</zorder>
    <zorder>label_10</zorder>
