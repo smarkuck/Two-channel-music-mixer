@@ -7,6 +7,7 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     realPosition = 0;
     duration = 0;
     loopingStart = 0;
+    isBPM = false;
     isSingleLoop = false;
     isLoopingSet = false;
     isLoopStartSet = false;
@@ -340,9 +341,21 @@ void MixPanel::highEQ(int value) {
     emit writeToFile(3, actPos,value);
 }
 
+void MixPanel::detectBPM() {
+    soundtouch::BPMDetect bpmDetector(1, 48000);
+    int samples = channel1->size()/sizeof(qint16);
+    if(samples > 480000)
+        samples = 480000;
+
+    bpmDetector.inputSamples(reinterpret_cast<soundtouch::SAMPLETYPE*>(channel1->data()), samples);
+    bpm = bpmDetector.getBpm();
+    qDebug() << bpm;
+}
+
 void MixPanel::loadAudio(QString filename) {
     isPlayed = false;
     audioReady = false;
+    isBPM = false;
 
     duration = 0;
     actPos = 0;
@@ -365,6 +378,11 @@ void MixPanel::readBuffer() {
     for(int i = 0; i < buffer.sampleCount()/2; i++) {
         channel1->append(reinterpret_cast<const char*>(data+i*2), sizeof(qint16));
         channel2->append(reinterpret_cast<const char*>(data+1+i*2), sizeof(qint16));
+    }
+
+    if(!isBPM && channel1->size()/sizeof(qint16) > 480000) {
+        detectBPM();
+        isBPM = true;
     }
 
     int seconds = actPos/48000.;
@@ -398,8 +416,11 @@ void MixPanel::finishDecoding() {
     plot = false;
     audioReady = true;
 
-    emit fileReady();
+    if(!isBPM) {
+        detectBPM();
+    }
 
+    emit fileReady();
 }
 
 void MixPanel::speedChange(int value){

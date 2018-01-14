@@ -13,6 +13,9 @@
 #include <QTimer>
 #include "qcustomplot.h"
 #include "action.h"
+
+#include "soundtouch/BPMDetect.h"
+
 class MixPanel : public QObject
 {
     Q_OBJECT
@@ -36,6 +39,7 @@ public:
     bool isLoopingActive;
     bool isLoopingSet;
     bool isFlagSet;
+    bool isBPM;
 
     qint64 loopingStart;
     qint64 loopingEnd;
@@ -45,6 +49,7 @@ public:
     qint64 actPos;
     qreal realPosition;
     double speed;
+    double bpm;
     qreal volume;
     QByteArray *channel1;
     QByteArray *channel2;
@@ -70,7 +75,7 @@ public:
     void process(double *buffer, int nFrames);
 
     void shelfFilter(double F0, double g, QString type, memEQ &eq);
-
+    void detectBPM();
 
 private:
     QAudioDecoder *decoder;

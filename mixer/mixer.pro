@@ -32,7 +32,10 @@ SOURCES += \
         mixpanel.cpp \
     qcustomplot.cpp \
     action.cpp \
-    exporting.cpp
+    exporting.cpp \
+    soundtouch/BPMDetect.cpp \
+    soundtouch/PeakFinder.cpp \
+    soundtouch/FIFOSampleBuffer.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +43,10 @@ HEADERS += \
         mixpanel.h \
     qcustomplot.h \
     action.h \
-    exporting.h
+    exporting.h \
+    soundtouch/BPMDetect.h \
+    soundtouch/PeakFinder.h \
+    soundtouch/FIFOSampleBuffer.h
 
 FORMS += \
         mainwindow.ui
