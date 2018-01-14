@@ -499,9 +499,11 @@ void MixPanel::finishDecoding() {
 
 void MixPanel::speedChange(int value){
     speed = value/50.0;
+    emit writeToFile(6, actPos,value);
 }
 void MixPanel::volumeChange(int value){
     volume = value/100.0;
+    emit writeToFile(5, actPos,value);
 }
 
 MixPanel::~MixPanel() {

@@ -107,6 +107,14 @@ void SoundProcessing::launchActions(quint64 actPos1, quint64 actPos2)
                     emit crossChange(action.loadBuffer[action.p1+2]);
                     action.p1 += 3;
                     break;
+                case volume:
+                    emit volumeChange(action.loadBuffer[action.p1+2]);
+                    action.p1 += 3;
+                    break;
+                case tempo:
+                    emit tempoChange(action.loadBuffer[action.p1+2]);
+                    action.p1 += 3;
+                    break;
                 default:
                     break;
                 }
@@ -148,6 +156,14 @@ void SoundProcessing::launchActions(quint64 actPos1, quint64 actPos2)
                 case cross:
                     crossFader = action.loadBuffer[action.p2+2];
                     emit crossChange(action.loadBuffer[action.p2+2]);
+                    action.p2 += 3;
+                    break;
+                case volume:
+                    emit volumeChange2(action.loadBuffer[action.p2+2]);
+                    action.p2 += 3;
+                    break;
+                case tempo:
+                    emit tempoChange2(action.loadBuffer[action.p2+2]);
                     action.p2 += 3;
                     break;
                 default:

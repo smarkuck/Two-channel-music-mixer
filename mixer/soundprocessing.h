@@ -29,7 +29,7 @@ public:
 
     Action action;
 
-    enum Actions { low=1, med, high, cross };
+    enum Actions { low=1, med, high, cross, volume, tempo };
     void launchActions(quint64 actPos1, quint64 actPos2);
 
     double buffer1[960], buffer2[960];
@@ -54,7 +54,10 @@ signals:
     void highEQChange2(int value);
     void crossChange(int value);
     void crossChange2(int value);
-
+    void volumeChange(int value);
+    void volumeChange2(int value);
+    void tempoChange(int value);
+    void tempoChange2(int value);
 
 public slots:
     void play();

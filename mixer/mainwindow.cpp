@@ -69,15 +69,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->sMedium, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(medEQ(int)));
     connect(ui->sHigh, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(highEQ(int)));
     connect(ui->sSpeed1,SIGNAL(valueChanged(int)),&soundProc->panel1,SLOT(speedChange(int)));
-    connect(ui->sSpeed2,SIGNAL(valueChanged(int)),&soundProc->panel2,SLOT(speedChange(int)));
     connect(ui->sVolume1,SIGNAL(valueChanged(int)),&soundProc->panel1,SLOT(volumeChange(int)));
-    connect(ui->sVolume2,SIGNAL(valueChanged(int)),&soundProc->panel2,SLOT(volumeChange(int)));
 
     //AKCJE
     //sygnaly do zmiany suwakow
     connect(soundProc, SIGNAL(lowEQChange(int)), this, SLOT(lowChange(int)));
     connect(soundProc, SIGNAL(medEQChange(int)), this, SLOT(medChange(int)));
     connect(soundProc, SIGNAL(highEQChange(int)), this, SLOT(highChange(int)));
+    connect(soundProc, SIGNAL(volumeChange(int)), ui->sVolume1, SLOT(setValue(int)));
+    connect(soundProc, SIGNAL(volumeChange2(int)), ui->sVolume2, SLOT(setValue(int)));
+    connect(soundProc, SIGNAL(tempoChange(int)), ui->sSpeed1, SLOT(setValue(int)));
+    connect(soundProc, SIGNAL(tempoChange2(int)), ui->sSpeed2, SLOT(setValue(int)));
     connect(soundProc, SIGNAL(lowEQChange2(int)), this, SLOT(lowChange2(int)));
     connect(soundProc, SIGNAL(medEQChange2(int)), this, SLOT(medChange2(int)));
     connect(soundProc, SIGNAL(highEQChange2(int)), this, SLOT(highChange2(int)));
@@ -115,6 +117,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->sLow_2, SIGNAL(valueChanged(int)), &soundProc->panel2, SLOT(lowEQ(int)));
     connect(ui->sMedium_2, SIGNAL(valueChanged(int)), &soundProc->panel2, SLOT(medEQ(int)));
     connect(ui->sHigh_2, SIGNAL(valueChanged(int)), &soundProc->panel2, SLOT(highEQ(int)));
+    connect(ui->sSpeed2,SIGNAL(valueChanged(int)),&soundProc->panel2,SLOT(speedChange(int)));
+    connect(ui->sVolume2,SIGNAL(valueChanged(int)),&soundProc->panel2,SLOT(volumeChange(int)));
 
     connect(&soundProc->panel2, SIGNAL(timeChange(QString)), ui->lTime_2, SLOT(setText(QString)));
 
