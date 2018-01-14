@@ -114,7 +114,7 @@ void MixPanel::playLoop() {
 void MixPanel::playStop() {
 
     isPlayed = false;
-    audioReady = true;
+    //audioReady = true;
     actPos = 0;
     realPosition = 0;
     int minutes = duration/1000000./60.;
@@ -150,12 +150,12 @@ void MixPanel::process(double *buffer, int nFrames) {
         double y2;
 
         if(lowValue>=0) {
-            y = processLowUp(value)*lowValue*10+value*(1-lowValue);
-            y2 = processLowUp(value2)*lowValue*10+value2*(1-lowValue);
+            y = processLowUp(value)*lowValue*20+value*(1-lowValue);
+            y2 = processLowUp(value2)*lowValue*20+value2*(1-lowValue);
         }
         else {
-            y = processLowDown(value)*(-lowValue)*10+value*(1+lowValue);
-            y2 = processLowDown(value2)*(-lowValue)*10+value2*(1+lowValue);
+            y = processLowDown(value)*(-lowValue)*20+value*(1+lowValue);
+            y2 = processLowDown(value2)*(-lowValue)*20+value2*(1+lowValue);
         }
 
         if(medValue>=0) {
@@ -176,7 +176,7 @@ void MixPanel::process(double *buffer, int nFrames) {
             y2 += processHighDown(value2)*(-highValue)*10+value2*(1+highValue);
         }
 
-        float dividor = abs(lowValue)*10+1+abs(medValue)*10+1+abs(highValue)*10+1;
+        float dividor = abs(lowValue)*20+1+abs(medValue)*10+1+abs(highValue)*10+1;
 
         buffer[i*2] = y/dividor;
         buffer[i*2+1] = y2/dividor;
@@ -202,7 +202,10 @@ void MixPanel::process(double *buffer, int nFrames) {
         actPos = 0;
         realPosition = 0;
         if(isSingleLoop || isLoopingSet) isPlayed = true;
-        else isPlayed = false;
+        else
+            emit pause();
+            //isPlayed = false;
+
     }
 
     int seconds = actPos/48000.;
@@ -222,7 +225,7 @@ void MixPanel::process(double *buffer, int nFrames) {
     if(sSeconds.size() == 1)
         sSeconds.insert(0, '0');
 
-    time  += "/" + QString::number(minutes) + ":" + QString::number(seconds);
+    time  += "/" + QString::number(minutes) + ":" + sSeconds;
 
     emit timeChange(time);
 }
@@ -315,7 +318,7 @@ void MixPanel::highEQ(int value) {
 
 void MixPanel::loadAudio(QString filename) {
     isPlayed = false;
-    audioReady = true;
+    audioReady = false;
 
     duration = 0;
     actPos = 0;
@@ -339,25 +342,37 @@ void MixPanel::readBuffer() {
         channel1->append(reinterpret_cast<const char*>(data+i*2), sizeof(qint16));
         channel2->append(reinterpret_cast<const char*>(data+1+i*2), sizeof(qint16));
     }
-    int minutes = duration/1000000./60.;
-    int seconds = (duration - minutes*1000000*60)/1000000.;
+
+    int seconds = actPos/48000.;
+    int minutes = seconds/60.;
+    seconds -= minutes*60;
 
     QString sSeconds = QString::number(seconds);
     if(sSeconds.size() == 1)
         sSeconds.insert(0, '0');
 
-    QString time  = "0:00/" + QString::number(minutes) + ":" + QString::number(seconds);
+    QString time = QString::number(minutes) + ":" + sSeconds;
+
+    minutes = duration/1000000./60.;
+    seconds = (duration - minutes*1000000*60)/1000000.;
+
+    sSeconds = QString::number(seconds);
+    if(sSeconds.size() == 1)
+        sSeconds.insert(0, '0');
+
+    time  += "/" + QString::number(minutes) + ":" + sSeconds;
+
 
     emit timeChange(time);
-    if(minutes == 1)
-
-    audioReady = true;
+    //if(minutes == 1)
+        //audioReady = true;
 
 }
 
 void MixPanel::finishDecoding() {
     qDebug() << "ready";
     plot = false;
+    audioReady = true;
 
     emit fileReady();
 

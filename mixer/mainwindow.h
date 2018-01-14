@@ -58,7 +58,7 @@ signals:
     void loadAudio2(QString filename);
     void saveActionToFile(QString fileName);
     void loadActionFromFile(QString fileName);
-    void startDownload(QString filename);
+    void startExport(QString filename);
 
 
 public slots:
@@ -82,10 +82,7 @@ public slots:
     void highChange2(int value);
     void crossChanger(int value);
 
-    void onDownload();
-    void downloadTextChange();
-    void setText_audio1Ready();
-    void setText_audio2Ready();
+    void onExport();
 };
 
 #endif // MAINWINDOW_H

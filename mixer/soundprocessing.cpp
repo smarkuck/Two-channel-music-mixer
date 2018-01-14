@@ -13,30 +13,29 @@ SoundProcessing::SoundProcessing(QObject *parent) : QObject(parent)
     format.setSampleSize(16);
 
     audioOutput = new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice(), format);
-    audioOutput->setBufferSize(1024);
+    audioOutput->setBufferSize(960);
     audioDevice = audioOutput->start();
 
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(play()));
-    timer->start(0.5);
-
+    timer->setInterval(10);
+    timer->start();
 }
 //------------------------------------------------------------
 void SoundProcessing::play() {
 
     if(abort) timer->stop();
-    if(!timer->isActive()) return;
 
     QByteArray output;
 
-    panel1.process(buffer1, 512);
-    panel2.process(buffer2, 512);
+    panel1.process(buffer1, 480);
+    panel2.process(buffer2, 480);
 
 
     doActions(panel1.actPos, panel2.actPos);
 
 
-    for(int i = 0; i < 1024; i++) {
+    for(int i = 0; i < 960; i++) {
         rate += 0.0000001;
         if(rate > 1) rate = 1;
 
@@ -62,7 +61,6 @@ void SoundProcessing::play() {
 
     qint64 written = 0;
     while((written += audioDevice->write(output.right(output.size()-written))) < output.size());
-
 }
 
 void SoundProcessing::doActions(quint64 actPos1, quint64 actPos2)

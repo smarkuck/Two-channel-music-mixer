@@ -1,13 +1,11 @@
-#include <downloading.h>
+#include <exporting.h>
 #include <soundprocessing.h>
 
-Downloading::Downloading(SoundProcessing* soundprocessing, QObject *parent) : QObject(parent)
+Exporting::Exporting(SoundProcessing* soundprocessing, QObject *parent) : QObject(parent)
 {
  this->soundProc = soundprocessing;
 }
-void Downloading::download(QString filename){
-
-    qDebug() << " Downloading started " ;
+void Exporting::exportFile(QString filename){
 
     QFile* file= new QFile(filename);
 
@@ -18,11 +16,11 @@ void Downloading::download(QString filename){
     file->write(soundProc->output1);
     closeWavHeader(file);
 
-    emit downloadReady();
+    emit exportReady();
     qDebug() << "ready";
 }
 
-void Downloading::writeWavHeader( QFile * file )
+void Exporting::writeWavHeader( QFile * file )
 {
     QDataStream out(file);
     out.setByteOrder(QDataStream::LittleEndian);
@@ -49,7 +47,7 @@ void Downloading::writeWavHeader( QFile * file )
 
 }
 
-void Downloading::closeWavHeader( QFile * file) {
+void Exporting::closeWavHeader( QFile * file) {
     // Fill the header size placeholders
     quint32 fileSize = file->size();
 

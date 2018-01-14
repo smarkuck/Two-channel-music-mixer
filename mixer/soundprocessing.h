@@ -32,15 +32,16 @@ public:
     enum Actions { low=1, med, high, cross };
     void doActions(quint64 actPos1, quint64 actPos2);
 
-    double buffer1[1024], buffer2[1024];
+    double buffer1[960], buffer2[960];
 
     QByteArray output1;
     QAudioFormat format;
+
+    QTimer* timer;
 private:
     QAudioOutput *audioOutput;
     QIODevice *audioDevice;
 
-    QTimer* timer;
 
     double rate;
 
@@ -57,7 +58,6 @@ signals:
 
 public slots:
     void play();
-
 };
 
 #endif // SOUNDPROCESSING_H

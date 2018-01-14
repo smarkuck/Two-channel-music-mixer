@@ -32,7 +32,7 @@ SOURCES += \
         mixpanel.cpp \
     qcustomplot.cpp \
     action.cpp \
-    downloading.cpp
+    exporting.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,10 +40,13 @@ HEADERS += \
         mixpanel.h \
     qcustomplot.h \
     action.h \
-    downloading.h
+    exporting.h
 
 FORMS += \
         mainwindow.ui
 
 INCLUDEPATH += $$PWD/.
 DEPENDPATH += $$PWD/.
+
+DISTFILES += \
+    stylesheet.qss

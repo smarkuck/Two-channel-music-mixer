@@ -76,6 +76,7 @@ signals:
     void timeChange(QString time);
     void writeToFile(quint64 type, quint64 position, quint64 value);
     void fileReady();
+    void pause();
 
 public slots:
     void playPause();

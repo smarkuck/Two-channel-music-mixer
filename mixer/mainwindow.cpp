@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "downloading.h"
+#include "exporting.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QDesktopWidget>
@@ -13,19 +13,26 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setFixedSize(size());
 
-    ui->customPlot->moveToThread(&th_soundGraph);
-    connect(&th_soundGraph, &QThread::finished,ui->customPlot , &QObject::deleteLater);
-    th_soundGraph.start();
+    QString path = QDir::currentPath();
+    path.append("/../mixer/stylesheet.qss");
+    QFile File(path);
+    File.open(QFile::ReadOnly | QFile::Text);
+    QTextStream in(&File);
 
+    QString stylesheet = in.readAll();
+
+    setStyleSheet(stylesheet);
 
     setupSoundGraph(ui->customPlot);
     setupSoundGraph2(ui->customPlot_2);
 
     soundProc = new SoundProcessing;
     soundProc->moveToThread(&th_soundProc);
+    soundProc->timer->moveToThread(&th_soundProc);
 
-    Downloading* download = new Downloading(soundProc);
+    Exporting* Export = new Exporting(soundProc);
 
     connect(&th_soundProc, &QThread::finished, soundProc, &QObject::deleteLater);
     th_soundProc.start();
@@ -36,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_Open, SIGNAL(triggered(bool)), this, SLOT(selectAudio()));
     connect(this, SIGNAL(loadAudio(QString)), &soundProc->panel1, SLOT(loadAudio(QString)));
     connect(ui->pbSound, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playPause()));
+    connect(&soundProc->panel1, SIGNAL(pause()), ui->pbSound, SLOT(click()));
     connect(ui->pbStop_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playStop()));
     connect(ui->pbSingleLoop_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoop()));
     connect(ui->pbLoopEnable_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoopingSet()));
@@ -62,12 +70,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(soundProc, SIGNAL(crossChange(int)), this, SLOT(crossChanger(int)));
 
     connect(&soundProc->panel1, SIGNAL(timeChange(QString)), ui->lTime, SLOT(setText(QString)));
-    connect(&soundProc->panel1, SIGNAL(fileReady()), this, SLOT(setText_audio1Ready()));
 
     connect(ui->pbAddMusic_2, SIGNAL(clicked(bool)), this, SLOT(selectAudio2()));
     connect(ui->action_Open2, SIGNAL(triggered(bool)), this, SLOT(selectAudio2()));
     connect(this, SIGNAL(loadAudio2(QString)), &soundProc->panel2, SLOT(loadAudio(QString)));
     connect(ui->pbSound_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playPause()));
+    connect(&soundProc->panel2, SIGNAL(pause()), ui->pbSound_2, SLOT(click()));
     connect(ui->pbStop_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playStop()));
     connect(ui->pbSingleLoop_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoop()));
     connect(ui->pbLoopEnable_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoopingSet()));
@@ -81,11 +89,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->sHigh_2, SIGNAL(valueChanged(int)), &soundProc->panel2, SLOT(highEQ(int)));
 
     connect(&soundProc->panel2, SIGNAL(timeChange(QString)), ui->lTime_2, SLOT(setText(QString)));
-    connect(&soundProc->panel2, SIGNAL(fileReady()), this, SLOT(setText_audio2Ready()));
 
     connect(ui->sCrossfader, SIGNAL(valueChanged(int)), this, SLOT(crossFaderChange(int)));
-    connect(ui->pbDownload, SIGNAL(clicked(bool)), this, SLOT(onDownload()));
-    connect(this, SIGNAL(startDownload(QString)), download, SLOT(download(QString)));
+    connect(ui->action_Export, SIGNAL(triggered(bool)), this, SLOT(onExport()));
+    connect(this, SIGNAL(startExport(QString)), Export, SLOT(exportFile(QString)));
 
     connect(ui->customPlot, SIGNAL(plottableClick(QCPAbstractPlottable*,int,QMouseEvent*)), this, SLOT(graphClicked(QCPAbstractPlottable*,int)));
     connect(ui->customPlot_2, SIGNAL(plottableClick(QCPAbstractPlottable*,int,QMouseEvent*)), this, SLOT(graphClicked2(QCPAbstractPlottable*,int)));
@@ -103,8 +110,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(&soundProc->panel1, SIGNAL(writeToFile(quint64,quint64,quint64)), &soundProc->action, SLOT(writePanel1(quint64,quint64,quint64)));
     connect(&soundProc->panel2, SIGNAL(writeToFile(quint64,quint64,quint64)), &soundProc->action, SLOT(writePanel2(quint64,quint64,quint64)));
-
-    connect(download, SIGNAL(downloadReady()), this, SLOT(downloadTextChange()));
 }
 //------------------------------------------------------------
 void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
@@ -112,13 +117,15 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
 
   //customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
   QCPGraph *graph = customPlot->addGraph();
-  customPlot->setBackground(QColor(QWidget::palette().color(QWidget::backgroundRole())));
+  graph->setPen(QPen(QColor(255, 120, 5)));
+  //customPlot->setBackground(QColor(QWidget::palette().color(QWidget::backgroundRole())));
+  customPlot->setBackground(QColor(54, 54, 54));
 
   //stworzenie i ustawienie wskaznika do pokazywania aktualnego czasu utworu
   bars1 = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
   bars1->setWidth(0.025);
-  bars1->setPen(QPen(QColor(Qt::green)));
-  bars1->setBrush(QBrush(QBrush(QColor(Qt::green))));
+  bars1->setPen(QPen(QColor(Qt::white)));
+  bars1->setBrush(QBrush(QBrush(QColor(Qt::white))));
 
 
     barLoopStart_1 = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
@@ -166,7 +173,7 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
     xfill.push_back(0);
   connect(&dataTimer, SIGNAL(timeout()), this, SLOT(bracketDataSlot()));
 
-  dataTimer.start(0); // ustawinie timera do odswiezania danych
+  dataTimer.start(100); // ustawinie timera do odswiezania danych
 }
 
 void MainWindow::bracketDataSlot()
@@ -176,11 +183,12 @@ void MainWindow::bracketDataSlot()
 
       ui->customPlot->xAxis->setRange(0,(soundProc->panel1.channel1->size() )/ (48000 * 2) + 1);
       int n = soundProc->panel1.channel1->size();
-      QVector<double> x, y;
+      static QVector<double> x, y;
 
-      quint64 actPos = 0;
-
-  for (int i=1; actPos<n/sizeof(qint16); i++)
+    static int prevI = 0;
+    //quint64 actPos = 0;
+    quint64 actPos = prevI * 3000;
+  for (int i=1; actPos<n/sizeof(qint16) && i < 50; i++, prevI++)
     {
       //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
       x.push_back(actPos/48000.);
@@ -197,12 +205,17 @@ void MainWindow::bracketDataSlot()
   }
 
     //ustawiam dane do rysowania i wskaznik pozycji utworu na 0
-    x1[0] = 0;
-    x1[1] = 0;
-    bars1->setData(x1, y2);
+    //x1[0] = 0;
+    //x1[1] = 0;
+    //bars1->setData(x1, y2);
     ui->customPlot->replot();
-    soundProc->panel1.plot = true;
-
+    //soundProc->panel1.plot = true;
+    if(actPos>=n/sizeof(qint16)){
+        soundProc->panel1.plot = true;
+        prevI = 0;
+        x.clear();
+        y.clear();
+    }
   }
 
   if(soundProc->panel1.isLoopStartSet){
@@ -264,13 +277,14 @@ void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
 
   //customPlot->setInteractions( QCP::iRangeZoom);
   QCPGraph *graph = customPlot->addGraph();
-
-    customPlot->setBackground(QColor(QWidget::palette().color(QWidget::backgroundRole())));
+  graph->setPen(QPen(QColor(66, 134 ,244)));
+    //customPlot->setBackground(QColor(QWidget::palette().color(QWidget::backgroundRole())));
+  customPlot->setBackground(QColor(54, 54, 54));
   //stworzenie i ustawienie wskaznika do pokazywania aktualnego czasu utworu
   bars2 = new QCPBars(ui->customPlot_2->xAxis, ui->customPlot_2->yAxis);
   bars2->setWidth(0.025);
-  bars2->setPen(QPen(QColor(Qt::green)));
-  bars2->setBrush(QBrush(QBrush(QColor(Qt::green))));
+  bars2->setPen(QPen(QColor(Qt::white)));
+  bars2->setBrush(QBrush(QBrush(QColor(Qt::white))));
 
 
   barLoopStart_2 = new QCPBars(ui->customPlot_2->xAxis, ui->customPlot_2->yAxis);
@@ -306,7 +320,7 @@ void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
     xEnd_2.push_back(0);
   connect(&dataTimer2, SIGNAL(timeout()), this, SLOT(bracketDataSlot2()));
 
-  dataTimer2.start(0); // ustawinie timera do odswiezania danych
+  dataTimer2.start(100); // ustawinie timera do odswiezania danych
 }
 
 void MainWindow::bracketDataSlot2()
@@ -316,12 +330,13 @@ void MainWindow::bracketDataSlot2()
 
       ui->customPlot_2->xAxis->setRange(0,(soundProc->panel2.channel1->size() )/ (48000 * 2) + 1);
       int n = soundProc->panel2.channel1->size();
-      QVector<double> x, y;
-      quint64 actPos = 0;
+      static QVector<double> x, y;
+      static int prevI = 0;
+      quint64 actPos = prevI * 3000;
 
-  for (int i=1; i<n/sizeof(qint16); i+=3000)
+  for (int i=1; actPos<n/sizeof(qint16) && i < 100; i++, prevI++)
     {
-      x.push_back(i/48000.);  //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
+      x.push_back(actPos/48000.);  //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
       //pobieram i dodaje probki z kanalu 1 i 2, nie wiem czy to jest dobre ale nie bedziemy
       //chyba rysowac dwoch kanalow osobno xD
       y.push_back(*(reinterpret_cast<qint16*>(soundProc->panel2.channel1->data())+actPos)
@@ -335,9 +350,9 @@ void MainWindow::bracketDataSlot2()
   }
 
   //ustawiam dane do rysowania i wskaznik pozycji utworu na 0
-  x2[0] = 0;
-  x2[1] = 0;
-  bars2->setData(x2, y1);
+  //x2[0] = 0;
+  //x2[1] = 0;
+  //bars2->setData(x2, y1);
   xStart_2[0]=0;
   xStart_2[1]=0;
   barLoopStart_2->setData(xStart_2, yStart_2);
@@ -345,7 +360,13 @@ void MainWindow::bracketDataSlot2()
   xEnd_2[1]=0;
   barLoopEnd_2->setData(xEnd_2, yEnd_2);
   ui->customPlot_2->replot();
-  soundProc->panel2.plot = true;
+  //soundProc->panel2.plot = true;
+  if(actPos>=n/sizeof(qint16)){
+      soundProc->panel2.plot = true;
+      prevI = 0;
+      x.clear();
+      y.clear();
+  }
   }
 
 
@@ -389,12 +410,11 @@ void MainWindow::graphClicked2(QCPAbstractPlottable *plottable, int dataIndex)
 
 void MainWindow::selectAudio() {
     QString filename = QFileDialog::getOpenFileName(this,
-        tr("Open file"), "/home/", tr("Music Files (*.mp3)"));
+        tr("Open file"), "/home/", tr("Music Files (*.mp3 *.wav)"));
 
     if(filename == "") return;
 
     ui->laudio->setText(filename.split('/').last());
-    ui->file1_ready->setText("Wait...");
     emit loadAudio(filename);
 }
 
@@ -409,7 +429,6 @@ void MainWindow::selectAudio2() {
     if(filename == "") return;
 
     ui->laudio_2->setText(filename.split('/').last());
-    ui->file2_ready->setText("Wait...");
     emit loadAudio2(filename);
 }
 //------------------------------------------------------------
@@ -485,19 +504,17 @@ void MainWindow::crossChanger(int value)
 }
 //------------------------------------------------------------
 
-void MainWindow::onDownload() {
-
+void MainWindow::onExport() {
 
     //wybor lokalizacji zapisywanego pliku audio
     QString selectedFilter;
     QString filename = QFileDialog::getSaveFileName(this,
-        tr("Download"), "/home", tr("audio(*.wav)"),&selectedFilter);
+        tr("Export"), "/home", tr("audio(*.wav)"),&selectedFilter);
 
     if(filename.count() != 0){
-        ui->download_ready->setText("Wait...");
         filename += ".wav";
 
-        emit startDownload(filename);
+        emit startExport(filename);
     }
 
 }
@@ -508,19 +525,4 @@ MainWindow::~MainWindow()
     th_soundProc.quit();
     th_soundProc.wait();
     delete ui;
-}
-
-//------------------------------------------------
-
-void MainWindow::downloadTextChange(){
-    ui->download_ready->setText("Done");
-}
-
-
-void MainWindow::setText_audio1Ready(){
-     ui->file1_ready->setText("");
-}
-
-void MainWindow::setText_audio2Ready(){
-     ui->file2_ready->setText("");
 }
