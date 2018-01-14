@@ -36,6 +36,7 @@ public:
     bool isLoopingActive;
     bool isLoopingSet;
     bool isFlagSet;
+
     qint64 loopingStart;
     qint64 loopingEnd;
     qint64 returnFlag;

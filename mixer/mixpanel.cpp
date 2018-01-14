@@ -10,6 +10,7 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     isSingleLoop = false;
     isLoopingSet = false;
     isLoopStartSet = false;
+    isFlagSet = false;
     audioReady = false;
     isPlayed = false;
     plot = false;
@@ -115,7 +116,7 @@ void MixPanel::flagReturn() {
         isFlagSet = !isFlagSet;
         returnFlag = actPos;
     }
-        else
+    else
     {
         actPos = returnFlag;
         realPosition = returnFlag;
