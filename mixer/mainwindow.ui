@@ -718,7 +718,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>330</y>
+      <y>370</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -736,7 +736,7 @@
     <property name="geometry">
      <rect>
       <x>610</x>
-      <y>330</y>
+      <y>370</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -786,12 +786,12 @@
      <string>LoopEnd</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pbFlagReturn_1">
+   <widget class="QPushButton" name="pbFlag1">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>370</y>
-      <width>71</width>
+      <y>250</y>
+      <width>21</width>
       <height>31</height>
      </rect>
     </property>
@@ -801,25 +801,7 @@
      </font>
     </property>
     <property name="text">
-     <string>returnFlag</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pbLoopReturn_2">
-    <property name="geometry">
-     <rect>
-      <x>608</x>
-      <y>370</y>
-      <width>71</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Lato</family>
-     </font>
-    </property>
-    <property name="text">
-     <string>LoopReturn</string>
+     <string>1</string>
     </property>
    </widget>
    <widget class="QSlider" name="sSpeed1">
@@ -1118,6 +1100,332 @@
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="pbFlag2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>250</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Lato</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>2</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbFlag3">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>250</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Lato</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>3</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbFlag4">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>250</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Lato</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>4</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbUnflag1">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>280</y>
+      <width>21</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbUnflag2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>280</y>
+      <width>21</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbUnflag3">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>280</y>
+      <width>21</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbUnflag4">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>280</y>
+      <width>21</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbFlag3_2">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>250</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Lato</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>3</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbUnflag1_2">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>280</y>
+      <width>21</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbLoop1_16_2">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>160</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1/16</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbLoop1_2_2">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>200</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1/2</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbUnflag2_2">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>280</y>
+      <width>21</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbFlag1_2">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>250</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Lato</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>1</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbLoop2__2">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>200</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>2</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbFlag4_2">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>250</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Lato</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>4</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbFlag2_2">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>250</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Lato</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>2</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbUnflag4_2">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>280</y>
+      <width>21</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbLoop1__2">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>200</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbUnflag3_2">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>280</y>
+      <width>21</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbLoop1_8_2">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>160</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1/8</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbLoop1_4_2">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>160</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1/4</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
    <zorder>pbSound</zorder>
    <zorder>sLow</zorder>
    <zorder>sMedium</zorder>
@@ -1151,8 +1459,7 @@
    <zorder>pbLoopEnable_2</zorder>
    <zorder>pbLoopStart_2</zorder>
    <zorder>pbLoopEnd_2</zorder>
-   <zorder>pbFlagReturn_1</zorder>
-   <zorder>pbLoopReturn_2</zorder>
+   <zorder>pbFlag1</zorder>
    <zorder>sSpeed1</zorder>
    <zorder>label_10</zorder>
    <zorder>label_12</zorder>
@@ -1173,6 +1480,27 @@
    <zorder>pbLoop2</zorder>
    <zorder>pbLoop1_2</zorder>
    <zorder>pbLoop1</zorder>
+   <zorder>pbFlag2</zorder>
+   <zorder>pbFlag3</zorder>
+   <zorder>pbFlag4</zorder>
+   <zorder>pbUnflag1</zorder>
+   <zorder>pbUnflag2</zorder>
+   <zorder>pbUnflag3</zorder>
+   <zorder>pbUnflag4</zorder>
+   <zorder>pbFlag3_2</zorder>
+   <zorder>pbUnflag1_2</zorder>
+   <zorder>pbLoop1_16_2</zorder>
+   <zorder>pbLoop1_2_2</zorder>
+   <zorder>pbUnflag2_2</zorder>
+   <zorder>pbFlag1_2</zorder>
+   <zorder>pbLoop2__2</zorder>
+   <zorder>pbFlag4_2</zorder>
+   <zorder>pbFlag2_2</zorder>
+   <zorder>pbUnflag4_2</zorder>
+   <zorder>pbLoop1__2</zorder>
+   <zorder>pbUnflag3_2</zorder>
+   <zorder>pbLoop1_8_2</zorder>
+   <zorder>pbLoop1_4_2</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

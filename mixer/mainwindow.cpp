@@ -49,7 +49,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbLoopEnable_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoopingSet()));
     connect(ui->pbLoopStart_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoopingStart()));
     connect(ui->pbLoopEnd_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoopingEnd()));
-    connect(ui->pbFlagReturn_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(flagReturn()));
+    connect(ui->pbFlag1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(setFlag1()));
+    connect(ui->pbFlag2, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(setFlag2()));
+    connect(ui->pbFlag3, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(setFlag3()));
+    connect(ui->pbFlag4, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(setFlag4()));
+    connect(ui->pbUnflag1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(unsetFlag1()));
+    connect(ui->pbUnflag2, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(unsetFlag2()));
+    connect(ui->pbUnflag3, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(unsetFlag3()));
+    connect(ui->pbUnflag4, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(unsetFlag4()));
 
     connect(ui->pbLoop1_16, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(setLoop1_16()));
     connect(ui->pbLoop1_8, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(setLoop1_8()));
@@ -88,8 +95,22 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbLoopEnable_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoopingSet()));
     connect(ui->pbLoopStart_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoopingStart()));
     connect(ui->pbLoopEnd_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(playLoopingEnd()));
-    connect(ui->pbLoopReturn_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(flagReturn()));
 
+    connect(ui->pbFlag1_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(setFlag1()));
+    connect(ui->pbFlag2_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(setFlag2()));
+    connect(ui->pbFlag3_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(setFlag3()));
+    connect(ui->pbFlag4_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(setFlag4()));
+    connect(ui->pbUnflag1_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(unsetFlag1()));
+    connect(ui->pbUnflag2_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(unsetFlag2()));
+    connect(ui->pbUnflag3_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(unsetFlag3()));
+    connect(ui->pbUnflag4_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(unsetFlag4()));
+
+    connect(ui->pbLoop1_16_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(setLoop1_16()));
+    connect(ui->pbLoop1_8_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(setLoop1_8()));
+    connect(ui->pbLoop1_4_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(setLoop1_4()));
+    connect(ui->pbLoop1_2_2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(setLoop1_2()));
+    connect(ui->pbLoop1__2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(setLoop1()));
+    connect(ui->pbLoop2__2, SIGNAL(clicked(bool)), &soundProc->panel2, SLOT(setLoop2()));
 
     connect(ui->sLow_2, SIGNAL(valueChanged(int)), &soundProc->panel2, SLOT(lowEQ(int)));
     connect(ui->sMedium_2, SIGNAL(valueChanged(int)), &soundProc->panel2, SLOT(medEQ(int)));
@@ -153,10 +174,20 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
 
     color2 = QColor(Qt::green);
     color2.setAlpha(50);
-    returnBar = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
-    returnBar->setWidth(0.025);
-    returnBar->setPen(QPen(QColor(color2)));
-    returnBar->setBrush(QBrush(QBrush(color2)));
+
+    QColor colors[4];
+    colors[0] = QColor(Qt::red);
+    colors[1] = QColor(Qt::green);
+    colors[2] = QColor(Qt::blue);
+    colors[3] = QColor(Qt::yellow);
+    for(int i = 0; i < 4; i++) {
+        returnBar[i] = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
+        returnBar[i]->setWidth(0.025);
+        colors[i].setAlpha(150);
+        returnBar[i]->setPen(QPen(QColor(colors[i])));
+        returnBar[i]->setBrush(QBrush(QBrush(colors[i])));
+        returnBar[i]->setVisible(false);
+    }
 
     customPlot->graph(1)->setPen(QPen(Qt::NoPen));
     customPlot->graph(1)->setBrush(QBrush(QBrush(color1)));
@@ -190,7 +221,7 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
     yReturn.push_back(-100000);
     xReturn.push_back(0);
     xReturn.push_back(0);
-    returnBar->setVisible(false);
+
     ui->customPlot->graph(1)->setVisible(false);
     ui->customPlot->graph(2)->setVisible(false);
 
@@ -238,14 +269,26 @@ void MainWindow::bracketDataSlot()
       }
     }
 
-  if(soundProc->panel1.isFlagSet)
-  {
-    xReturn[0] = soundProc->panel1.returnFlag/48000;
-    xReturn[1] = soundProc->panel1.returnFlag/48000;
-    returnBar->setData(xReturn, yReturn);
-    returnBar->setVisible(true);
-    ui->customPlot->replot();
-  }
+    for(int i = 0; i < 4; i++) {
+        if(soundProc->panel1.flags[i]) {
+            xReturn[0] = xReturn[1] = soundProc->panel1.flagPos[i]/48000;
+            returnBar[i]->setData(xReturn, yReturn);
+            returnBar[i]->setVisible(true);
+            ui->customPlot->replot();
+        }
+        else {
+            returnBar[i]->setVisible(false);
+        }
+    }
+
+//  if(soundProc->panel1.isFlagSet)
+//  {
+//    xReturn[0] = soundProc->panel1.returnFlag/48000;
+//    xReturn[1] = soundProc->panel1.returnFlag/48000;
+//    returnBar->setData(xReturn, yReturn);
+//    returnBar->setVisible(true);
+//    ui->customPlot->replot();
+//  }
 
   if(soundProc->panel1.isLoopStartSet){
       xStart_1[0]=soundProc->panel1.loopingStart/48000;

@@ -39,14 +39,14 @@ public:
     bool isLoopEndSet;
     bool isLoopingActive;
     bool isLoopingSet;
-    bool isFlagSet;
+    bool flags[4];
     bool isBPM;
 
     double audioLength;
     int    audioLengthInSec;
     qint64 loopingStart;
     qint64 loopingEnd;
-    qint64 returnFlag;
+    qint64 flagPos[4];
 
     double bpm;
     int loopInterval;
@@ -84,6 +84,8 @@ public:
     void shelfFilter(double F0, double g, QString type, memEQ &eq);
     void detectBPM();
     void setLoop(int loop);
+    void setFlag(int flag);
+    void unsetFlag(int flag);
 
 private:
     QAudioDecoder *decoder;
@@ -101,7 +103,16 @@ public slots:
     void playLoopingSet();
     void playLoopingStart();
     void playLoopingEnd();
-    void flagReturn();
+
+    void setFlag1();
+    void setFlag2();
+    void setFlag3();
+    void setFlag4();
+
+    void unsetFlag1();
+    void unsetFlag2();
+    void unsetFlag3();
+    void unsetFlag4();
 
     void setLoop1_16();
     void setLoop1_8();

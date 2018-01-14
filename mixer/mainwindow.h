@@ -39,7 +39,8 @@ public:
     QCPBars *barLoopEnd_2;
     QVector<double> xEnd_2,yEnd_2;
     QVector<double> xfill,yfill;
-    QCPBars *returnBar;
+    QCPBars *returnBar[4];
+    QCPBars *returnBar2[4];
     QVector<double> xReturn,yReturn;
     double speed;
     double volume;

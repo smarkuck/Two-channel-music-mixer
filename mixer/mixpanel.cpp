@@ -11,10 +11,15 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     isSingleLoop = false;
     isLoopingSet = false;
     isLoopStartSet = false;
-    isFlagSet = false;
     audioReady = false;
     isPlayed = false;
     plot = false;
+
+    for(int i = 0; i < 4; i++) {
+        flags[i] = false;
+        flagPos[i] = 0;
+    }
+
     speed = 1.0;
     volume = 0.5;
 
@@ -115,26 +120,62 @@ void MixPanel::playLoopingEnd() {
 
 
 }
-void MixPanel::flagReturn() {
+void MixPanel::setFlag(int flag) {
 
-    if(!isFlagSet)
+    if(!flags[flag])
     {
-        isFlagSet = !isFlagSet;
-        returnFlag = actPos;
+        flags[flag] = true;
+        flagPos[flag] = actPos;
     }
     else
     {
-        actPos = returnFlag;
-        realPosition = returnFlag;
+        actPos = flagPos[flag];
+        realPosition = actPos;
     }
 }
 
+void MixPanel::unsetFlag(int flag) {
+    flags[flag] = false;
+}
+
+void MixPanel::setFlag1() {
+    setFlag(0);
+}
+
+void MixPanel::setFlag2() {
+    setFlag(1);
+}
+
+void MixPanel::setFlag3() {
+    setFlag(2);
+}
+
+void MixPanel::setFlag4() {
+    setFlag(3);
+}
+
+void MixPanel::unsetFlag1() {
+    unsetFlag(0);
+}
+
+void MixPanel::unsetFlag2() {
+    unsetFlag(1);
+}
+
+void MixPanel::unsetFlag3() {
+    unsetFlag(2);
+}
+
+void MixPanel::unsetFlag4() {
+    unsetFlag(3);
+}
+
 void MixPanel::setLoop(int loop) {
+    if(loopInterval == 0)
+        return;
+
     if(actLoop == 0)
-        if(loopInterval == 0)
-            loopStart = 0;
-        else
-            loopStart = actPos - actPos % loopInterval;
+        loopStart = actPos - actPos % loopInterval;
 
     if(actLoop != loop)
         actLoop = loop;
@@ -253,7 +294,7 @@ void MixPanel::process(double *buffer, int nFrames) {
         }
 
         double loopType = pow(2, actLoop-4);
-        if(actLoop && actPos > loopStart + loopInterval*loopType) {
+        if(actLoop && (actPos > loopStart + loopInterval*loopType || actPos < loopStart)) {
             actPos = loopStart;
             realPosition = actPos;
         }
