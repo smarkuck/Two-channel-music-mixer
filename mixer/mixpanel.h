@@ -45,11 +45,15 @@ public:
     qint64 loopingEnd;
     qint64 returnFlag;
 
+    double bpm;
+    int loopInterval;
+    int loopStart;
+    int actLoop;
+
     qint64 duration;
     qint64 actPos;
     qreal realPosition;
     double speed;
-    double bpm;
     qreal volume;
     QByteArray *channel1;
     QByteArray *channel2;
@@ -76,6 +80,7 @@ public:
 
     void shelfFilter(double F0, double g, QString type, memEQ &eq);
     void detectBPM();
+    void setLoop(int loop);
 
 private:
     QAudioDecoder *decoder;
@@ -94,6 +99,13 @@ public slots:
     void playLoopingStart();
     void playLoopingEnd();
     void flagReturn();
+
+    void setLoop1_16();
+    void setLoop1_8();
+    void setLoop1_4();
+    void setLoop1_2();
+    void setLoop1();
+    void setLoop2();
 
     void loadAudio(QString filename);
     void readBuffer();

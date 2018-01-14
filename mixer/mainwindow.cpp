@@ -51,6 +51,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbLoopEnd_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(playLoopingEnd()));
     connect(ui->pbFlagReturn_1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(flagReturn()));
 
+    connect(ui->pbLoop1_16, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(setLoop1_16()));
+    connect(ui->pbLoop1_8, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(setLoop1_8()));
+    connect(ui->pbLoop1_4, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(setLoop1_4()));
+    connect(ui->pbLoop1_2, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(setLoop1_2()));
+    connect(ui->pbLoop1, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(setLoop1()));
+    connect(ui->pbLoop2, SIGNAL(clicked(bool)), &soundProc->panel1, SLOT(setLoop2()));
+
     connect(ui->sLow, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(lowEQ(int)));
     connect(ui->sMedium, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(medEQ(int)));
     connect(ui->sHigh, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(highEQ(int)));

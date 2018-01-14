@@ -18,6 +18,11 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     speed = 1.0;
     volume = 0.5;
 
+    bpm = 0;
+    loopInterval = 0;
+    loopStart = 0;
+    actLoop = 0;
+
     channel1 = new QByteArray();
     channel2 = new QByteArray();
 
@@ -123,6 +128,43 @@ void MixPanel::flagReturn() {
         realPosition = returnFlag;
     }
 }
+
+void MixPanel::setLoop(int loop) {
+    if(actLoop == 0)
+        if(loopInterval == 0)
+            loopStart = 0;
+        else
+            loopStart = actPos - actPos % loopInterval;
+
+    if(actLoop != loop)
+        actLoop = loop;
+    else actLoop = 0;
+}
+
+void MixPanel::setLoop1_16() {
+    setLoop(1);
+}
+
+void MixPanel::setLoop1_8() {
+    setLoop(2);
+}
+
+void MixPanel::setLoop1_4() {
+    setLoop(3);
+}
+
+void MixPanel::setLoop1_2() {
+    setLoop(4);
+}
+
+void MixPanel::setLoop1() {
+    setLoop(5);
+}
+
+void MixPanel::setLoop2() {
+    setLoop(6);
+}
+
 void MixPanel::playLoop() {
 
         isSingleLoop = !isSingleLoop;
@@ -222,6 +264,11 @@ void MixPanel::process(double *buffer, int nFrames) {
             }
         }
 
+        double loopType = pow(2, actLoop-4);
+        if(actLoop && actPos > loopStart + loopInterval*loopType) {
+            actPos = loopStart;
+            realPosition = actPos;
+        }
 
     if(actPos >= channel1->size()/sizeof(qint16)) {
         actPos = 0;
@@ -349,7 +396,7 @@ void MixPanel::detectBPM() {
 
     bpmDetector.inputSamples(reinterpret_cast<soundtouch::SAMPLETYPE*>(channel1->data()), samples);
     bpm = bpmDetector.getBpm();
-    qDebug() << bpm;
+    loopInterval = 60/bpm*48000;
 }
 
 void MixPanel::loadAudio(QString filename) {

@@ -1022,6 +1022,102 @@
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="pbLoop1_16">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>160</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1/16</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbLoop1_8">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>160</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1/8</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbLoop1_4">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>160</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1/4</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbLoop2">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>200</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>2</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbLoop1_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>200</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1/2</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbLoop1">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>200</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
    <zorder>pbSound</zorder>
    <zorder>sLow</zorder>
    <zorder>sMedium</zorder>
@@ -1071,6 +1167,12 @@
    <zorder>laudio</zorder>
    <zorder>laudio_2</zorder>
    <zorder>pbRec</zorder>
+   <zorder>pbLoop1_16</zorder>
+   <zorder>pbLoop1_8</zorder>
+   <zorder>pbLoop1_4</zorder>
+   <zorder>pbLoop2</zorder>
+   <zorder>pbLoop1_2</zorder>
+   <zorder>pbLoop1</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
