@@ -39,3 +39,16 @@ Jak pobierzecie repo to po wczytaniu utworu spróbujcie załadować akcje test.a
 Dodałam pobieranie w formacie mp3 ale ono się opiera na bibliotece zewnętrznej libmp3lame.so, ona jest w folderze mixer,
 jak będzie wam wyskakiwał błąd że jakieś undefined references do funkcji z lame w nazwie to trzeba kliknąć prawym przyciskiem na nazwę projektu->Add Libraries->Add external libraries 
 i wybrać tą bibliotekę i powinno być ok
+
+---------
+
+Została dodana zewnętrzna biblioteka TagLib do obliczania długości utworu natychmiastowo . Jeżeli nie będziecie mogli uruchomić miksera,
+ściągnijcie wersje 1.11.1 ze strony http://taglib.org/
+Instrukcja instalacji:
+```
+cd ~/taglib-1.11.1/
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release .
+make
+sudo make install
+sudo apt install libtag1-dev
+```
