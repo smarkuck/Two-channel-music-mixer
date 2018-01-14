@@ -22,7 +22,6 @@ void Action::saveActionToFile(QString fileName)
         out << buffer2[i] << "\n";
     }
     file.close();
-    qDebug() << "actions saved";
 }
 
 void Action::writePanel2(quint64 type, quint64 position, quint64 value)
@@ -64,13 +63,12 @@ void Action::loadActionFromFile(QString fileName)
 {
     actionLoaded = false;
     loadBuffer.clear();
-    int k = 0;
+
     QFile file(fileName);
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     while(!file.atEnd()){
         QString line = file.readLine();
         loadBuffer.push_back(line.toInt());
-        qDebug() << "read " << loadBuffer[k++];
     }
     beg1 = p1 = 1;
     beg2 = p2 = loadBuffer[0]+1;

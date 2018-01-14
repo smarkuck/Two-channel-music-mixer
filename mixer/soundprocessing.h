@@ -20,7 +20,7 @@ class SoundProcessing : public QObject
 
 public:
     explicit SoundProcessing(QObject *parent = nullptr); 
-    bool abort;
+    bool isRecording;
 
     int crossFader;
 
@@ -30,7 +30,7 @@ public:
     Action action;
 
     enum Actions { low=1, med, high, cross };
-    void doActions(quint64 actPos1, quint64 actPos2);
+    void launchActions(quint64 actPos1, quint64 actPos2);
 
     double buffer1[960], buffer2[960];
 
@@ -58,6 +58,8 @@ signals:
 
 public slots:
     void play();
+    void record();
+
 };
 
 #endif // SOUNDPROCESSING_H

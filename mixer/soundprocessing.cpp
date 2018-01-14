@@ -2,7 +2,8 @@
 //============================================================
 SoundProcessing::SoundProcessing(QObject *parent) : QObject(parent)
 {
-    abort = false;
+    isRecording = false;
+
     rate = 1;
     crossFader = 50;
 
@@ -24,15 +25,12 @@ SoundProcessing::SoundProcessing(QObject *parent) : QObject(parent)
 //------------------------------------------------------------
 void SoundProcessing::play() {
 
-    if(abort) timer->stop();
-
     QByteArray output;
 
     panel1.process(buffer1, 480);
     panel2.process(buffer2, 480);
 
-
-    doActions(panel1.actPos, panel2.actPos);
+    launchActions(panel1.actPos, panel2.actPos);
 
 
     for(int i = 0; i < 960; i++) {
@@ -55,15 +53,21 @@ void SoundProcessing::play() {
     }
 
     //wpisuj do output1 dopiero gdy zacznie być odtwarzany jakis plik:
-    int y = output.toHex().count('0');
-    if(y != 4096 )
+    if(isRecording)
         output1.insert(output1.size(),output);
 
     qint64 written = 0;
     while((written += audioDevice->write(output.right(output.size()-written))) < output.size());
 }
 
-void SoundProcessing::doActions(quint64 actPos1, quint64 actPos2)
+void SoundProcessing::record() {
+    if(!isRecording)
+        output1.clear();
+
+    isRecording = !isRecording;
+}
+
+void SoundProcessing::launchActions(quint64 actPos1, quint64 actPos2)
 {
     if(action.actionLoaded && action.isRunning){  //sprawdzam czy bufer jest gotowy
         if(action.loadBuffer[0] > 0) { //czy są akcje dla panelu 1

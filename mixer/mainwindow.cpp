@@ -91,6 +91,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&soundProc->panel2, SIGNAL(timeChange(QString)), ui->lTime_2, SLOT(setText(QString)));
 
     connect(ui->sCrossfader, SIGNAL(valueChanged(int)), this, SLOT(crossFaderChange(int)));
+
+    connect(ui->pbRec, SIGNAL(clicked(bool)), soundProc, SLOT(record()));
     connect(ui->action_Export, SIGNAL(triggered(bool)), this, SLOT(onExport()));
     connect(this, SIGNAL(startExport(QString)), Export, SLOT(exportFile(QString)));
 
@@ -479,10 +481,6 @@ void MainWindow::selectAudio() {
 
     ui->laudio->setText(filename.split('/').last());
     emit loadAudio(filename);
-}
-
-void MainWindow::closeEvent(QCloseEvent * /* unused */) {
-    soundProc->abort = true;
 }
 //------------------------------------------------------------
 void MainWindow::selectAudio2() {

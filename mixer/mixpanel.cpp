@@ -393,7 +393,7 @@ void MixPanel::readBuffer() {
 }
 
 void MixPanel::finishDecoding() {
-    qDebug() << "ready";
+
     plot = false;
     audioReady = true;
 

@@ -45,9 +45,6 @@ public:
     double volume;
     ~MainWindow();
 
-protected:
-    void closeEvent(QCloseEvent *event) override;
-
 private:
     Ui::MainWindow *ui;
     SoundProcessing* soundProc;

@@ -17,7 +17,6 @@ void Exporting::exportFile(QString filename){
     closeWavHeader(file);
 
     emit exportReady();
-    qDebug() << "ready";
 }
 
 void Exporting::writeWavHeader( QFile * file )
