@@ -13,7 +13,8 @@
 #include <QTimer>
 #include "qcustomplot.h"
 #include "action.h"
-
+#include <taglib/audioproperties.h>
+#include <taglib/fileref.h>
 #include "soundtouch/BPMDetect.h"
 
 class MixPanel : public QObject
@@ -41,6 +42,8 @@ public:
     bool isFlagSet;
     bool isBPM;
 
+    double audioLength;
+    int    audioLengthInSec;
     qint64 loopingStart;
     qint64 loopingEnd;
     qint64 returnFlag;

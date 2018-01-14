@@ -244,18 +244,6 @@ void MixPanel::process(double *buffer, int nFrames) {
         actPos = (int)realPosition;
 
     }
-//    if((loopingEnd > loopingStart) && isLoopingSet){
-//        if((actPos > loopingEnd)){
-//            actPos = loopingStart;
-//            realPosition = loopingStart;
-//        }
-//    }
-//    else if ((loopingEnd < loopingStart) && isLoopingSet){
-//        if((actPos > loopingEnd) && (actPos < loopingStart)){
-//            actPos = loopingStart;
-//            realPosition = loopingStart;
-//        }
-//    }
 
         if(isLoopingActive){
             if((actPos > loopingEnd)){
@@ -290,8 +278,8 @@ void MixPanel::process(double *buffer, int nFrames) {
 
     QString time = QString::number(minutes) + ":" + sSeconds;
 
-    minutes = duration/1000000./60.;
-    seconds = (duration - minutes*1000000*60)/1000000.;
+    minutes = audioLengthInSec/60.;
+    seconds = audioLengthInSec - minutes*60;
 
     sSeconds = QString::number(seconds);
     if(sSeconds.size() == 1)
@@ -411,6 +399,28 @@ void MixPanel::loadAudio(QString filename) {
     channel1->clear();
     channel2->clear();
 
+    TagLib::FileRef f(QFile::encodeName(filename).constData());
+    audioLength  = f.audioProperties()->lengthInMilliseconds() / 1000.;
+    audioLengthInSec = f.audioProperties()->lengthInSeconds();
+    int minutes = audioLengthInSec/60.;
+    int seconds = audioLengthInSec - minutes*60;
+
+    QString sSeconds = QString::number(0);
+    if(sSeconds.size() == 1)
+        sSeconds.insert(0, '0');
+
+    QString time = QString::number(0) + ":" + sSeconds;
+
+    sSeconds = QString::number(seconds);
+    if(sSeconds.size() == 1)
+        sSeconds.insert(0, '0');
+
+    time  += "/" + QString::number(minutes) + ":" + sSeconds;
+
+    emit timeChange(time);
+
+    audioReady = true;
+
     decoder->stop();
     decoder->setSourceFilename(filename);
     decoder->start();
@@ -432,36 +442,12 @@ void MixPanel::readBuffer() {
         isBPM = true;
     }
 
-    int seconds = actPos/48000.;
-    int minutes = seconds/60.;
-    seconds -= minutes*60;
-
-    QString sSeconds = QString::number(seconds);
-    if(sSeconds.size() == 1)
-        sSeconds.insert(0, '0');
-
-    QString time = QString::number(minutes) + ":" + sSeconds;
-
-    minutes = duration/1000000./60.;
-    seconds = (duration - minutes*1000000*60)/1000000.;
-
-    sSeconds = QString::number(seconds);
-    if(sSeconds.size() == 1)
-        sSeconds.insert(0, '0');
-
-    time  += "/" + QString::number(minutes) + ":" + sSeconds;
-
-
-    emit timeChange(time);
-    //if(minutes == 1)
-        //audioReady = true;
-
 }
 
 void MixPanel::finishDecoding() {
 
-    plot = false;
-    audioReady = true;
+    //plot = false;
+    //audioReady = true;
 
     if(!isBPM) {
         detectBPM();
