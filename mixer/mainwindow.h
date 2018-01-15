@@ -44,6 +44,7 @@ public:
     QCPBars *returnBar[4];
     QCPBars *returnBar2[4];
     QVector<double> xReturn,yReturn;
+     QVector<double> xReturn2,yReturn2;
     double speed;
     double volume;
     ~MainWindow();

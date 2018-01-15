@@ -486,6 +486,20 @@ void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
   barLoopEnd_2->setBrush(QBrush(QBrush(QColor(color2))));
 
 
+  QColor colors[4];
+  colors[0] = QColor(Qt::red);
+  colors[1] = QColor(Qt::green);
+  colors[2] = QColor(Qt::blue);
+  colors[3] = QColor(Qt::yellow);
+  for(int i = 0; i < 4; i++) {
+      returnBar2[i] = new QCPBars(ui->customPlot_2->xAxis, ui->customPlot_2->yAxis);
+      returnBar2[i]->setWidth(0.025);
+      colors[i].setAlpha(150);
+      returnBar2[i]->setPen(QPen(QColor(colors[i])));
+      returnBar2[i]->setBrush(QBrush(QBrush(colors[i])));
+      returnBar2[i]->setVisible(false);
+  }
+
   customPlot->graph(1)->setPen(QPen(Qt::NoPen));
   customPlot->graph(1)->setBrush(QBrush(QBrush(color1)));
   customPlot->graph(2)->setPen(QPen(Qt::NoPen));
@@ -515,6 +529,10 @@ void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
     y2fill.push_back(-100000);
     x2fill.push_back(0);
     x2fill.push_back(0);
+    yReturn2.push_back(100000);
+    yReturn2.push_back(-100000);
+    xReturn2.push_back(0);
+    xReturn2.push_back(0);
 
     ui->customPlot->graph(1)->setVisible(false);
     ui->customPlot->graph(2)->setVisible(false);
@@ -563,6 +581,18 @@ void MainWindow::bracketDataSlot2()
       xII.clear();
       yII.clear();
   }
+  }
+
+  for(int i = 0; i < 4; i++) {
+      if(soundProc->panel2.flags[i]) {
+          xReturn2[0] = xReturn2[1] = soundProc->panel2.flagPos[i]/48000;
+          returnBar2[i]->setData(xReturn2, yReturn2);
+          returnBar2[i]->setVisible(true);
+          ui->customPlot_2->replot();
+      }
+      else {
+          returnBar2[i]->setVisible(false);
+      }
   }
 
   if(soundProc->panel2.isLoopStartSet){
