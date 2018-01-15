@@ -41,6 +41,7 @@ public:
     bool isLoopingSet;
     bool flags[4];
     bool isBPM;
+    bool isDisc;
 
     double audioLength;
     int    audioLengthInSec;
@@ -52,6 +53,10 @@ public:
     int loopInterval;
     int loopStart;
     int actLoop;
+
+    float prevDiscAngle;
+    float discSpeed;
+    int discSamples;
 
     qint64 duration;
     qint64 actPos;
@@ -103,6 +108,10 @@ public slots:
     void playLoopingSet();
     void playLoopingStart();
     void playLoopingEnd();
+
+    void getDiscSpeed(float angle);
+    void enableDisc();
+    void disableDisc();
 
     void setFlag1();
     void setFlag2();

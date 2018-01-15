@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QThread>
 #include <QTimer>
+#include <disc.h>
 #include "qcustomplot.h"
 #include "soundprocessing.h"
 #include "mixpanel.h"
@@ -52,6 +53,9 @@ private:
     QThread th_soundProc;
     QThread th_soundGraph;
 
+    QGraphicsPixmapItem* discImg[2];
+    Disc* disc[2];
+
 signals:
     void loadAudio(QString filename);
     void loadAudio2(QString filename);
@@ -80,6 +84,9 @@ public slots:
     void medChange2(int value);
     void highChange2(int value);
     void crossChanger(int value);
+
+    void rotate(float angle);
+    void rotate2(float angle);
 
     void onExport();
 };

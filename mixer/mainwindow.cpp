@@ -15,6 +15,28 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setFixedSize(size());
 
+    QString filename = QDir::currentPath();
+    filename.append("/../mixer/disc.png");
+    QImage image(filename);
+
+    for(int i = 0; i < 2; i++) {
+        discImg[i] = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+        discImg[i]->setTransformationMode(Qt::SmoothTransformation);
+        discImg[i]->setTransformOriginPoint(100, 100);
+        disc[i] = new Disc();
+        disc[i]->setSceneRect(0, 0, 200, 200);
+    }
+
+    ui->disc->setScene(disc[0]);
+    ui->disc->scene()->addItem(discImg[0]);
+    ui->disc->setBackgroundBrush(QBrush(QColor(54, 54, 54), Qt::SolidPattern));
+    ui->disc->show();
+
+    ui->disc_2->setScene(disc[1]);
+    ui->disc_2->scene()->addItem(discImg[1]);
+    ui->disc_2->setBackgroundBrush(QBrush(QColor(54, 54, 54), Qt::SolidPattern));
+    ui->disc_2->show();
+
     QString path = QDir::currentPath();
     path.append("/../mixer/stylesheet.qss");
     QFile File(path);
@@ -36,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(&th_soundProc, &QThread::finished, soundProc, &QObject::deleteLater);
     th_soundProc.start();
+
 
     connect(ui->actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
 
@@ -70,6 +93,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->sHigh, SIGNAL(valueChanged(int)), &soundProc->panel1, SLOT(highEQ(int)));
     connect(ui->sSpeed1,SIGNAL(valueChanged(int)),&soundProc->panel1,SLOT(speedChange(int)));
     connect(ui->sVolume1,SIGNAL(valueChanged(int)),&soundProc->panel1,SLOT(volumeChange(int)));
+
+    connect(disc[0], SIGNAL(rotate(float)), this, SLOT(rotate(float)));
+    connect(disc[0], SIGNAL(rotate(float)), &soundProc->panel1, SLOT(getDiscSpeed(float)));
+    connect(disc[0], SIGNAL(start()), &soundProc->panel1, SLOT(enableDisc()));
+    connect(disc[0], SIGNAL(stop()), &soundProc->panel1, SLOT(disableDisc()));
 
     //AKCJE
     //sygnaly do zmiany suwakow
@@ -119,6 +147,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->sHigh_2, SIGNAL(valueChanged(int)), &soundProc->panel2, SLOT(highEQ(int)));
     connect(ui->sSpeed2,SIGNAL(valueChanged(int)),&soundProc->panel2,SLOT(speedChange(int)));
     connect(ui->sVolume2,SIGNAL(valueChanged(int)),&soundProc->panel2,SLOT(volumeChange(int)));
+
+    connect(disc[1], SIGNAL(rotate(float)), this, SLOT(rotate2(float)));
+    connect(disc[1], SIGNAL(rotate(float)), &soundProc->panel2, SLOT(getDiscSpeed(float)));
+    connect(disc[1], SIGNAL(start()), &soundProc->panel2, SLOT(enableDisc()));
+    connect(disc[1], SIGNAL(stop()), &soundProc->panel2, SLOT(disableDisc()));
 
     connect(&soundProc->panel2, SIGNAL(timeChange(QString)), ui->lTime_2, SLOT(setText(QString)));
 
@@ -620,6 +653,14 @@ void MainWindow::crossChanger(int value)
     ui->sCrossfader->setValue(value);
 }
 //------------------------------------------------------------
+void MainWindow::rotate(float angle) {
+    discImg[0]->setRotation(angle);
+}
+//------------------------------------------------------------
+void MainWindow::rotate2(float angle) {
+    discImg[1]->setRotation(angle);
+}
+//------------------------------------------------------------
 
 void MainWindow::onExport() {
 
@@ -641,5 +682,11 @@ MainWindow::~MainWindow()
 {
     th_soundProc.quit();
     th_soundProc.wait();
+
+    delete discImg[0];
+    delete discImg[1];
+    delete disc[0];
+    delete disc[1];
+
     delete ui;
 }

@@ -36,7 +36,8 @@ SOURCES += \
     exporting.cpp \
     soundtouch/BPMDetect.cpp \
     soundtouch/PeakFinder.cpp \
-    soundtouch/FIFOSampleBuffer.cpp
+    soundtouch/FIFOSampleBuffer.cpp \
+    disc.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -47,7 +48,8 @@ HEADERS += \
     exporting.h \
     soundtouch/BPMDetect.h \
     soundtouch/PeakFinder.h \
-    soundtouch/FIFOSampleBuffer.h
+    soundtouch/FIFOSampleBuffer.h \
+    disc.h
 
 FORMS += \
         mainwindow.ui

@@ -14,6 +14,11 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     audioReady = false;
     isPlayed = false;
     plot = false;
+    isDisc = false;
+
+    discSpeed = 1;
+    prevDiscAngle = 0;
+    discSamples = 0;
 
     for(int i = 0; i < 4; i++) {
         flags[i] = false;
@@ -120,6 +125,30 @@ void MixPanel::playLoopingEnd() {
 
 
 }
+
+void MixPanel::getDiscSpeed(float angle) {
+
+    float angleDif = angle - prevDiscAngle;
+    if(angleDif > 300)
+        angleDif -= 360;
+    else if(angleDif < -300) {
+        angleDif += 360;
+    }
+
+    discSamples += 96000*angleDif/360.;
+
+    prevDiscAngle = angle;
+}
+
+void MixPanel::enableDisc() {
+    isDisc = true;
+    discSamples = 0;
+}
+
+void MixPanel::disableDisc() {
+    isDisc = false;
+}
+
 void MixPanel::setFlag(int flag) {
 
     if(!flags[flag])
@@ -230,10 +259,17 @@ void MixPanel::process(double *buffer, int nFrames) {
 
     //if(!audioReady || !isPlayed) {
     if( !isPlayed) {
+        discSpeed = 1;
         memset(buffer, 0, sizeof(double)*nFrames*2);
         return;
     }
 
+    if(isDisc)
+        discSpeed = discSamples/5000.;
+    else if(discSpeed > speed)
+        discSpeed -= (discSpeed - speed)/10.;
+    else if(discSpeed < speed)
+        discSpeed += (speed-discSpeed)/10.;
 
     for(int i = 0; i < nFrames; i++) {
 
@@ -250,12 +286,12 @@ void MixPanel::process(double *buffer, int nFrames) {
         double y2;
 
         if(lowValue>=0) {
-            y = processLowUp(value)*lowValue*20+value*(1-lowValue);
-            y2 = processLowUp(value2)*lowValue*20+value2*(1-lowValue);
+            y = processLowUp(value)*lowValue*10+value*(1-lowValue);
+            y2 = processLowUp(value2)*lowValue*10+value2*(1-lowValue);
         }
         else {
-            y = processLowDown(value)*(-lowValue)*20+value*(1+lowValue);
-            y2 = processLowDown(value2)*(-lowValue)*20+value2*(1+lowValue);
+            y = processLowDown(value)*(-lowValue)*10+value*(1+lowValue);
+            y2 = processLowDown(value2)*(-lowValue)*10+value2*(1+lowValue);
         }
 
         if(medValue>=0) {
@@ -276,15 +312,21 @@ void MixPanel::process(double *buffer, int nFrames) {
             y2 += processHighDown(value2)*(-highValue)*10+value2*(1+highValue);
         }
 
-        float dividor = abs(lowValue)*20+1+abs(medValue)*10+1+abs(highValue)*10+1;
+        float dividor = abs(lowValue)*10+1+abs(medValue)*10+1+abs(highValue)*10+1;
 
         buffer[i*2] = y/dividor;
         buffer[i*2+1] = y2/dividor;
 
-        realPosition += speed;
+        if(isDisc || abs(discSpeed - speed) > 1e-5)
+            realPosition += discSpeed;
+        else
+            realPosition += speed;
         actPos = (int)realPosition;
 
     }
+
+    if(isDisc)
+        discSamples -= discSpeed*nFrames;
 
         if(isLoopingActive){
             if((actPos > loopingEnd)){

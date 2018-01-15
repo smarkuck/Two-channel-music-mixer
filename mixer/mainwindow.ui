@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>690</width>
-    <height>674</height>
+    <width>751</width>
+    <height>588</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="pbSound">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>460</y>
+      <x>60</x>
+      <y>500</y>
       <width>61</width>
       <height>41</height>
      </rect>
@@ -59,8 +59,8 @@
    <widget class="QSlider" name="sLow">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>180</y>
+      <x>68</x>
+      <y>160</y>
       <width>16</width>
       <height>160</height>
      </rect>
@@ -89,8 +89,8 @@
    <widget class="QSlider" name="sMedium">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>180</y>
+      <x>98</x>
+      <y>160</y>
       <width>16</width>
       <height>160</height>
      </rect>
@@ -119,8 +119,8 @@
    <widget class="QSlider" name="sHigh">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>180</y>
+      <x>128</x>
+      <y>160</y>
       <width>16</width>
       <height>160</height>
      </rect>
@@ -150,7 +150,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>30</y>
+      <y>40</y>
       <width>281</width>
       <height>21</height>
      </rect>
@@ -169,9 +169,9 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>350</y>
-      <width>41</width>
+      <x>70</x>
+      <y>330</y>
+      <width>16</width>
       <height>16</height>
      </rect>
     </property>
@@ -181,15 +181,15 @@
      </font>
     </property>
     <property name="text">
-     <string>LOW</string>
+     <string>L</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>350</y>
-      <width>41</width>
+      <x>98</x>
+      <y>330</y>
+      <width>16</width>
       <height>16</height>
      </rect>
     </property>
@@ -199,15 +199,15 @@
      </font>
     </property>
     <property name="text">
-     <string>MED</string>
+     <string>M</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>260</x>
-      <y>350</y>
-      <width>41</width>
+      <x>130</x>
+      <y>330</y>
+      <width>16</width>
       <height>16</height>
      </rect>
     </property>
@@ -217,14 +217,14 @@
      </font>
     </property>
     <property name="text">
-     <string>HIGH</string>
+     <string>H</string>
     </property>
    </widget>
    <widget class="QLabel" name="laudio_2">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>30</y>
+      <x>460</x>
+      <y>40</y>
       <width>281</width>
       <height>21</height>
      </rect>
@@ -243,9 +243,9 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>460</x>
-      <y>350</y>
-      <width>41</width>
+      <x>670</x>
+      <y>330</y>
+      <width>16</width>
       <height>16</height>
      </rect>
     </property>
@@ -255,14 +255,14 @@
      </font>
     </property>
     <property name="text">
-     <string>HIGH</string>
+     <string>H</string>
     </property>
    </widget>
    <widget class="QSlider" name="sHigh_2">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>180</y>
+      <x>668</x>
+      <y>160</y>
       <width>16</width>
       <height>160</height>
      </rect>
@@ -288,8 +288,8 @@
    <widget class="QSlider" name="sMedium_2">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>180</y>
+      <x>638</x>
+      <y>160</y>
       <width>16</width>
       <height>160</height>
      </rect>
@@ -315,7 +315,7 @@
    <widget class="QPushButton" name="pbAddMusic_2">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>410</x>
       <y>10</y>
       <width>41</width>
       <height>41</height>
@@ -333,8 +333,8 @@
    <widget class="QSlider" name="sLow_2">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>180</y>
+      <x>608</x>
+      <y>160</y>
       <width>16</width>
       <height>160</height>
      </rect>
@@ -360,9 +360,9 @@
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>350</y>
-      <width>41</width>
+      <x>638</x>
+      <y>330</y>
+      <width>16</width>
       <height>16</height>
      </rect>
     </property>
@@ -372,15 +372,15 @@
      </font>
     </property>
     <property name="text">
-     <string>MED</string>
+     <string>M</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>380</x>
-      <y>350</y>
-      <width>41</width>
+      <x>610</x>
+      <y>330</y>
+      <width>16</width>
       <height>16</height>
      </rect>
     </property>
@@ -390,14 +390,14 @@
      </font>
     </property>
     <property name="text">
-     <string>LOW</string>
+     <string>L</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pbSound_2">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>450</y>
+      <x>560</x>
+      <y>500</y>
       <width>61</width>
       <height>41</height>
      </rect>
@@ -417,7 +417,7 @@
    <widget class="QLabel" name="lTime">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>270</x>
       <y>10</y>
       <width>81</width>
       <height>20</height>
@@ -438,7 +438,7 @@
    <widget class="QLabel" name="lTime_2">
     <property name="geometry">
      <rect>
-      <x>600</x>
+      <x>660</x>
       <y>10</y>
       <width>81</width>
       <height>20</height>
@@ -459,9 +459,9 @@
    <widget class="QSlider" name="sCrossfader">
     <property name="geometry">
      <rect>
-      <x>260</x>
-      <y>470</y>
-      <width>160</width>
+      <x>290</x>
+      <y>510</y>
+      <width>171</width>
       <height>16</height>
      </rect>
     </property>
@@ -494,7 +494,7 @@
      <rect>
       <x>0</x>
       <y>50</y>
-      <width>341</width>
+      <width>351</width>
       <height>91</height>
      </rect>
     </property>
@@ -510,7 +510,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>340</x>
+      <x>400</x>
       <y>50</y>
       <width>351</width>
       <height>91</height>
@@ -525,9 +525,9 @@
    <widget class="QPushButton" name="pbActionSave">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>560</y>
-      <width>89</width>
+      <x>380</x>
+      <y>430</y>
+      <width>101</width>
       <height>25</height>
      </rect>
     </property>
@@ -543,9 +543,9 @@
    <widget class="QPushButton" name="pbActionLoad">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>560</y>
-      <width>89</width>
+      <x>270</x>
+      <y>430</y>
+      <width>101</width>
       <height>25</height>
      </rect>
     </property>
@@ -561,8 +561,8 @@
    <widget class="QPushButton" name="pbRecord">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>590</y>
+      <x>380</x>
+      <y>460</y>
       <width>101</width>
       <height>25</height>
      </rect>
@@ -579,9 +579,9 @@
    <widget class="QPushButton" name="pbRun">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>590</y>
-      <width>89</width>
+      <x>270</x>
+      <y>460</y>
+      <width>101</width>
       <height>25</height>
      </rect>
     </property>
@@ -597,8 +597,8 @@
    <widget class="QPushButton" name="pbStop_1">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>460</y>
+      <x>130</x>
+      <y>500</y>
       <width>61</width>
       <height>41</height>
      </rect>
@@ -618,8 +618,8 @@
    <widget class="QPushButton" name="pbStop_2">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>450</y>
+      <x>630</x>
+      <y>500</y>
       <width>61</width>
       <height>41</height>
      </rect>
@@ -639,7 +639,7 @@
    <widget class="QPushButton" name="pbSingleLoop_1">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>250</x>
       <y>10</y>
       <width>31</width>
       <height>21</height>
@@ -660,7 +660,7 @@
    <widget class="QPushButton" name="pbSingleLoop_2">
     <property name="geometry">
      <rect>
-      <x>580</x>
+      <x>640</x>
       <y>10</y>
       <width>31</width>
       <height>21</height>
@@ -681,10 +681,10 @@
    <widget class="QPushButton" name="pbLoopStart_1">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>410</y>
-      <width>61</width>
-      <height>31</height>
+      <x>90</x>
+      <y>461</y>
+      <width>31</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="font">
@@ -693,16 +693,16 @@
      </font>
     </property>
     <property name="text">
-     <string>LoopStart</string>
+     <string>(</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pbLoopEnd_1">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>410</y>
-      <width>61</width>
-      <height>31</height>
+      <x>120</x>
+      <y>461</y>
+      <width>31</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="font">
@@ -711,16 +711,16 @@
      </font>
     </property>
     <property name="text">
-     <string>LoopEnd</string>
+     <string>)</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pbLoopEnable_1">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>370</y>
-      <width>71</width>
-      <height>31</height>
+      <x>90</x>
+      <y>440</y>
+      <width>61</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -729,16 +729,16 @@
      </font>
     </property>
     <property name="text">
-     <string>LoopEnable</string>
+     <string>Enable</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pbLoopEnable_2">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>370</y>
-      <width>71</width>
-      <height>31</height>
+      <x>680</x>
+      <y>440</y>
+      <width>61</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -747,16 +747,16 @@
      </font>
     </property>
     <property name="text">
-     <string>LoopEnable</string>
+     <string>Enable</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pbLoopStart_2">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>410</y>
-      <width>61</width>
-      <height>31</height>
+      <x>680</x>
+      <y>460</y>
+      <width>31</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -765,16 +765,16 @@
      </font>
     </property>
     <property name="text">
-     <string>LoopStart</string>
+     <string>(</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pbLoopEnd_2">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>410</y>
-      <width>61</width>
-      <height>31</height>
+      <x>710</x>
+      <y>460</y>
+      <width>31</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -783,16 +783,16 @@
      </font>
     </property>
     <property name="text">
-     <string>LoopEnd</string>
+     <string>)</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pbFlag1">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>250</y>
+      <y>440</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -807,8 +807,8 @@
    <widget class="QSlider" name="sSpeed1">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>410</y>
+      <x>180</x>
+      <y>380</y>
       <width>160</width>
       <height>16</height>
      </rect>
@@ -828,8 +828,8 @@
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>390</y>
+      <x>230</x>
+      <y>360</y>
       <width>61</width>
       <height>16</height>
      </rect>
@@ -849,8 +849,8 @@
    <widget class="QLabel" name="label_12">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>390</y>
+      <x>460</x>
+      <y>360</y>
       <width>61</width>
       <height>16</height>
      </rect>
@@ -870,8 +870,8 @@
    <widget class="QSlider" name="sSpeed2">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>410</y>
+      <x>410</x>
+      <y>380</y>
       <width>160</width>
       <height>16</height>
      </rect>
@@ -891,8 +891,8 @@
    <widget class="QSlider" name="sVolume1">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>180</y>
+      <x>20</x>
+      <y>160</y>
       <width>20</width>
       <height>161</height>
      </rect>
@@ -912,9 +912,9 @@
    <widget class="QLabel" name="label_11">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>350</y>
-      <width>61</width>
+      <x>14</x>
+      <y>330</y>
+      <width>31</width>
       <height>16</height>
      </rect>
     </property>
@@ -924,14 +924,14 @@
      </font>
     </property>
     <property name="text">
-     <string>VOLUME</string>
+     <string>VOL</string>
     </property>
    </widget>
    <widget class="QSlider" name="sVolume2">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>180</y>
+      <x>710</x>
+      <y>160</y>
       <width>20</width>
       <height>161</height>
      </rect>
@@ -951,9 +951,9 @@
    <widget class="QLabel" name="label_13">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>350</y>
-      <width>61</width>
+      <x>704</x>
+      <y>330</y>
+      <width>31</width>
       <height>16</height>
      </rect>
     </property>
@@ -963,7 +963,7 @@
      </font>
     </property>
     <property name="text">
-     <string>VOLUME</string>
+     <string>VOL</string>
     </property>
    </widget>
    <widget class="Line" name="line">
@@ -971,7 +971,7 @@
      <rect>
       <x>-20</x>
       <y>130</y>
-      <width>711</width>
+      <width>771</width>
       <height>1</height>
      </rect>
     </property>
@@ -991,8 +991,8 @@
    <widget class="QPushButton" name="pbRec">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>150</y>
+      <x>360</x>
+      <y>80</y>
       <width>31</width>
       <height>25</height>
      </rect>
@@ -1007,10 +1007,10 @@
    <widget class="QPushButton" name="pbLoop1_16">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>160</y>
+      <x>20</x>
+      <y>370</y>
       <width>41</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -1023,10 +1023,10 @@
    <widget class="QPushButton" name="pbLoop1_8">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>160</y>
+      <x>60</x>
+      <y>370</y>
       <width>41</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -1039,10 +1039,10 @@
    <widget class="QPushButton" name="pbLoop1_4">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>160</y>
+      <x>100</x>
+      <y>370</y>
       <width>41</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -1055,10 +1055,10 @@
    <widget class="QPushButton" name="pbLoop2">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>200</y>
+      <x>100</x>
+      <y>400</y>
       <width>41</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -1071,10 +1071,10 @@
    <widget class="QPushButton" name="pbLoop1_2">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>200</y>
+      <x>20</x>
+      <y>400</y>
       <width>41</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -1087,10 +1087,10 @@
    <widget class="QPushButton" name="pbLoop1">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>200</y>
+      <x>60</x>
+      <y>400</y>
       <width>41</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -1104,9 +1104,9 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>250</y>
+      <y>440</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -1122,9 +1122,9 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>250</y>
+      <y>440</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -1140,9 +1140,9 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>250</y>
+      <y>440</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -1158,9 +1158,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>280</y>
+      <y>460</y>
       <width>21</width>
-      <height>25</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -1171,9 +1171,9 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>280</y>
+      <y>460</y>
       <width>21</width>
-      <height>25</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -1184,9 +1184,9 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>280</y>
+      <y>460</y>
       <width>21</width>
-      <height>25</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -1197,9 +1197,9 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>280</y>
+      <y>460</y>
       <width>21</width>
-      <height>25</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -1209,10 +1209,10 @@
    <widget class="QPushButton" name="pbFlag3_2">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>250</y>
+      <x>640</x>
+      <y>440</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -1227,10 +1227,10 @@
    <widget class="QPushButton" name="pbUnflag1_2">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>280</y>
+      <x>600</x>
+      <y>460</y>
       <width>21</width>
-      <height>25</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -1240,10 +1240,10 @@
    <widget class="QPushButton" name="pbLoop1_16_2">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>160</y>
+      <x>610</x>
+      <y>370</y>
       <width>41</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -1256,10 +1256,10 @@
    <widget class="QPushButton" name="pbLoop1_2_2">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>200</y>
+      <x>610</x>
+      <y>400</y>
       <width>41</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -1272,10 +1272,10 @@
    <widget class="QPushButton" name="pbUnflag2_2">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>280</y>
+      <x>620</x>
+      <y>460</y>
       <width>21</width>
-      <height>25</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -1285,10 +1285,10 @@
    <widget class="QPushButton" name="pbFlag1_2">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>250</y>
+      <x>600</x>
+      <y>440</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -1303,10 +1303,10 @@
    <widget class="QPushButton" name="pbLoop2__2">
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>200</y>
+      <x>690</x>
+      <y>400</y>
       <width>41</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -1319,10 +1319,10 @@
    <widget class="QPushButton" name="pbFlag4_2">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>250</y>
+      <x>660</x>
+      <y>440</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -1337,10 +1337,10 @@
    <widget class="QPushButton" name="pbFlag2_2">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>250</y>
+      <x>620</x>
+      <y>440</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -1355,10 +1355,10 @@
    <widget class="QPushButton" name="pbUnflag4_2">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>280</y>
+      <x>660</x>
+      <y>460</y>
       <width>21</width>
-      <height>25</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -1368,10 +1368,10 @@
    <widget class="QPushButton" name="pbLoop1__2">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>200</y>
+      <x>650</x>
+      <y>400</y>
       <width>41</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -1384,10 +1384,10 @@
    <widget class="QPushButton" name="pbUnflag3_2">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>280</y>
+      <x>640</x>
+      <y>460</y>
       <width>21</width>
-      <height>25</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -1397,10 +1397,10 @@
    <widget class="QPushButton" name="pbLoop1_8_2">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>160</y>
+      <x>650</x>
+      <y>370</y>
       <width>41</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -1413,10 +1413,10 @@
    <widget class="QPushButton" name="pbLoop1_4_2">
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>160</y>
+      <x>690</x>
+      <y>370</y>
       <width>41</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -1424,6 +1424,56 @@
     </property>
     <property name="checkable">
      <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="disc">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>150</y>
+      <width>200</width>
+      <height>200</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="lineWidth">
+     <number>1</number>
+    </property>
+    <property name="backgroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="255">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="disc_2">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>150</y>
+      <width>200</width>
+      <height>200</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="lineWidth">
+     <number>1</number>
+    </property>
+    <property name="backgroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="255">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
     </property>
    </widget>
    <zorder>pbSound</zorder>
@@ -1501,13 +1551,15 @@
    <zorder>pbUnflag3_2</zorder>
    <zorder>pbLoop1_8_2</zorder>
    <zorder>pbLoop1_4_2</zorder>
+   <zorder>disc</zorder>
+   <zorder>disc_2</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>690</width>
+     <width>751</width>
      <height>22</height>
     </rect>
    </property>

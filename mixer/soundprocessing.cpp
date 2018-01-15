@@ -34,7 +34,7 @@ void SoundProcessing::play() {
 
 
     for(int i = 0; i < 960; i++) {
-        rate += 0.0000001;
+        rate += 0.000001;
         if(rate > 1) rate = 1;
 
         if(crossFader <= 50)
