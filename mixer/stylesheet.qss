@@ -106,6 +106,7 @@ QPushButton#pbAddMusic, QPushButton#pbAddMusic_2 {
     border: 2px solid #555;
     border-radius: 20px;
     font-size: 40px;
+    background-color: #363636;
 }
 
 QPushButton#pbAddMusic {
@@ -136,20 +137,39 @@ QCustomPlot {
     background-color: blue;
 }
 
-QFrame#line {
+#line, #line_2, #line_3, #line_4, #line_5, #line_6 {
     background-color: black;
 }
 
-#pbSound, #pbSound_2, #pbStop_1, #pbStop_2 {
+QPushButton {
     background-color: #999;
     border-radius: 2px;
+    border: 1px solid #222;
 }
 
-#pbSound:checked, #pbStop_1:pressed {
+QPushButton:hover {
+    background-color: white;
+}
+
+#lRec {
+    color: #d00;
+}
+
+#pbRec {
+    background-color: transparent;
+    border-radius: 7px;
+    border: 2px solid #d00;
+}
+
+#pbRec:checked {
+    background-color: #d00;
+}
+
+#pbSound:checked, #pbStop_1:pressed, #pbRun:checked, #pbActionLoad:pressed, #pbLoopEnable_1:checked {
     background-color: #ff7f00;
 }
 
-#pbSound_2:checked, #pbStop_2:pressed {
+#pbSound_2:checked, #pbStop_2:pressed, #pbRecord:checked, #pbActionSave:pressed {
     background-color: #4286f4;
 }
 
@@ -158,8 +178,9 @@ QFrame#line {
     background-position: center;
     background-repeat: none;
     background-color: transparent;
+    border: none;
 }
 
 #pbSingleLoop_1:checked, #pbSingleLoop_2:checked {
-    background-image: url(../mixer/repeat.png);
+    background-image: url(../mixer/repeat2.png);
 }

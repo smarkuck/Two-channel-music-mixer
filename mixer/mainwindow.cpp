@@ -18,9 +18,14 @@ MainWindow::MainWindow(QWidget *parent) :
     QString filename = QDir::currentPath();
     filename.append("/../mixer/disc.png");
     QImage image(filename);
+    discImg[0] = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+
+    filename = QDir::currentPath();
+    filename.append("/../mixer/disc2.png");
+    QImage image2(filename);
+    discImg[1] = new QGraphicsPixmapItem(QPixmap::fromImage(image2));
 
     for(int i = 0; i < 2; i++) {
-        discImg[i] = new QGraphicsPixmapItem(QPixmap::fromImage(image));
         discImg[i]->setTransformationMode(Qt::SmoothTransformation);
         discImg[i]->setTransformOriginPoint(100, 100);
         disc[i] = new Disc();
