@@ -29,7 +29,7 @@ public:
 
     QCPBars *trackPointer;
     QVector<double> x1,y2;
-    QCPBars *bars2;
+    QCPBars *trackPointer2;
     QVector<double> x2,y1;
     QCPBars *barLoopStart_1;
     QVector<double> xStart_1,yStart_1;
@@ -40,6 +40,7 @@ public:
     QCPBars *barLoopEnd_2;
     QVector<double> xEnd_2,yEnd_2;
     QVector<double> xfill,yfill;
+    QVector<double> x2fill,y2fill;
     QCPBars *returnBar[4];
     QCPBars *returnBar2[4];
     QVector<double> xReturn,yReturn;
@@ -70,6 +71,10 @@ public slots:
      void graphClicked(QCPAbstractPlottable *plottable, int dataIndex);
      void bracketDataSlot2();
      void graphClicked2(QCPAbstractPlottable *plottable, int dataIndex);
+
+     void mouseMove(QMouseEvent *event);
+     void mouseMove2(QMouseEvent *event);
+
     //--------------------
     void selectAudio();
     void selectAudio2();

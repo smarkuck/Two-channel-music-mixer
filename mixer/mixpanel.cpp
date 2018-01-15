@@ -20,6 +20,9 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     prevDiscAngle = 0;
     discSamples = 0;
 
+
+    rewindConst = 310;
+
     for(int i = 0; i < 4; i++) {
         flags[i] = false;
         flagPos[i] = 0;
@@ -487,6 +490,8 @@ void MixPanel::loadAudio(QString filename) {
     audioLengthInSec = f.audioProperties()->lengthInSeconds();
     int minutes = audioLengthInSec/60.;
     int seconds = audioLengthInSec - minutes*60;
+
+    rewindParam = audioLength*audioLength/rewindConst;
 
     QString sSeconds = QString::number(0);
     if(sSeconds.size() == 1)

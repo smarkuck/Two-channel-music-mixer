@@ -43,6 +43,9 @@ public:
     bool isBPM;
     bool isDisc;
 
+    int rewindConst;
+    double rewindParam;
+
     double audioLength;
     int    audioLengthInSec;
     qint64 loopingStart;
