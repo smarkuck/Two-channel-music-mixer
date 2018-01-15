@@ -144,6 +144,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(&soundProc->panel1, SIGNAL(writeToFile(quint64,quint64,quint64)), &soundProc->action, SLOT(writePanel1(quint64,quint64,quint64)));
     connect(&soundProc->panel2, SIGNAL(writeToFile(quint64,quint64,quint64)), &soundProc->action, SLOT(writePanel2(quint64,quint64,quint64)));
+
+    connect(ui->customPlot, SIGNAL(mouseMove(QMouseEvent*)), this, SLOT(mouseMove(QMouseEvent*)));
 }
 //------------------------------------------------------------
 void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
@@ -383,8 +385,41 @@ void MainWindow::graphClicked(QCPAbstractPlottable *plottable, int dataIndex)
   x1[1] = czas;
   trackPointer->setData(x1, y2);
   ui->customPlot->replot();
-
 }
+void MainWindow::mouseMove(QMouseEvent *event)
+{
+    if(event->buttons() == Qt::LeftButton)
+    {
+        double position = (event->x()-15) * soundProc->panel1.rewindParam/soundProc->panel1.audioLength;
+        if(position*48000 < soundProc->panel1.loopingStart || position*48000 > soundProc->panel1.loopingEnd)
+            soundProc->panel1.isLoopingActive = false;
+
+     if(position < 0)
+     {
+         x1[0] = 0;
+         x1[1] = 0;
+         soundProc->panel1.actPos = 0;
+         soundProc->panel1.realPosition = 0;
+     }
+     else if(position > soundProc->panel1.audioLength)
+     {
+         x1[0] = soundProc->panel1.audioLength-0.1;
+         x1[1] = soundProc->panel1.audioLength-0.1;
+         soundProc->panel1.actPos = soundProc->panel1.audioLength-0.1;
+         soundProc->panel1.realPosition = soundProc->panel1.audioLength-0.1;
+     }
+     else
+     {
+         x1[0] = position;
+         x1[1] = position;
+         soundProc->panel1.actPos = position*48000;
+         soundProc->panel1.realPosition = position*48000;
+     }
+     trackPointer->setData(x1, y2);
+     ui->customPlot->replot();
+    }
+}
+
 //-----------GRAPH 1--------------------------------------------------
 
 void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)

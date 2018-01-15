@@ -66,6 +66,9 @@ public slots:
      void graphClicked(QCPAbstractPlottable *plottable, int dataIndex);
      void bracketDataSlot2();
      void graphClicked2(QCPAbstractPlottable *plottable, int dataIndex);
+
+     void mouseMove(QMouseEvent *event);
+
     //--------------------
     void selectAudio();
     void selectAudio2();

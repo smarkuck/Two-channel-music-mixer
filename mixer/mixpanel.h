@@ -41,7 +41,8 @@ public:
     bool isLoopingSet;
     bool flags[4];
     bool isBPM;
-
+    int rewindConst;
+    double rewindParam;
     double audioLength;
     int    audioLengthInSec;
     qint64 loopingStart;
