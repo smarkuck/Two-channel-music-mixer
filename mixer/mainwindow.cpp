@@ -395,17 +395,13 @@ void MainWindow::bracketDataSlot()
       ui->customPlot->replot();
   }
 
-
-  if(soundProc->panel1.isPlayed)
-  {
-
+  if(soundProc->panel1.duration > 0) {
     //to odpowiada za przesuwanie sie wykresu podczas odtwarzania
     x1[0] = soundProc->panel1.actPos/48000;
     x1[1]=  soundProc->panel1.actPos/48000;
     trackPointer->setData(x1, y2);
     ui->customPlot->replot();
   }
-
 }
 
 
@@ -662,17 +658,13 @@ void MainWindow::bracketDataSlot2()
       ui->customPlot_2->replot();
   }
 
-
-
-  if(soundProc->panel2.isPlayed){
-
+  if(soundProc->panel2.duration > 0) {
         //to odpowiada za przesuwanie sie wykresu podczas odtwarzania
         x2[0] = soundProc->panel2.actPos/48000;
         x2[1]=  soundProc->panel2.actPos/48000;
         trackPointer2->setData(x2, y1);
         ui->customPlot_2->replot();
   }
-
 }
 
 

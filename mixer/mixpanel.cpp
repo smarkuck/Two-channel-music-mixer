@@ -11,6 +11,7 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     isSingleLoop = false;
     isLoopingSet = false;
     isLoopStartSet = false;
+    isLoopEndSet = false;
     audioReady = false;
     isPlayed = false;
     plot = false;
@@ -63,8 +64,8 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     medEQ(50);
     highEQ(50);
 
-    shelfFilter(500, -10, "low", lowMemEq[0]);
-    shelfFilter(500, 10, "low", lowMemEq[1]);
+    shelfFilter(500, -8, "low", lowMemEq[0]);
+    shelfFilter(500, 8, "low", lowMemEq[1]);
 
     shelfFilter(15000, -10, "low", medMemEq[0]);
     shelfFilter(500, 10, "low", medMemEq2[0]);
@@ -315,7 +316,7 @@ void MixPanel::process(double *buffer, int nFrames) {
             y2 += processHighDown(value2)*(-highValue)*10+value2*(1+highValue);
         }
 
-        float dividor = abs(lowValue)*10+1+abs(medValue)*10+1+abs(highValue)*10+1;
+        float dividor = abs(lowValue)*9+1+abs(medValue)*9+1+abs(highValue)*9+1;
 
         buffer[i*2] = y/dividor;
         buffer[i*2+1] = y2/dividor;
