@@ -61,6 +61,7 @@ public:
     float discSpeed;
     int discSamples;
 
+    int channelSamples;
     qint64 duration;
     qint64 actPos;
     qreal realPosition;

@@ -286,7 +286,7 @@ void MainWindow::bracketDataSlot()
       quint64 actPos = prevI * 3000;
     for (int i=1; actPos<n/sizeof(qint16) && i < 50; i++, prevI++)
       {
-        if(actPos > soundProc->panel1.channel1->size()/sizeof(qint16))
+        if(actPos > soundProc->panel1.channelSamples)
             break;
         //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
         x.push_back(actPos/48000.);
@@ -559,7 +559,7 @@ void MainWindow::bracketDataSlot2()
 
   for (int i=1; actPos<n/sizeof(qint16) && i < 50; i++, prevII++)
     {
-      if(actPos > soundProc->panel2.channel1->size()/sizeof(qint16))
+      if(actPos > soundProc->panel2.channelSamples)
           break;
       xII.push_back(actPos/48000.);  //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
       //pobieram i dodaje probki z kanalu 1 i 2, nie wiem czy to jest dobre ale nie bedziemy
