@@ -16,7 +16,8 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     isPlayed = false;
     plot = false;
     isDisc = false;
-
+    audioLengthInSec = 0;
+    audioLength = 0;
     discSpeed = 1;
     prevDiscAngle = 0;
     discSamples = 0;
@@ -78,7 +79,7 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
 
 void MixPanel::playPause() {
 
-    if(duration)
+
         isPlayed = !isPlayed;
 }
 
@@ -251,8 +252,10 @@ void MixPanel::playStop() {
     //audioReady = true;
     actPos = 0;
     realPosition = 0;
-    int minutes = duration/1000000./60.;
-    int seconds = (duration - minutes*1000000*60)/1000000.;
+    //int minutes = duration/1000000./60.;
+    //int seconds = (duration - minutes*1000000*60)/1000000.;
+    int minutes = audioLengthInSec/60.;
+    int seconds = audioLengthInSec - minutes*60;
     QString sSeconds = QString::number(seconds);
     if(sSeconds.size() == 1)
         sSeconds.insert(0, '0');
