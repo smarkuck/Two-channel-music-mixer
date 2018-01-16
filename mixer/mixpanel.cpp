@@ -78,6 +78,7 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
 
 void MixPanel::playPause() {
 
+    if(duration)
         isPlayed = !isPlayed;
 }
 
@@ -252,7 +253,10 @@ void MixPanel::playStop() {
     realPosition = 0;
     int minutes = duration/1000000./60.;
     int seconds = (duration - minutes*1000000*60)/1000000.;
-    QString time  = "0:00/" + QString::number(minutes) + ":" + QString::number(seconds);
+    QString sSeconds = QString::number(seconds);
+    if(sSeconds.size() == 1)
+        sSeconds.insert(0, '0');
+    QString time  = "0:00/" + QString::number(minutes) + ":" + sSeconds;
     emit timeChange(time);
 
 
