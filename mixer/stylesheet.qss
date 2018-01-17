@@ -165,7 +165,7 @@ QPushButton:hover {
     background-color: #d00;
 }
 
-#pbSound:checked, #pbStop_1:pressed, #pbRun:checked, #pbActionLoad:pressed, #pbLoopEnable_1:checked {
+#pbSound:checked, #pbStop_1:pressed, #pbRun:checked, #pbActionLoad:pressed, #pbLoopEnable_1:checked, #pbLoopEnable_2:checked {
     background-color: #ff7f00;
 }
 
