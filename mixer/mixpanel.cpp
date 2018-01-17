@@ -486,6 +486,7 @@ void MixPanel::loadAudio(QString filename) {
     isPlayed = false;
     audioReady = false;
     isBPM = false;
+    loadAudioInterruption = true;
 
     duration = 0;
     actPos = 0;

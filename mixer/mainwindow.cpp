@@ -283,6 +283,15 @@ void MainWindow::bracketDataSlot()
         static QVector<double> x, y;
 
       static int prevI = 0;
+      if(soundProc->panel1.loadAudioInterruption)
+      {
+          prevI = 0;
+          x.clear();
+          y.clear();
+          ui->customPlot->graph(0)->setData(x, y);
+          ui->customPlot->replot();
+          soundProc->panel1.loadAudioInterruption = false;
+      }
       quint64 actPos = prevI * 3000;
     for (int i=1; actPos<n/sizeof(qint16) && i < 50; i++, prevI++)
       {
@@ -555,6 +564,15 @@ void MainWindow::bracketDataSlot2()
       //int n = soundProc->panel2.channel1->size();
       static QVector<double> xII, yII;
       static int prevII = 0;
+      if(soundProc->panel2.loadAudioInterruption)
+      {
+          prevII = 0;
+          xII.clear();
+          yII.clear();
+          ui->customPlot_2->graph(0)->setData(xII, yII);
+          ui->customPlot_2->replot();
+          soundProc->panel2.loadAudioInterruption = false;
+      }
       quint64 actPos = prevII * 3000;
 
   for (int i=1; actPos<n/sizeof(qint16) && i < 50; i++, prevII++)

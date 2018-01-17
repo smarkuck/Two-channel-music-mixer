@@ -42,6 +42,7 @@ public:
     bool flags[4];
     bool isBPM;
     bool isDisc;
+    bool loadAudioInterruption;
 
     int rewindConst;
     double rewindParam;
