@@ -290,6 +290,7 @@ void MixPanel::process(double *buffer, int nFrames) {
         if(actPos >= channel1->size()/sizeof(qint16)) {
             buffer[i*2] = 0;
             buffer[i*2+1] = 0;
+            lock.unlock();
             continue;
         }
 
