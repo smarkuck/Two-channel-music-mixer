@@ -53,7 +53,6 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     decoder->setAudioFormat(format);
 
     connect(decoder, SIGNAL(bufferReady()), this, SLOT(readBuffer()));
-    connect(decoder, SIGNAL(sourceChanged()), this, SLOT(startDecoding()));
     connect(decoder, SIGNAL(finished()), this, SLOT(finishDecoding()));
 
     for(int i = 0; i < 2; i++) {
@@ -489,7 +488,9 @@ void MixPanel::detectBPM() {
     loopInterval = 60/bpm*48000;
 }
 
-void MixPanel::startDecoding() {
+void MixPanel::loadAudio(QString filename) {
+    decoder->setSourceFilename(filename);
+
     isPlayed = false;
     audioReady = false;
     isBPM = false;
@@ -504,7 +505,7 @@ void MixPanel::startDecoding() {
     channel2->clear();
     lock.unlock();
 
-    TagLib::FileRef f(QFile::encodeName(decoder->sourceFilename()).constData());
+    TagLib::FileRef f(QFile::encodeName(filename).constData());
     audioLength  = f.audioProperties()->lengthInMilliseconds() / 1000.;
     audioLengthInSec = f.audioProperties()->lengthInSeconds();
     int minutes = audioLengthInSec/60.;
@@ -529,11 +530,6 @@ void MixPanel::startDecoding() {
     audioReady = true;
 
     decoder->start();
-}
-
-void MixPanel::loadAudio(QString filename) {
-    decoder->stop();
-    decoder->setSourceFilename(filename);
 }
 
 void MixPanel::readBuffer() {

@@ -612,7 +612,6 @@ void MainWindow::bracketDataSlot2()
       }
 
   }
-  lock.unlock();
 
    ui->customPlot_2->replot();
 
@@ -762,7 +761,7 @@ void MainWindow::mouseMove2(QMouseEvent *event)
 
 void MainWindow::selectAudio() {
     QString filename = QFileDialog::getOpenFileName(this,
-        tr("Open file"), "/home/", tr("Music Files (*.mp3 *.wav)"));
+        tr("Open file"), "/home/", tr("Music Files (*.mp3 *.wav)"), 0, QFileDialog::DontUseNativeDialog);
 
     if(filename == "") return;
 
@@ -772,7 +771,7 @@ void MainWindow::selectAudio() {
 //------------------------------------------------------------
 void MainWindow::selectAudio2() {
     QString filename = QFileDialog::getOpenFileName(this,
-        tr("Open file"), "/home/", tr("Music Files (*.mp3)"));
+        tr("Open file"), "/home/", tr("Music Files (*.mp3)"), 0, QFileDialog::DontUseNativeDialog);
 
     if(filename == "") return;
 
@@ -791,7 +790,7 @@ void MainWindow::crossFaderChange(int value) {
 void MainWindow::saveAction()
 {
      QString fileName = QFileDialog::getSaveFileName(this,
-         tr("Save action"), "/home", tr("save(*.acn)"));
+         tr("Save action"), "/home", tr("save(*.acn)"), 0, QFileDialog::DontUseNativeDialog);
 
      if(fileName == "") return;
 
@@ -802,7 +801,7 @@ void MainWindow::saveAction()
 void MainWindow::loadAction()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Open action"), "/home", tr("Action Files (*.acn)"));
+        tr("Open action"), "/home", tr("Action Files (*.acn)"), 0, QFileDialog::DontUseNativeDialog);
 
     if(fileName == "") return;
 
@@ -865,7 +864,7 @@ void MainWindow::onExport() {
     //wybor lokalizacji zapisywanego pliku audio
     QString selectedFilter;
     QString filename = QFileDialog::getSaveFileName(this,
-        tr("Export"), "/home", tr("audio(*.wav)"),&selectedFilter);
+        tr("Export"), "/home", tr("audio(*.wav)"),&selectedFilter, QFileDialog::DontUseNativeDialog);
 
     if(filename.count() != 0){
         filename += ".wav";

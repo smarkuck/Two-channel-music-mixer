@@ -138,7 +138,6 @@ public slots:
 
     void loadAudio(QString filename);
     void readBuffer();
-    void startDecoding();
     void finishDecoding();
 
     void lowEQ(int value);
