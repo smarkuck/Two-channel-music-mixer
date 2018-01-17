@@ -38,7 +38,6 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     loopInterval = 0;
     loopStart = 0;
     actLoop = 0;
-    channelSamples = 0;
 
     channel1 = new QByteArray();
     channel2 = new QByteArray();
@@ -54,6 +53,7 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     decoder->setAudioFormat(format);
 
     connect(decoder, SIGNAL(bufferReady()), this, SLOT(readBuffer()));
+    connect(decoder, SIGNAL(sourceChanged()), this, SLOT(startDecoding()));
     connect(decoder, SIGNAL(finished()), this, SLOT(finishDecoding()));
 
     for(int i = 0; i < 2; i++) {
@@ -286,7 +286,8 @@ void MixPanel::process(double *buffer, int nFrames) {
 
     for(int i = 0; i < nFrames; i++) {
 
-        if(actPos >= channelSamples) {
+        lock.lockForRead();
+        if(actPos >= channel1->size()/sizeof(qint16)) {
             buffer[i*2] = 0;
             buffer[i*2+1] = 0;
             continue;
@@ -294,6 +295,7 @@ void MixPanel::process(double *buffer, int nFrames) {
 
         qint16 value = *(reinterpret_cast<qint16*>(channel1->data())+actPos)*volume;
         qint16 value2 = *(reinterpret_cast<qint16*>(channel2->data())+actPos)*volume;
+        lock.unlock();
 
         double y;
         double y2;
@@ -354,7 +356,8 @@ void MixPanel::process(double *buffer, int nFrames) {
             realPosition = actPos;
         }
 
-    if(actPos >= channelSamples) {
+    lock.lockForRead();
+    if(actPos >= channel1->size()/sizeof(qint16)) {
         actPos = 0;
         realPosition = 0;
         if(isSingleLoop || isLoopingSet) isPlayed = true;
@@ -363,6 +366,7 @@ void MixPanel::process(double *buffer, int nFrames) {
             //isPlayed = false;
 
     }
+    lock.unlock();
 
     int seconds = actPos/48000.;
     int minutes = seconds/60.;
@@ -474,7 +478,8 @@ void MixPanel::highEQ(int value) {
 
 void MixPanel::detectBPM() {
     soundtouch::BPMDetect bpmDetector(1, 48000);
-    int samples = channelSamples;
+    int samples = channel1->size()/sizeof(qint16);
+
     if(samples > 480000)
         samples = 480000;
 
@@ -483,7 +488,7 @@ void MixPanel::detectBPM() {
     loopInterval = 60/bpm*48000;
 }
 
-void MixPanel::loadAudio(QString filename) {
+void MixPanel::startDecoding() {
     isPlayed = false;
     audioReady = false;
     isBPM = false;
@@ -492,12 +497,13 @@ void MixPanel::loadAudio(QString filename) {
     duration = 0;
     actPos = 0;
     realPosition = 0;
-    channelSamples = 0;
 
+    lock.lockForWrite();
     channel1->clear();
     channel2->clear();
+    lock.unlock();
 
-    TagLib::FileRef f(QFile::encodeName(filename).constData());
+    TagLib::FileRef f(QFile::encodeName(decoder->sourceFilename()).constData());
     audioLength  = f.audioProperties()->lengthInMilliseconds() / 1000.;
     audioLengthInSec = f.audioProperties()->lengthInSeconds();
     int minutes = audioLengthInSec/60.;
@@ -521,27 +527,34 @@ void MixPanel::loadAudio(QString filename) {
 
     audioReady = true;
 
+    decoder->start();
+}
+
+void MixPanel::loadAudio(QString filename) {
     decoder->stop();
     decoder->setSourceFilename(filename);
-    decoder->start();
 }
 
 void MixPanel::readBuffer() {
     QAudioBuffer buffer = decoder->read();
     const qint16 *data = buffer.constData<qint16>();
 
+    lock.lockForWrite();
     for(int i = 0; i < buffer.sampleCount()/2; i++) {
         channel1->append(reinterpret_cast<const char*>(data+i*2), sizeof(qint16));
         channel2->append(reinterpret_cast<const char*>(data+1+i*2), sizeof(qint16));
     }
+    lock.unlock();
 
     duration += buffer.duration();
-    channelSamples += buffer.sampleCount()/2;
+    lock.lockForRead();
+    int size = channel1->size()/sizeof(qint16);
 
-    if(!isBPM && channelSamples > 480000) {
+    if(!isBPM && size > 480000) {
         detectBPM();
         isBPM = true;
     }
+    lock.unlock();
 
 }
 

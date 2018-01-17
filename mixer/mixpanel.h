@@ -17,6 +17,8 @@
 #include <taglib/fileref.h>
 #include "soundtouch/BPMDetect.h"
 
+extern QReadWriteLock lock;
+
 class MixPanel : public QObject
 {
     Q_OBJECT
@@ -62,7 +64,6 @@ public:
     float discSpeed;
     int discSamples;
 
-    int channelSamples;
     qint64 duration;
     qint64 actPos;
     qreal realPosition;
@@ -137,6 +138,7 @@ public slots:
 
     void loadAudio(QString filename);
     void readBuffer();
+    void startDecoding();
     void finishDecoding();
 
     void lowEQ(int value);

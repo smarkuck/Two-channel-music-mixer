@@ -6,6 +6,10 @@
 #include <QScreen>
 #include <QMessageBox>
 #include <QMetaEnum>
+
+#include <QReadWriteLock>
+QReadWriteLock lock;
+
 //===============================================
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -293,15 +297,24 @@ void MainWindow::bracketDataSlot()
           soundProc->panel1.loadAudioInterruption = false;
       }
       quint64 actPos = prevI * 3000;
+
+
     for (int i=1; actPos<n/sizeof(qint16) && i < 50; i++, prevI++)
       {
-        if(actPos > soundProc->panel1.channelSamples)
+        lock.lockForWrite();
+        int size = soundProc->panel1.channel1->size()/sizeof(qint16);
+        if(actPos > size) {
+            lock.unlock();
             break;
+        }
+
         //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
         x.push_back(actPos/48000.);
           //pobieram i dodaje probki z kanalu 1 i 2
+
         y.push_back(*(reinterpret_cast<qint16*>(soundProc->panel1.channel1->data())+actPos)
                            +*(reinterpret_cast<qint16*>(soundProc->panel1.channel2->data())+actPos));
+        lock.unlock();
         actPos += 3000;
 
         if(actPos % 96 == 0) //96
@@ -577,13 +590,21 @@ void MainWindow::bracketDataSlot2()
 
   for (int i=1; actPos<n/sizeof(qint16) && i < 50; i++, prevII++)
     {
-      if(actPos > soundProc->panel2.channelSamples)
+      lock.lockForWrite();
+      int size = soundProc->panel2.channel1->size()/sizeof(qint16);
+      if(actPos > size) {
+          lock.unlock();
           break;
+      }
+
       xII.push_back(actPos/48000.);  //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
       //pobieram i dodaje probki z kanalu 1 i 2, nie wiem czy to jest dobre ale nie bedziemy
       //chyba rysowac dwoch kanalow osobno xD
+
       yII.push_back(*(reinterpret_cast<qint16*>(soundProc->panel2.channel1->data())+actPos)
               +*(reinterpret_cast<qint16*>(soundProc->panel2.channel2->data())+actPos));
+      lock.unlock();
+
       actPos += 3000;
       if(actPos % 96 == 0){
         ui->customPlot_2->graph(0)->setData(xII, yII);
@@ -591,6 +612,7 @@ void MainWindow::bracketDataSlot2()
       }
 
   }
+  lock.unlock();
 
    ui->customPlot_2->replot();
 
