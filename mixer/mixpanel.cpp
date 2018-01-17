@@ -16,6 +16,7 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     isPlayed = false;
     plot = false;
     isDisc = false;
+    loadAudioInterruption = false;
     audioLengthInSec = 0;
     audioLength = 0;
     discSpeed = 1;
@@ -491,6 +492,7 @@ void MixPanel::loadAudio(QString filename) {
     duration = 0;
     actPos = 0;
     realPosition = 0;
+    channelSamples = 0;
 
     channel1->clear();
     channel2->clear();
