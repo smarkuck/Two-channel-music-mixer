@@ -508,6 +508,8 @@ void MixPanel::loadAudio(QString filename) {
         flags[i] = false;
     }
 
+    actLoop = 0;
+
     duration = 0;
     actPos = 0;
     realPosition = 0;
