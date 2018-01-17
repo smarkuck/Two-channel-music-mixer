@@ -42,18 +42,7 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     channel1 = new QByteArray();
     channel2 = new QByteArray();
 
-    QAudioFormat format;
-    format.setChannelCount(2);
-    format.setCodec("audio/pcm");
-    format.setSampleType(QAudioFormat::SignedInt);
-    format.setSampleRate(48000);
-    format.setSampleSize(16);
-
-    decoder = new QAudioDecoder;
-    decoder->setAudioFormat(format);
-
-    connect(decoder, SIGNAL(bufferReady()), this, SLOT(readBuffer()));
-    connect(decoder, SIGNAL(finished()), this, SLOT(finishDecoding()));
+    decoder = nullptr;
 
     for(int i = 0; i < 2; i++) {
         memset(&lowMemEq[i], 0, sizeof(memEQ));
@@ -357,7 +346,9 @@ void MixPanel::process(double *buffer, int nFrames) {
         }
 
     lock.lockForRead();
-    if(actPos >= channel1->size()/sizeof(qint16)) {
+    int size = channel1->size()/sizeof(qint16);
+    lock.unlock();
+    if(actPos >= size) {
         actPos = 0;
         realPosition = 0;
         if(isSingleLoop || isLoopingSet) isPlayed = true;
@@ -366,7 +357,6 @@ void MixPanel::process(double *buffer, int nFrames) {
             //isPlayed = false;
 
     }
-    lock.unlock();
 
     int seconds = actPos/48000.;
     int minutes = seconds/60.;
@@ -489,6 +479,21 @@ void MixPanel::detectBPM() {
 }
 
 void MixPanel::loadAudio(QString filename) {
+    delete decoder;
+
+    QAudioFormat format;
+    format.setChannelCount(2);
+    format.setCodec("audio/pcm");
+    format.setSampleType(QAudioFormat::SignedInt);
+    format.setSampleRate(48000);
+    format.setSampleSize(16);
+
+    decoder = new QAudioDecoder;
+    decoder->setAudioFormat(format);
+
+    connect(decoder, SIGNAL(bufferReady()), this, SLOT(readBuffer()));
+    connect(decoder, SIGNAL(finished()), this, SLOT(finishDecoding()));
+
     decoder->setSourceFilename(filename);
 
     isPlayed = false;
@@ -499,6 +504,9 @@ void MixPanel::loadAudio(QString filename) {
     duration = 0;
     actPos = 0;
     realPosition = 0;
+
+    audioLengthInSec = 0;
+    audioLength = 0;
 
     lock.lockForWrite();
     channel1->clear();
@@ -546,13 +554,11 @@ void MixPanel::readBuffer() {
     duration += buffer.duration();
     lock.lockForRead();
     int size = channel1->size()/sizeof(qint16);
-
+    lock.unlock();
     if(!isBPM && size > 480000) {
         detectBPM();
         isBPM = true;
     }
-    lock.unlock();
-
 }
 
 void MixPanel::finishDecoding() {
