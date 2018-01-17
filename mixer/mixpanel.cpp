@@ -260,7 +260,6 @@ void MixPanel::process(double *buffer, int nFrames) {
 
     //if(!audioReady || !isPlayed) {
     if( !isPlayed) {
-        discSpeed = 1;
         memset(buffer, 0, sizeof(double)*nFrames*2);
         return;
     }
@@ -500,6 +499,14 @@ void MixPanel::loadAudio(QString filename) {
     audioReady = false;
     isBPM = false;
     loadAudioInterruption = true;
+    isLoopingSet = false;
+    isLoopEndSet = false;
+    isLoopStartSet = false;
+    isLoopingActive = false;
+
+    for(int i = 0; i < 4; i++) {
+        flags[i] = false;
+    }
 
     duration = 0;
     actPos = 0;
