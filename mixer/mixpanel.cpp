@@ -23,7 +23,6 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
     prevDiscAngle = 0;
     discSamples = 0;
 
-
     rewindConst = 310;
 
     for(int i = 0; i < 4; i++) {
@@ -33,7 +32,6 @@ MixPanel::MixPanel(QObject *parent) : QObject(parent)
 
     speed = 1.0;
     volume = 0.5;
-
     bpm = 0;
     loopInterval = 0;
     loopStart = 0;
@@ -233,17 +231,14 @@ void MixPanel::setLoop2() {
 
 void MixPanel::playLoop() {
 
-        isSingleLoop = !isSingleLoop;
+    isSingleLoop = !isSingleLoop;
 }
 
 void MixPanel::playStop() {
 
     isPlayed = false;
-    //audioReady = true;
     actPos = 0;
     realPosition = 0;
-    //int minutes = duration/1000000./60.;
-    //int seconds = (duration - minutes*1000000*60)/1000000.;
     int minutes = audioLengthInSec/60.;
     int seconds = audioLengthInSec - minutes*60;
     QString sSeconds = QString::number(seconds);
@@ -252,13 +247,10 @@ void MixPanel::playStop() {
     QString time  = "0:00/" + QString::number(minutes) + ":" + sSeconds;
     emit timeChange(time);
 
-
-
 }
 
 void MixPanel::process(double *buffer, int nFrames) {
 
-    //if(!audioReady || !isPlayed) {
     if( !isPlayed) {
         memset(buffer, 0, sizeof(double)*nFrames*2);
         return;
@@ -353,8 +345,6 @@ void MixPanel::process(double *buffer, int nFrames) {
         if(isSingleLoop || isLoopingSet) isPlayed = true;
         else
             emit pause();
-            //isPlayed = false;
-
     }
 
     int seconds = actPos/48000.;
@@ -446,21 +436,16 @@ void MixPanel::shelfFilter(double F0, double g, QString type, memEQ &eq) {
 }
 
 void MixPanel::lowEQ(int value) {
-    //shelfFilter(500, (value-50)/50.*10, "low", lowMemEq);
     lowValue = (value-50)/50.;
     emit writeToFile(1, actPos,value);  //emisja sygnalu do zapisania akcji
 }
 
 void MixPanel::medEQ(int value) {
-    //double g = (value-50)/50.*10;
-    //shelfFilter(15000, g, "low", medMemEq);
-    //shelfFilter(500, -g, "low", medMemEq2);
     medValue = (value-50)/50.;
     emit writeToFile(2, actPos,value);
 }
 
 void MixPanel::highEQ(int value) {
-    //shelfFilter(15000, (value-50)/50.*10, "high", highMemEq);
     highValue = (value-50)/50.;
     emit writeToFile(3, actPos,value);
 }
@@ -571,9 +556,6 @@ void MixPanel::readBuffer() {
 }
 
 void MixPanel::finishDecoding() {
-
-    //plot = false;
-    //audioReady = true;
 
     if(!isBPM) {
         detectBPM();

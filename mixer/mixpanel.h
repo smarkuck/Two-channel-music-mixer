@@ -2,7 +2,6 @@
 #define MIXPANEL_H
 
 #include <QObject>
-
 #include <QAudioFormat>
 #include <QAudioBuffer>
 #include <QAudioDecoder>
@@ -28,58 +27,54 @@ private:
         double xmem1, xmem2, ymem1, ymem2;
         double b0, b1, b2, a0, a1, a2;
     };
+    QAudioDecoder *decoder;
+    bool isPlayed;
+    bool isSingleLoop;
+    bool isBPM;
+    bool isDisc;
+    double bpm;
+    int  rewindConst;
+    int  audioLengthInSec;
+    int loopInterval;
+    int loopStart;
+    int actLoop;
+    int discSamples;
+    float prevDiscAngle;
+    float discSpeed;
+    double speed;
+    qreal volume;
+    memEQ lowMemEq[2];
+    memEQ medMemEq[2];
+    memEQ medMemEq2[2];
+    memEQ highMemEq[2];
+    double lowValue;
+    double medValue;
+    double highValue;
 
 public:
     explicit MixPanel(QObject *parent = nullptr);
     ~MixPanel();
 
     bool plot;
-    bool isPlayed;
     bool audioReady;
-    bool isSingleLoop;
     bool isLoopStartSet;
     bool isLoopEndSet;
     bool isLoopingActive;
     bool isLoopingSet;
     bool flags[4];
-    bool isBPM;
-    bool isDisc;
     bool loadAudioInterruption;
-
-    int rewindConst;
     double rewindParam;
-
     double audioLength;
-    int    audioLengthInSec;
+
     qint64 loopingStart;
     qint64 loopingEnd;
     qint64 flagPos[4];
-
-    double bpm;
-    int loopInterval;
-    int loopStart;
-    int actLoop;
-
-    float prevDiscAngle;
-    float discSpeed;
-    int discSamples;
-
     qint64 duration;
     qint64 actPos;
     qreal realPosition;
-    double speed;
-    qreal volume;
+
     QByteArray *channel1;
     QByteArray *channel2;
-
-    memEQ lowMemEq[2];
-    memEQ medMemEq[2];
-    memEQ medMemEq2[2];
-    memEQ highMemEq[2];
-
-    double lowValue;
-    double medValue;
-    double highValue;
 
     double processEQ(double sample, memEQ &eq);
     double processLowUp(double sample);
@@ -88,18 +83,12 @@ public:
     double processMediumDown(double sample);
     double processHighUp(double sample);
     double processHighDown(double sample);
-
-
     void process(double *buffer, int nFrames);
-
     void shelfFilter(double F0, double g, QString type, memEQ &eq);
     void detectBPM();
     void setLoop(int loop);
     void setFlag(int flag);
     void unsetFlag(int flag);
-
-private:
-    QAudioDecoder *decoder;
 
 signals:
     void timeChange(QString time);

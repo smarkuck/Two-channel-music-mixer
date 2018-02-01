@@ -11,15 +11,19 @@
 class Action : public QObject
 {
     Q_OBJECT
-public:
-    Action();
+
+private:
     QVector<quint64> buffer;
     QVector<quint64> buffer2;
+    bool isRecording;
+
+public:
+    Action();
     QVector<quint64> loadBuffer;
     int p1, p2, beg1, beg2;
     bool actionLoaded;
     bool isRunning;
-    bool isRecording;
+
 signals:
 
 public slots:

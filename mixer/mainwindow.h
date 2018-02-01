@@ -9,6 +9,7 @@
 #include "qcustomplot.h"
 #include "soundprocessing.h"
 #include "mixpanel.h"
+#include "exporting.h"
 
 namespace Ui {
 
@@ -21,12 +22,18 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0); 
-    QTimer dataTimer;
-    QTimer dataTimer2;
+    ~MainWindow();
 
     void setupSoundGraph(QCustomPlot *customPlot);
     void setupSoundGraph2(QCustomPlot *customPlot);
 
+private:
+    Ui::MainWindow *ui;
+    SoundProcessing* soundProc;
+    QThread th_soundProc;
+    Exporting* Export;
+    QGraphicsPixmapItem* discImg[2];
+    Disc* disc[2];
     QCPBars *trackPointer;
     QVector<double> x1,y2;
     QCPBars *trackPointer2;
@@ -44,19 +51,10 @@ public:
     QCPBars *returnBar[4];
     QCPBars *returnBar2[4];
     QVector<double> xReturn,yReturn;
-     QVector<double> xReturn2,yReturn2;
-    double speed;
-    double volume;
-    ~MainWindow();
+    QVector<double> xReturn2,yReturn2;
+    QTimer dataTimer;
+    QTimer dataTimer2;
 
-private:
-    Ui::MainWindow *ui;
-    SoundProcessing* soundProc;
-    QThread th_soundProc;
-    QThread th_soundGraph;
-
-    QGraphicsPixmapItem* discImg[2];
-    Disc* disc[2];
 
 signals:
     void loadAudio(QString filename);
@@ -65,18 +63,15 @@ signals:
     void loadActionFromFile(QString fileName);
     void startExport(QString filename);
 
-
 public slots:
-    //----PLOTING------------
-     void bracketDataSlot();
-     void graphClicked(QCPAbstractPlottable *plottable, int dataIndex);
-     void bracketDataSlot2();
-     void graphClicked2(QCPAbstractPlottable *plottable, int dataIndex);
+    void bracketDataSlot();
+    void graphClicked(QCPAbstractPlottable *plottable, int dataIndex);
+    void bracketDataSlot2();
+    void graphClicked2(QCPAbstractPlottable *plottable, int dataIndex);
 
-     void mouseMove(QMouseEvent *event);
-     void mouseMove2(QMouseEvent *event);
+    void mouseMove(QMouseEvent *event);
+    void mouseMove2(QMouseEvent *event);
 
-    //--------------------
     void selectAudio();
     void selectAudio2();
     void crossFaderChange(int value);

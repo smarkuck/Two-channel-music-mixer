@@ -1,13 +1,12 @@
 #include "mainwindow.h"
-#include "exporting.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QScreen>
 #include <QMessageBox>
 #include <QMetaEnum>
-
 #include <QReadWriteLock>
+
 QReadWriteLock lock;
 
 //===============================================
@@ -63,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     soundProc->moveToThread(&th_soundProc);
     soundProc->timer->moveToThread(&th_soundProc);
 
-    Exporting* Export = new Exporting(soundProc);
+    Export = new Exporting(soundProc);
 
     connect(&th_soundProc, &QThread::finished, soundProc, &QObject::deleteLater);
     th_soundProc.start();
@@ -108,8 +107,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(disc[0], SIGNAL(start()), &soundProc->panel1, SLOT(enableDisc()));
     connect(disc[0], SIGNAL(stop()), &soundProc->panel1, SLOT(disableDisc()));
 
-    //AKCJE
-    //sygnaly do zmiany suwakow
     connect(soundProc, SIGNAL(lowEQChange(int)), this, SLOT(lowChange(int)));
     connect(soundProc, SIGNAL(medEQChange(int)), this, SLOT(medChange(int)));
     connect(soundProc, SIGNAL(highEQChange(int)), this, SLOT(highChange(int)));
@@ -173,8 +170,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->customPlot, SIGNAL(plottableClick(QCPAbstractPlottable*,int,QMouseEvent*)), this, SLOT(graphClicked(QCPAbstractPlottable*,int)));
     connect(ui->customPlot_2, SIGNAL(plottableClick(QCPAbstractPlottable*,int,QMouseEvent*)), this, SLOT(graphClicked2(QCPAbstractPlottable*,int)));
 
-    //AKCJE
-    //sygnaly do zapisywania i wczytywania akcji
     connect(ui->pbActionSave, SIGNAL(clicked(bool)), this, SLOT(saveAction()));
     connect(this, SIGNAL(saveActionToFile(QString)), &soundProc->action, SLOT(saveActionToFile(QString)));
 
@@ -346,15 +341,6 @@ void MainWindow::bracketDataSlot()
             returnBar[i]->setVisible(false);
         }
     }
-
-//  if(soundProc->panel1.isFlagSet)
-//  {
-//    xReturn[0] = soundProc->panel1.returnFlag/48000;
-//    xReturn[1] = soundProc->panel1.returnFlag/48000;
-//    returnBar->setData(xReturn, yReturn);
-//    returnBar->setVisible(true);
-//    ui->customPlot->replot();
-//  }
 
   if(soundProc->panel1.isLoopStartSet){
       xStart_1[0]=soundProc->panel1.loopingStart/48000;
@@ -573,8 +559,6 @@ void MainWindow::bracketDataSlot2()
       ui->customPlot_2->xAxis->setRange(0, soundProc->panel2.audioLength);
       int n = soundProc->panel2.audioLength * (48000 * 2) + 1;
 
-      //ui->customPlot_2->xAxis->setRange(0,(soundProc->panel2.channel1->size() )/ (48000 * 2) + 1);
-      //int n = soundProc->panel2.channel1->size();
       static QVector<double> xII, yII;
       static int prevII = 0;
       if(soundProc->panel2.loadAudioInterruption)
@@ -598,8 +582,6 @@ void MainWindow::bracketDataSlot2()
       }
 
       xII.push_back(actPos/48000.);  //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
-      //pobieram i dodaje probki z kanalu 1 i 2, nie wiem czy to jest dobre ale nie bedziemy
-      //chyba rysowac dwoch kanalow osobno xD
 
       yII.push_back(*(reinterpret_cast<qint16*>(soundProc->panel2.channel1->data())+actPos)
               +*(reinterpret_cast<qint16*>(soundProc->panel2.channel2->data())+actPos));
@@ -710,7 +692,6 @@ void MainWindow::bracketDataSlot2()
 void MainWindow::graphClicked2(QCPAbstractPlottable *plottable, int dataIndex)
 {
   double czas = plottable->interface1D()->dataMainKey(dataIndex);  //TO JEST OS X - sekundy
-  //double amplituda = plottable->interface1D()->dataMainValue(dataIndex);  //TO JEST OS Y - amplituda dzwieku
   if(czas*48000 < soundProc->panel2.loopingStart || czas*48000 > soundProc->panel2.loopingEnd)
       soundProc->panel2.isLoopingActive = false;
   soundProc->panel2.actPos = czas*48000;

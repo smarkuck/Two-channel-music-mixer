@@ -20,30 +20,23 @@ class SoundProcessing : public QObject
 
 public:
     explicit SoundProcessing(QObject *parent = nullptr); 
-    bool isRecording;
-
-    int crossFader;
-
+    enum Actions { low=1, med, high, cross, volume, tempo };
     MixPanel panel1;
     MixPanel panel2;
-
     Action action;
-
-    enum Actions { low=1, med, high, cross, volume, tempo };
-    void launchActions(quint64 actPos1, quint64 actPos2);
-
-    double buffer1[960], buffer2[960];
-
     QByteArray output1;
     QAudioFormat format;
-
     QTimer* timer;
+    int crossFader;
+
+    void launchActions(quint64 actPos1, quint64 actPos2);
+
 private:
     QAudioOutput *audioOutput;
     QIODevice *audioDevice;
-
-
+    bool isRecording;
     double rate;
+    double buffer1[960], buffer2[960];
 
 signals:
     void lowEQChange(int value);
