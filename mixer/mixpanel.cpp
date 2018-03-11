@@ -451,6 +451,7 @@ void MixPanel::highEQ(int value) {
 }
 
 void MixPanel::detectBPM() {
+#ifdef __linux__
     soundtouch::BPMDetect bpmDetector(1, 48000);
     int samples = channel1->size()/sizeof(qint16);
 
@@ -460,6 +461,10 @@ void MixPanel::detectBPM() {
     bpmDetector.inputSamples(reinterpret_cast<soundtouch::SAMPLETYPE*>(channel1->data()), samples);
     bpm = bpmDetector.getBpm();
     loopInterval = 60/bpm*48000;
+#else
+    loopInterval = 60/100.*48000;
+#endif
+
 }
 
 void MixPanel::loadAudio(QString filename) {

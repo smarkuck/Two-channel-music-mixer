@@ -244,7 +244,6 @@ void BPMDetect::updateXCorr(int process_samples)
 void BPMDetect::inputSamples(const SAMPLETYPE *samples, int numSamples)
 {
     SAMPLETYPE decimated[DECIMATED_BLOCK_SAMPLES];
-
     // iterate so that max INPUT_BLOCK_SAMPLES processed per iteration
     while (numSamples > 0)
     {
@@ -306,7 +305,6 @@ float BPMDetect::getBpm()
 
     // remove bias from xcorr data
     removeBias();
-
     // find peak position
     peakPos = peakFinder.detectPeak(xcorr, windowStart, windowLen);
 

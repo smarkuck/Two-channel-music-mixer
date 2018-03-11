@@ -14,7 +14,7 @@ SoundProcessing::SoundProcessing(QObject *parent) : QObject(parent)
     format.setSampleSize(16);
 
     audioOutput = new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice(), format);
-    audioOutput->setBufferSize(960);
+    audioOutput->setBufferSize(9600);
     audioDevice = audioOutput->start();
 
     timer = new QTimer();
