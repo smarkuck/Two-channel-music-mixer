@@ -1,9 +1,9 @@
-The Mixer was written in the Qt.
-It consists of two panels used for mixing tracks whose methods and functionalities were included in the Mixpanel class.
-The sound processing process from both panels combines the Soundprocessing class, which, after the samples are processed, releases the sound.
-The MainWindow class deals with the QCustomPlot widget, which is used to represent the sound graph of the loaded songs.
-The Exporting class whose instance is in the MainWindow class deals in recording mixed tracks.
-The Action class whose instance is in the Soundprocessing class deals with saving the actions performed during mixing, so that they can be automatically repeated later.
+#The Mixer was written in the Qt
+- It consists of two panels used for mixing tracks whose methods and functionalities were included in the Mixpanel class
+- The sound processing process from both panels combines the Soundprocessing class, which, after the samples are processed, releases the sound
+- The MainWindow class deals with the QCustomPlot widget, which is used to represent the sound graph of the loaded songs
+- The Exporting class whose instance is in the MainWindow class deals in recording mixed tracks
+- The Action class whose instance is in the Soundprocessing class deals with saving the actions performed during mixing, so that they can be automatically repeated later
 
 #Mixer Features:
 - Looping
