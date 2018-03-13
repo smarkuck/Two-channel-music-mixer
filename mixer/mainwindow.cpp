@@ -67,9 +67,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&th_soundProc, &QThread::finished, soundProc, &QObject::deleteLater);
     th_soundProc.start();
 
-
+    //connect mixer buttons with slots
     connect(ui->actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
-
     connect(ui->pbAddMusic, SIGNAL(clicked(bool)), this, SLOT(selectAudio()));
     connect(ui->action_Open, SIGNAL(triggered(bool)), this, SLOT(selectAudio()));
     connect(this, SIGNAL(loadAudio(QString)), &soundProc->panel1, SLOT(loadAudio(QString)));
@@ -120,7 +119,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(soundProc, SIGNAL(crossChange(int)), this, SLOT(crossChanger(int)));
 
     connect(&soundProc->panel1, SIGNAL(timeChange(QString)), ui->lTime, SLOT(setText(QString)));
-
     connect(ui->pbAddMusic_2, SIGNAL(clicked(bool)), this, SLOT(selectAudio2()));
     connect(ui->action_Open2, SIGNAL(triggered(bool)), this, SLOT(selectAudio2()));
     connect(this, SIGNAL(loadAudio2(QString)), &soundProc->panel2, SLOT(loadAudio(QString)));
@@ -185,17 +183,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->customPlot, SIGNAL(mouseMove(QMouseEvent*)), this, SLOT(mouseMove(QMouseEvent*)));
     connect(ui->customPlot_2, SIGNAL(mouseMove(QMouseEvent*)), this, SLOT(mouseMove2(QMouseEvent*)));
 }
-//------------------------------------------------------------
+//----------------------GRAPH 1---------------------------------------------
 void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
 {
+    //adding a graph to the sound and looping bars
+    customPlot->addGraph();
+    customPlot->addGraph();
+    customPlot->addGraph();
+    customPlot->graph(0)->setPen(QPen(QColor(255, 120, 5)));
+    customPlot->setBackground(QColor(54, 54, 54));
 
-  customPlot->addGraph();
-  customPlot->addGraph();
-  customPlot->addGraph();
-  customPlot->graph(0)->setPen(QPen(QColor(255, 120, 5)));
-  customPlot->setBackground(QColor(54, 54, 54));
-
-  //stworzenie i ustawienie wskaznika do pokazywania aktualnego czasu utworu
+    //create and set the pointer to show the current position of the song
     trackPointer = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
     trackPointer->setWidth(0.025);
     trackPointer->setPen(QPen(QColor(Qt::white)));
@@ -205,6 +203,8 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
     color1.setAlpha(50);
     QColor color2 = QColor(Qt::white);
     color2.setAlpha(20);
+    
+    //create and set looping flag pointers
     barLoopStart_1 = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
     barLoopStart_1->setWidth(0.025);
     barLoopStart_1->setPen(QPen(QColor(color2)));
@@ -223,6 +223,7 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
     colors[1] = QColor(Qt::green);
     colors[2] = QColor(Qt::blue);
     colors[3] = QColor(Qt::yellow);
+    //create and set return looping flags
     for(int i = 0; i < 4; i++) {
         returnBar[i] = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
         returnBar[i]->setWidth(0.025);
@@ -236,16 +237,18 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
     customPlot->graph(1)->setBrush(QBrush(QBrush(color1)));
     customPlot->graph(2)->setPen(QPen(Qt::NoPen));
     customPlot->graph(2)->setBrush(QBrush(QBrush(color1)));
-
+    
+    //set the range of sound amplitude
     customPlot->yAxis->setRange(-100000, 100000);
     customPlot->yAxis->setVisible(false);
     customPlot->yAxis2->setVisible(false);
     customPlot->xAxis2->setVisible(false);
     customPlot->xAxis->setVisible(false);
 
-    //tworze po dwa elementy dla vectora odpowiadajacego za wskaznik pozycji utworu,
-    //jeden el dla czesci dodatniej wskzanika, drugi dla ujemnej
-    x1.push_back(0);   x1.push_back(0);
+    //create two elements for the vector corresponding to the position pointer of the song
+    //one part for the positive part of the pointer, the other for the negative part
+    x1.push_back(0);
+    x1.push_back(0);
     y2.push_back(100000);
     y2.push_back(-100000);
     yStart_1.push_back(100000);
@@ -268,20 +271,24 @@ void MainWindow::setupSoundGraph(QCustomPlot *customPlot)
     ui->customPlot->graph(1)->setVisible(false);
     ui->customPlot->graph(2)->setVisible(false);
 
+  //setting the timer to refresh data every 100ms   
   connect(&dataTimer, SIGNAL(timeout()), this, SLOT(bracketDataSlot()));
-  dataTimer.start(100); // ustawinie timera do odswiezania danych
+  dataTimer.start(100);
 }
 
 void MainWindow::bracketDataSlot()
 {
-    //jezeli utwor zaladoany to rysuje wykres
-    if(soundProc->panel1.audioReady){
-
+    //if the song is loading, draw a graph
+    if(soundProc->panel1.audioReady)
+    {    
+        //setting the length of the song using the tagLib library
         ui->customPlot->xAxis->setRange(0, soundProc->panel1.audioLength);
         int n = soundProc->panel1.audioLength * (48000 * 2) + 1;
+        //creating static vectors so that you do not have to create them every time you refresh
         static QVector<double> x, y;
 
       static int prevI = 0;
+      //if the chart has been interrupted, reset the vectors
       if(soundProc->panel1.loadAudioInterruption)
       {
           prevI = 0;
@@ -293,7 +300,7 @@ void MainWindow::bracketDataSlot()
       }
       quint64 actPos = prevI * 3000;
 
-
+    //main loop for collecting amplitudes of samples and drawing a sound graph
     for (int i=1; actPos<n/sizeof(qint16) && i < 50; i++, prevI++)
       {
         lock.lockForWrite();
@@ -303,16 +310,16 @@ void MainWindow::bracketDataSlot()
             break;
         }
 
-        //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
+        //division by frequency to synchronize the X axis with time
         x.push_back(actPos/48000.);
-          //pobieram i dodaje probki z kanalu 1 i 2
-
+        //downloading and adding samples from channels 1 and 2
         y.push_back(*(reinterpret_cast<qint16*>(soundProc->panel1.channel1->data())+actPos)
                            +*(reinterpret_cast<qint16*>(soundProc->panel1.channel2->data())+actPos));
         lock.unlock();
+        //taking a further sample away at 3000 to speed up drawing
         actPos += 3000;
-
-        if(actPos % 96 == 0) //96
+        //drawing a graph every modulo 96
+        if(actPos % 96 == 0)
         {
           ui->customPlot->graph(0)->setData(x, y);
           ui->customPlot->replot();
@@ -329,7 +336,8 @@ void MainWindow::bracketDataSlot()
           y.clear();
       }
     }
-
+    
+    //checking and displaying looping flags
     for(int i = 0; i < 4; i++) {
         if(soundProc->panel1.flags[i]) {
             xReturn[0] = xReturn[1] = soundProc->panel1.flagPos[i]/48000;
@@ -355,7 +363,8 @@ void MainWindow::bracketDataSlot()
       xEnd_1[1]=soundProc->panel1.loopingEnd/48000;
       barLoopEnd_1->setData(xEnd_1, yEnd_1);
   }
-
+    
+  //setting the filling of the looping area  
   if(soundProc->panel1.isLoopingSet)
   {
       QColor color1;
@@ -402,9 +411,10 @@ void MainWindow::bracketDataSlot()
       barLoopEnd_1->setVisible(false);
       ui->customPlot->replot();
   }
-
+    
+  //this is responsible for moving the graph during playback
+  //the current position of the song is downloaded and the pointer is set
   if(soundProc->panel1.duration > 0) {
-    //to odpowiada za przesuwanie sie wykresu podczas odtwarzania
     x1[0] = soundProc->panel1.actPos/48000;
     x1[1]=  soundProc->panel1.actPos/48000;
     trackPointer->setData(x1, y2);
@@ -412,13 +422,12 @@ void MainWindow::bracketDataSlot()
   }
 }
 
-
 void MainWindow::graphClicked(QCPAbstractPlottable *plottable, int dataIndex)
 {
+  //getting seconds from the point where the graph was clicked  
+  double czas = plottable->interface1D()->dataMainKey(dataIndex);  
 
-  double czas = plottable->interface1D()->dataMainKey(dataIndex);  //TO JEST OS X - sekundy
-
-    //klikniecie poza obszar loopingu zawsze ustawia looping na false
+  //clicking outside the looping area always sets looping to false
   if(czas*48000 < soundProc->panel1.loopingStart || czas*48000 > soundProc->panel1.loopingEnd)
       soundProc->panel1.isLoopingActive = false;
   soundProc->panel1.actPos = czas*48000;
@@ -428,14 +437,18 @@ void MainWindow::graphClicked(QCPAbstractPlottable *plottable, int dataIndex)
   trackPointer->setData(x1, y2);
   ui->customPlot->replot();
 }
+
+//dragging the sound graph
 void MainWindow::mouseMove(QMouseEvent *event)
 {
     if(event->buttons() == Qt::LeftButton)
     {
+        //getting a dragged position
         double position = (event->x()-15) * soundProc->panel1.rewindParam/soundProc->panel1.audioLength;
         if(position*48000 < soundProc->panel1.loopingStart || position*48000 > soundProc->panel1.loopingEnd)
             soundProc->panel1.isLoopingActive = false;
-
+     
+     //if the position exceeds the left end of the graph, set the pointer to the beginning
      if(position < 0)
      {
          x1[0] = 0;
@@ -443,6 +456,7 @@ void MainWindow::mouseMove(QMouseEvent *event)
          soundProc->panel1.actPos = 0;
          soundProc->panel1.realPosition = 0;
      }
+     //if the position exceeds the right end of the graph, set the pointer to the end
      else if(position > soundProc->panel1.audioLength)
      {
          x1[0] = soundProc->panel1.audioLength-0.1;
@@ -450,6 +464,7 @@ void MainWindow::mouseMove(QMouseEvent *event)
          soundProc->panel1.actPos = soundProc->panel1.audioLength-0.1;
          soundProc->panel1.realPosition = soundProc->panel1.audioLength-0.1;
      }
+     //set the pointer to the dragged position
      else
      {
          x1[0] = position;
@@ -462,22 +477,20 @@ void MainWindow::mouseMove(QMouseEvent *event)
     }
 }
 
-//-----------GRAPH 1--------------------------------------------------
+//----------------------GRAPH 2---------------------------------------------
 
 void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
 {
-    customPlot->addGraph();
-    customPlot->addGraph();
-    customPlot->addGraph();
-   customPlot->graph(0)->setPen(QPen(QColor(66, 134 ,244)));
+  customPlot->addGraph();
+  customPlot->addGraph();
+  customPlot->addGraph();
+  customPlot->graph(0)->setPen(QPen(QColor(66, 134 ,244)));
   customPlot->setBackground(QColor(54, 54, 54));
-  //stworzenie i ustawienie wskaznika do pokazywania aktualnego czasu utworu
 
   trackPointer2 = new QCPBars(ui->customPlot_2->xAxis, ui->customPlot_2->yAxis);
   trackPointer2->setWidth(0.025);
   trackPointer2->setPen(QPen(QColor(Qt::white)));
   trackPointer2->setBrush(QBrush(QBrush(QColor(Qt::white))));
-
 
   QColor color1 = QColor(Qt::red);
   color1.setAlpha(50);
@@ -494,13 +507,13 @@ void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
   barLoopEnd_2->setPen(QPen(QColor(color2)));
   barLoopEnd_2->setBrush(QBrush(QBrush(QColor(color2))));
 
-
   QColor colors[4];
   colors[0] = QColor(Qt::red);
   colors[1] = QColor(Qt::green);
   colors[2] = QColor(Qt::blue);
   colors[3] = QColor(Qt::yellow);
-  for(int i = 0; i < 4; i++) {
+  for(int i = 0; i < 4; i++) 
+  {
       returnBar2[i] = new QCPBars(ui->customPlot_2->xAxis, ui->customPlot_2->yAxis);
       returnBar2[i]->setWidth(0.025);
       colors[i].setAlpha(150);
@@ -514,14 +527,12 @@ void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
   customPlot->graph(2)->setPen(QPen(Qt::NoPen));
   customPlot->graph(2)->setBrush(QBrush(QBrush(color1)));
 
-  customPlot->yAxis->setRange(-100000, 100000);   //ustawienie zakresu osiY
+  customPlot->yAxis->setRange(-100000, 100000);
     customPlot->yAxis->setVisible(false);
     customPlot->yAxis2->setVisible(false);
     customPlot->xAxis2->setVisible(false);
     customPlot->xAxis->setVisible(false);
 
-    //tworze po dwa elementy dla vectora odpowiadajacego za wskaznik pozycji utworu,
-    //jeden el dla czesci dodatniej wskzanika, drugi dla ujemnej
     x2.push_back(0);
     x2.push_back(0);
     y1.push_back(100000);
@@ -548,14 +559,14 @@ void MainWindow::setupSoundGraph2(QCustomPlot *customPlot)
 
   connect(&dataTimer2, SIGNAL(timeout()), this, SLOT(bracketDataSlot2()));
 
-  dataTimer2.start(100); // ustawinie timera do odswiezania danych
+  dataTimer2.start(100);
 }
 
 void MainWindow::bracketDataSlot2()
 {
 
-  if(soundProc->panel2.audioReady){
-
+  if(soundProc->panel2.audioReady)
+  {
       ui->customPlot_2->xAxis->setRange(0, soundProc->panel2.audioLength);
       int n = soundProc->panel2.audioLength * (48000 * 2) + 1;
 
@@ -581,23 +592,24 @@ void MainWindow::bracketDataSlot2()
           break;
       }
 
-      xII.push_back(actPos/48000.);  //dziele przez czestotliwosc zeby zsynchronizowac osX z czasem
+      xII.push_back(actPos/48000.);
 
       yII.push_back(*(reinterpret_cast<qint16*>(soundProc->panel2.channel1->data())+actPos)
               +*(reinterpret_cast<qint16*>(soundProc->panel2.channel2->data())+actPos));
       lock.unlock();
 
       actPos += 3000;
-      if(actPos % 96 == 0){
+      if(actPos % 96 == 0)
+      {
         ui->customPlot_2->graph(0)->setData(xII, yII);
         ui->customPlot_2->replot();
       }
-
   }
 
-   ui->customPlot_2->replot();
+  ui->customPlot_2->replot();
 
-  if(actPos>=n/sizeof(qint16)){
+  if(actPos>=n/sizeof(qint16))
+  {
       soundProc->panel2.audioReady = false;
       prevII = 0;
       xII.clear();
@@ -605,19 +617,23 @@ void MainWindow::bracketDataSlot2()
   }
   }
 
-  for(int i = 0; i < 4; i++) {
-      if(soundProc->panel2.flags[i]) {
+  for(int i = 0; i < 4; i++) 
+  {
+      if(soundProc->panel2.flags[i]) 
+      {
           xReturn2[0] = xReturn2[1] = soundProc->panel2.flagPos[i]/48000;
           returnBar2[i]->setData(xReturn2, yReturn2);
           returnBar2[i]->setVisible(true);
           ui->customPlot_2->replot();
       }
-      else {
+      else 
+      {
           returnBar2[i]->setVisible(false);
       }
   }
 
-  if(soundProc->panel2.isLoopStartSet){
+  if(soundProc->panel2.isLoopStartSet)
+  {
       xStart_2[0]=soundProc->panel2.loopingStart/48000;
       xStart_2[1]=soundProc->panel2.loopingStart/48000;
       barLoopStart_2->setData(xStart_2, yStart_2);
@@ -625,12 +641,12 @@ void MainWindow::bracketDataSlot2()
       ui->customPlot_2->replot();
   }
 
-  if(soundProc->panel2.isLoopEndSet){
+  if(soundProc->panel2.isLoopEndSet)
+  {
       xEnd_2[0]=soundProc->panel2.loopingEnd/48000;
       xEnd_2[1]=soundProc->panel2.loopingEnd/48000;
       barLoopEnd_2->setData(xEnd_2, yEnd_2);
   }
-
 
   if(soundProc->panel2.isLoopingSet)
   {
@@ -645,8 +661,8 @@ void MainWindow::bracketDataSlot2()
       {
           color1 = QColor(Qt::white);
           color1.setAlpha(50);
-
       }
+      
       barLoopStart_2->setPen(QPen(QColor(color1)));
       barLoopEnd_2->setPen(QPen(QColor(color1)));
       ui->customPlot_2->graph(1)->setBrush(QBrush(QBrush(color1)));
@@ -679,8 +695,8 @@ void MainWindow::bracketDataSlot2()
       ui->customPlot_2->replot();
   }
 
-  if(soundProc->panel2.duration > 0) {
-        //to odpowiada za przesuwanie sie wykresu podczas odtwarzania
+  if(soundProc->panel2.duration > 0) 
+  {
         x2[0] = soundProc->panel2.actPos/48000;
         x2[1]=  soundProc->panel2.actPos/48000;
         trackPointer2->setData(x2, y1);
@@ -736,9 +752,6 @@ void MainWindow::mouseMove2(QMouseEvent *event)
      ui->customPlot_2->replot();
     }
 }
-//----------PLOTING------------------------------------------------------
-
-
 
 void MainWindow::selectAudio() {
     QString filename = QFileDialog::getOpenFileName(this,
@@ -842,7 +855,7 @@ void MainWindow::rotate2(float angle) {
 
 void MainWindow::onExport() {
 
-    //wybor lokalizacji zapisywanego pliku audio
+    //choosing the location of the saved audio file
     QString selectedFilter;
     QString filename = QFileDialog::getSaveFileName(this,
         tr("Export"), "/home", tr("audio(*.wav)"),&selectedFilter, QFileDialog::DontUseNativeDialog);
