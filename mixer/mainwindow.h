@@ -106,6 +106,7 @@ public slots:
     void highChange2(int value);
     void crossChanger(int value);
 
+    //discs rotation slots
     void rotate(float angle);
     void rotate2(float angle);
     
