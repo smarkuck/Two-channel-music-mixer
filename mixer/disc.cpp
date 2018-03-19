@@ -5,7 +5,8 @@ Disc::Disc()
     actAngle = 0;
     prevAngle = 0;
 }
-
+//---------------------------------------------------
+//compute actual angle of rotation
 float Disc::getAngle(QPointF p) {
     p.setX(p.x() - width()/2);
     p.setY(p.y() - height()/2);
@@ -15,7 +16,8 @@ float Disc::getAngle(QPointF p) {
 
     return angle;
 }
-
+//---------------------------------------------------
+//rotate disk on mouse move when pressed
 void Disc::mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent) {
     float angle = getAngle(mouseEvent->scenePos());
 
@@ -27,11 +29,12 @@ void Disc::mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent) {
 
     emit rotate(angle);
 }
-
+//---------------------------------------------------
 void Disc::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent) {
     actAngle = getAngle(mouseEvent->scenePos());
     emit start();
 }
+//---------------------------------------------------
 void Disc::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent) {
     float angle = getAngle(mouseEvent->scenePos());
 

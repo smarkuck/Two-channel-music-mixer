@@ -13,6 +13,7 @@
 #include <mixpanel.h>
 #include <action.h>
 
+//class to mix audio from panels and output it
 class SoundProcessing : public QObject
 {
     Q_OBJECT

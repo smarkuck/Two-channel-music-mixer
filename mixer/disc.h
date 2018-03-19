@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <math.h>
 
+//class to control disc rotation
 class Disc : public QGraphicsScene
 {
     Q_OBJECT
@@ -18,10 +19,13 @@ public:
 private:
     float actAngle;
     float prevAngle;
+    //get actual angle while rotating
     float getAngle(QPointF p);
 
 signals:
+    //rotation start
     void start();
+    //rotation stop
     void stop();
     void rotate(float angle);
 
