@@ -1,3 +1,5 @@
+![alt text](https://github.com/smarkuck/Two-channel-music-mixer-old-project-/blob/master/example.png?raw=true)
+
 #Funkcjonalności miksera:
 - looping
 - detekcja BPM
